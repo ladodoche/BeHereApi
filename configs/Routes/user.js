@@ -202,7 +202,7 @@ userRouter.put('/update/password/:user_id', isAuthenticatedUserAccount, function
       });
     },
     function(user, done){
-      UserController.update(user, user.email, user.name, user.surname, sha256(newPassword))
+      UserController.update(user, undefined, undefined, undefined, undefined, undefined, sha256(newPassword))
       .then((user) => {
         return res.status(201).json({"error": false});
       })
@@ -244,10 +244,84 @@ userRouter.delete('/delete/:user_id', isAuthenticatedUserAccount, function(req, 
     },
     function(user, done){
       UserController.delete(user);
-      return res.status(200).json({"error": "false", "message": "Suppression de l'utilisateur réussit"}).end();
+      return res.status(200).json({"error": false, "result": "Suppression de l'utilisateur réussit"}).end();
     }
   ]);
 });
+
+userRouter.use(fileUpload());
+////////////////////////////////////////////////////
+userRouter.put('/upload/:user_id', isAuthenticatedUserAccount, function(req, res) {
+  const user_id = req.params.user_id;
+  const fileToUpload = req.files.file
+  const ext = fileToUpload.name.substr(fileToUpload.name.lastIndexOf('.') + 1).toLowerCase();
+  const regex = new RegExp(' ','g');
+  var src_tracks = artist+"_"+title+"."+ext;
+  src_tracks = src_tracks.replace(regex, '_');
+
+  if(fileToUpload === undefined)
+    return res.status(400).json({"error": true, "message": "Aucune image à upload"}).end();
+  if(ext != "png" && ext != "jpg")
+    return res.status(400).json({"error": true, "message": "Format de l'image non géré (png et jpg)"}).end();
+
+  asyncLib.waterfall([
+    function(done){
+      UserController.getOne(user_id)
+      .then((user) => {
+        if(user === null || user === undefined){
+          result["getOne"] = 'L\'utilisateur n\'existe pas';
+          return res.status(400).json({"error": true, "message": result});
+        }
+        done(null, user);
+      })
+      .catch((err) => {
+          result["server"] = 'Erreur lors de la récupération de l\'utilisateur';
+          return res.status(500).json({"error": true, "message": result});
+      });
+    },
+    function(user, done){
+      fileToUpload.mv("../medias/users/"+src_tracks, function(err) {
+        if (err){
+          result["server"] = "Erreur lors de l'upload";
+          return res.status(400).json({"error": true, "message": result});
+        }
+        else
+          done(null, user);
+      });
+    },
+    function(user, done){
+      UserController.update(user, undefined, undefined, undefined, undefined, pathPicture)
+      .then((track) => {
+        return res.status(201).json({"error": false});
+      })
+      .catch((err) => {
+        result["server"] = 'Erreur lors de la sauvegarde du chemin';
+        return res.status(500).json({"error": true, "message": result});
+      });
+    }
+  ])
+});
+
+userRouter.get('/download/:user_id', function(req, res){
+  const user_id = req.params.user_id;
+  const pathUsers = path.resolve( __dirname+"/../../../medias/users/");
+
+  UserController.getOne(user_id)
+  .then((user) => {
+    pathUsers += user.pathPicture;
+    if (fs.existsSync(pathUsers)){
+      const buffer = new Buffer(fs.readFileSync(pathTrack), 'binary');
+      res.status(200).end({"error": true, "result": buffer});
+    }else {
+      result["getOne"] = 'Image non trouvé sur notre serveur';
+      return res.status(404).json({"error": true, "message": result});
+    }
+  })
+  .catch((err) => {
+    result["server"] = 'Image non trouvé sur notre serveur';
+    return res.status(500).json({"error": true, "message": "Erreur lors de la récupération de la musique"});
+  });
+})
 
 
 module.exports = userRouter;

@@ -22,7 +22,7 @@ function _startServer() {
 
   //app.use(express.static('apiDoc'));
 
-  app.listen(8081, function() {
-    console.log('Server started on 8081...');
+  app.listen(8080, function() {
+    console.log('Server started on 8080...');
   });
 }
