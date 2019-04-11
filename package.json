@@ -17,6 +17,7 @@
   "license": "ISC",
   "dependencies": {
     "apidoc": "^0.17.6",
+    "apidoc-plugin-schema": "^0.1.8",
     "async": "^2.6.1",
     "charset-detector": "0.0.2",
     "cors": "^2.8.4",

@@ -1,0 +1,10 @@
+{
+  "name": "Be-Here",
+  "description": "Be-Here Documentation",
+  "title": "Be-Here Documentation",
+  "url" : "localhost:8080/",
+  "template" : {
+    "withCompare" : false,
+    "forceLanguage": "en"
+  }
+}

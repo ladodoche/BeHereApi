@@ -11,16 +11,15 @@ authentificateRouter.use(bodyParser.json());
 const sha256 = require('js-sha256').sha256;
 
 authentificateRouter.post('/', function(req, res) {
+  var result = new Object();
   const email = req.body.email;
   const password = req.body.password;
 
   UserController.login(email, sha256(password))
   .then((user) => {
     if (user === undefined || user === null){
-      res.status(404).json({
-        "auth": false,
-        "message": "Le nom d'utilisateur et le mot de passe que vous avez entrés ne correspondent pas à ceux présents dans nos fichiers. Veuillez vérifier et réessayer"
-      });
+      result["auth"] = 'Le nom d\'utilisateur et le mot de passe';
+      return res.status(401).json({ "error": true, "message": result});
     }
     else{
       const token = jwt.sign(
@@ -29,14 +28,15 @@ authentificateRouter.post('/', function(req, res) {
           admin: user.admin
         },
         auth.secret, {
-          expiresIn: 3600 // 1 hours
+          expiresIn: 36000 // 1 hours
         }
       );
-      res.status(200).json({ "auth": true, "token": token, "user": user});
+      return res.status(200).json({"error": false, "message": token});
     }
   })
   .catch((err) => {
-    res.status(500).end();
+    result["server"] = 'Erreur lors de la récupération du bar';
+    return res.status(500).json({"error": true, "message": result});
   });
 });
 

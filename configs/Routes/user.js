@@ -14,24 +14,71 @@ const userRouter = express.Router();
 userRouter.use(bodyParser.json({limit: '10mb'}));
 
 function isAuthenticatedUserAccount(req, res, next) {
+  var result = new Object();
+  const token = req.headers['x-access-token'];
+
   if (req.params.user_id == "create") { next(); return; }
 
-  var token = req.headers['x-access-token'];
-  if (!token)
-    return res.status(401).json({ "auth": "false", "message": "Problème lors de l'authentification" });
+  if (!token){
+    result["auth"] = 'Problème lors de l\'authentification: il manque la clé d\'authentification';
+    return res.status(401).json({ "error": true, "message": result});
+  }
 
   jwt.verify(token, auth.secret, function(err, decoded) {
-    console.log(decoded.admin);
-    if (err)
-      return res.status(500).json({ "auth": "false", "message": "Problème lors de l'authentification" });
-    if ((decoded.id != req.params.user_id) && decoded.admin != 1)
-      return res.status(401).json({ "auth": "false", "message": "Vous ne disposez pas des droits nécessairent"})
+    if (err){
+      result["auth"] = 'Problème lors de l\'authentification';
+      return res.status(500).json({ "error": true, "message": result});
+    }
+    if ((decoded.id != req.params.user_id) && decoded.admin != 1){
+      result["auth"] = 'Vous ne disposez pas des droits nécessairent';
+      return res.status(401).json({ "error": true, "message": result});
+    }
     next();
   });
 }
 
 
-userRouter.use(fileUpload());
+/**
+@api {post} /users/create add a new user
+* @apiGroup Users
+* @apiParam {String} email User email
+* @apiParam {String} name User name
+* @apiParam {String} surname User surname
+* @apiParam {String} password User password
+* @apiParam {String} checkPassword User checkPassword
+* @apiParam {String} birthDate User birthDate
+* @apiParamExample {json} Input
+*  {
+*    "email": "dogui78930@gmail.com",
+*    "name": "dorian",
+*    "surname": "alayrangues",
+*    "password": "ESGI-tir1997",
+*    "checkPassword": "ESGI-tir1997",
+*    "birthDate": "1997-05-22"
+*  }
+* @apiSuccess {Number} id User id
+* @apiSuccess {String} login User login
+* @apiSuccess {Date} updated_at Update date
+* @apiSuccess {Date} created_at create date
+* @apiSuccessExample {json} Success
+*    HTTP/1.1 201 Created
+*    {
+*        "error": false,
+*        "message": {
+*            "admin": false,
+*            "id": 13,
+*            "email": "dogui78930@gmail.com",
+*            "name": "dorian",
+*            "surname": "alayrangues",
+*            "birthDate": "1997-05-22T00:00:00.000Z",
+*            "updated_at": "2019-04-11T15:12:41.172Z",
+*            "created_at": "2019-04-11T15:12:41.172Z"
+*        }
+*    }
+* @apiErrorExample {json} Register's error
+*    HTTP/1.1 400 Bad Request
+*    HTTP/1.1 500 Internal Server Error
+*/
 ////////////////////////////////////////////////////
 userRouter.post('/create', function(req, res) {
 
@@ -61,7 +108,8 @@ userRouter.post('/create', function(req, res) {
 
   UserController.add(email, sha256(password), name, surname, birthDate)
   .then((user) => {
-    return res.status(201).json({"error": false});
+    delete user['dataValues']["password"];
+    return res.status(201).json({"error": false, "message": user});
   })
   .catch((err) => {
     if(err.errors){
@@ -79,7 +127,7 @@ userRouter.post('/create', function(req, res) {
 
 ////////////////////////////////////////////////////
 userRouter.get('/', function(req, res) {
-  const email = req.body.login;
+  const email = req.body.email;
   var result = new Object();
 
   UserController.getAll(email)
@@ -88,9 +136,13 @@ userRouter.get('/', function(req, res) {
       result["getAll"] = 'Aucun utilisateur trouvé';
       return res.status(400).json({"error": true, "message": result});
     }
-    return res.status(200).json({"error": false, "result": users});
+    Object.keys(users).forEach(function(key){
+      delete users[key]['dataValues']["password"];
+    });
+    return res.status(200).json({"error": false, "message": users});
   })
   .catch((err) => {
+    console.log(err);
     result["server"] = 'Erreur lors de la récupération des utilisateurs';
     return res.status(500).json({"error": true, "message": result});
   });
@@ -107,7 +159,8 @@ userRouter.get('/:user_id', function(req, res) {
       result["getOne"] = 'L\'utilisateur n\'existe pas';
       return res.status(400).json({"error": true, "message": result});
     }
-    return res.status(200).json({"error": false, "result": user});
+    delete user['dataValues']["password"];
+    return res.status(200).json({"error": false, "message": user});
   })
   .catch((err) => {
     result["server"] = 'Erreur lors de la récupération de l\'utilisateurs';
@@ -143,7 +196,9 @@ userRouter.put('/update/:user_id', isAuthenticatedUserAccount, function(req, res
     function(user, done){
       UserController.update(user, email, name, surname, birthDate, pathPicture)
       .then((user) => {
-        return res.status(201).json({"error": false});
+        delete user['dataValues']["password"];
+        result["user"] = user;
+        return res.status(201).json({"error": false, "message": result});
       })
       .catch((err) => {
         if(err.errors){
@@ -176,7 +231,6 @@ userRouter.put('/update/password/:user_id', isAuthenticatedUserAccount, function
     result["newPassword"] = 'votre mot de passe doit au moins comporter une lettre minuscule et majuscule ainsi qu\'un chiffre';
     return res.status(400).json({"error": true, "message": result});
   }
-
   if(newPassword !== checkNewPassword) {
     result["checkNewPassword"] = 'Vous avez fait une erreur lors de la vérification de votre nouveau mot de passe';
     return res.status(400).json({"error": true, "message": result});
@@ -244,7 +298,7 @@ userRouter.delete('/delete/:user_id', isAuthenticatedUserAccount, function(req, 
     },
     function(user, done){
       UserController.delete(user);
-      return res.status(200).json({"error": false, "result": "Suppression de l'utilisateur réussit"}).end();
+      return res.status(200).json({"error": false, "message": "Suppression de l'utilisateur réussit"}).end();
     }
   ]);
 });
@@ -311,7 +365,7 @@ userRouter.get('/download/:user_id', function(req, res){
     pathUsers += user.pathPicture;
     if (fs.existsSync(pathUsers)){
       const buffer = new Buffer(fs.readFileSync(pathTrack), 'binary');
-      res.status(200).end({"error": true, "result": buffer});
+      res.status(200).end({"error": false, "message": buffer});
     }else {
       result["getOne"] = 'Image non trouvé sur notre serveur';
       return res.status(404).json({"error": true, "message": result});

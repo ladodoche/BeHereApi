@@ -1,14 +1,20 @@
 {
-  "name": "retro-server",
+  "name": "Be-Here",
   "version": "1.0.0",
-  "description": "Serveur HTTP pour API REST",
+  "description": "Be-Here Documentation",
+  "title": "Be-Here Documentation",
+  "url": "localhost:8080/",
+  "template": {
+    "withCompare": false,
+    "forceLanguage": "en"
+  },
   "sampleUrl": false,
   "defaultVersion": "0.0.0",
   "apidoc": "0.3.0",
   "generator": {
     "name": "apidoc",
-    "time": "2018-06-17T20:17:37.260Z",
+    "time": "2019-04-11T15:16:05.694Z",
     "url": "http://apidocjs.com",
-    "version": "0.17.6"
+    "version": "0.17.7"
   }
 }

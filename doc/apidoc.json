@@ -1,0 +1,10 @@
+{
+  "name": "MacNode",
+  "description": "MacNode Documentation",
+  "title": "MacNode Documentation",
+  "url" : "localhost:3000/",
+  "template" : {
+    "withCompare" : false,
+    "forceLanguage": "en"
+  }
+}
