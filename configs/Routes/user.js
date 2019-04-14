@@ -90,37 +90,23 @@ userRouter.post('/create', function(req, res) {
   var birthDate = undefined
   if(req.body.birthDate != undefined)
     birthDate = new Date(req.body.birthDate);
-  var result = new Object();
 
   const regex = RegExp('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])');
-  if(password.length < 8 || password.length > 40){
-    result["password"] = 'Votre mot de passe doit faire entre 8 et 40 caractères';
-    return res.status(400).json({"error": true, "message": result});
-  }
-  if(!regex.test(password)){
-    result["password"] = 'votre mot de passe doit au moins comporter une lettre minuscule et majuscule ainsi qu\'un chiffre';
-    return res.status(400).json({"error": true, "message": result});
-  }
-  if(password !== checkPassword){
-    result["checkPassword"] = 'Vous avez fait une erreur lors de la vérification de votre mot de passe';
-    return res.status(400).json({"error": true, "message": result});
-  }
+  if(password.length < 8 || password.length > 40)
+    return res.status(400).json({"error": true, "message": "Votre mot de passe doit faire entre 8 et 40 caractères"});
+  if(!regex.test(password))
+    return res.status(400).json({"error": true, "message": "votre mot de passe doit au moins comporter une lettre minuscule et majuscule ainsi qu'un chiffre"});
+  if(password !== checkPassword)
+    return res.status(400).json({"error": true, "message": "Vous avez fait une erreur lors de la vérification de votre mot de passe"});
 
   UserController.add(email, sha256(password), name, surname, birthDate)
   .then((user) => {
-    delete user['dataValues']["password"];
-    return res.status(201).json({"error": false, "message": user});
+    return res.status(201).json({"error": false});
   })
   .catch((err) => {
-    if(err.errors){
-      err.errors.forEach(function(value){
-        if(!result.hasOwnProperty(value.path))
-          result[value.path] = value.message;
-      });
-      return res.status(400).json({"error": true, "message": result});
-    }
-    result["server"] = 'Erreur lors de la création de l\'utilisateur';
-    return res.status(500).json({"error": true, "message": result});
+    if(err.errors)
+      return res.status(400).json({"error": true, "message": err.errors[0].message});
+    return res.status(500).json({"error": true, "message": "Erreur lors de la création de l'utilisateur"});
   });
 });
 

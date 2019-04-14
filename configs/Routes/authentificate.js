@@ -17,10 +17,8 @@ authentificateRouter.post('/', function(req, res) {
 
   UserController.login(email, sha256(password))
   .then((user) => {
-    if (user === undefined || user === null){
-      result["auth"] = 'Le nom d\'utilisateur et le mot de passe';
-      return res.status(401).json({ "error": true, "message": result});
-    }
+    if (user === undefined || user === null)
+      return res.status(401).json({ "error": true, "message": "Le nom d'utilisateur et le mot de passe"});
     else{
       const token = jwt.sign(
         {
@@ -28,15 +26,14 @@ authentificateRouter.post('/', function(req, res) {
           admin: user.admin
         },
         auth.secret, {
-          expiresIn: 36000 // 1 hours
+          expiresIn: 36000 // 10 hours
         }
       );
       return res.status(200).json({"error": false, "message": token});
     }
   })
   .catch((err) => {
-    result["server"] = 'Erreur lors de la récupération du bar';
-    return res.status(500).json({"error": true, "message": result});
+    return res.status(500).json({"error": true, "message": "Erreur lors de la récupération du bar"});
   });
 });
 
