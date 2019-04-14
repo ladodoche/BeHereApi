@@ -29,11 +29,14 @@ authentificateRouter.post('/', function(req, res) {
           expiresIn: 36000 // 10 hours
         }
       );
-      return res.status(200).json({"error": false, "message": token});
+      delete user["dataValues"]["password"];
+      user["dataValues"]["token"] = token;
+      return res.status(200).json({"error": false, "user": user});
     }
   })
   .catch((err) => {
-    return res.status(500).json({"error": true, "message": "Erreur lors de la récupération du bar"});
+    console.log(err);
+    return res.status(500).json({"error": true, "message": "Erreur lors de la récupération de l'utilisateur"});
   });
 });
 

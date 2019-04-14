@@ -95,7 +95,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Success",
-          "content": "HTTP/1.1 201 Created\n{\n    \"error\": false,\n    \"message\": {\n        \"admin\": false,\n        \"id\": 13,\n        \"email\": \"dogui78930@gmail.com\",\n        \"name\": \"dorian\",\n        \"surname\": \"alayrangues\",\n        \"birthDate\": \"1997-05-22T00:00:00.000Z\",\n        \"updated_at\": \"2019-04-11T15:12:41.172Z\",\n        \"created_at\": \"2019-04-11T15:12:41.172Z\"\n    }\n}",
+          "content": "HTTP/1.1 201 Created\n{\n    \"error\": false\n}",
           "type": "json"
         }
       ]

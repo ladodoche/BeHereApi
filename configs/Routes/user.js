@@ -63,21 +63,15 @@ function isAuthenticatedUserAccount(req, res, next) {
 * @apiSuccessExample {json} Success
 *    HTTP/1.1 201 Created
 *    {
-*        "error": false,
-*        "message": {
-*            "admin": false,
-*            "id": 13,
-*            "email": "dogui78930@gmail.com",
-*            "name": "dorian",
-*            "surname": "alayrangues",
-*            "birthDate": "1997-05-22T00:00:00.000Z",
-*            "updated_at": "2019-04-11T15:12:41.172Z",
-*            "created_at": "2019-04-11T15:12:41.172Z"
-*        }
+*        "error": false
 *    }
 * @apiErrorExample {json} Register's error
 *    HTTP/1.1 400 Bad Request
 *    HTTP/1.1 500 Internal Server Error
+*    {
+*        "error": true
+*        "error": Erreur lors de la création de l'utilisateur
+*    }
 */
 ////////////////////////////////////////////////////
 userRouter.post('/create', function(req, res) {
@@ -101,7 +95,8 @@ userRouter.post('/create', function(req, res) {
 
   UserController.add(email, sha256(password), name, surname, birthDate)
   .then((user) => {
-    return res.status(201).json({"error": false});
+    delete user['dataValues']["password"];
+    return res.status(201).json({"error": false, "user": user});
   })
   .catch((err) => {
     if(err.errors)
