@@ -109,7 +109,7 @@ userRouter.post('/create', function(req, res) {
 /**
 @api {get} users/?email=email get all users
 * @apiGroup Users
-* @apiParam {String} email Optionnel
+* @apiParam {String} email
 * @apiSuccessExample {json} Success
 *    HTTP/1.1 200 Success
 *    {
@@ -505,7 +505,7 @@ userRouter.put('/upload/:user_id', isAuthenticatedUserAccount, function(req, res
 *    HTTP/1.1 200 Success
 *    {
 *        "error": false,
-*         "result": buffer
+*        "buffer": buffer
 *    }
 * @apiErrorExample {json} Error
 *    HTTP/1.1 400 Bad Request
@@ -539,6 +539,5 @@ userRouter.get('/download/:user_id', function(req, res){
     return res.status(500).json({"error": true, "message": "Image non trouvé sur notre serveur"});
   });
 })
-
 
 module.exports = userRouter;

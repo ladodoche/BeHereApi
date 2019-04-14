@@ -56,6 +56,301 @@
   },
   {
     "type": "delete",
+    "url": "bars/delete/:bar_id",
+    "title": "delete bar",
+    "group": "Bars",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-access-token",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 200 Success\n{\n    \"error\": false\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": \"Le bar n'existe pas\"\n}\n\nHTTP/1.1 401 Unauthorized\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": \"Erreur lors de la récupération du bar\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/bar.js",
+    "groupTitle": "Bars",
+    "name": "DeleteBarsDeleteBar_id"
+  },
+  {
+    "type": "get",
+    "url": "bars/:bar_id",
+    "title": "get bar",
+    "group": "Bars",
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "{\n   \"error\": false,\n   \"message\": {\n       \"id\": 1,\n       \"name\": \"Le dernier bar avant la fin du monde\",\n       \"gpsLatitude\": 48,\n       \"gpsLongitude\": 2.3461672,\n       \"description\": \"Coucou\",\n       \"webSiteLink\": \"https://www.facebook.com/?ref=tn_tnmn\",\n       \"created_at\": \"2019-04-14T13:42:47.000Z\",\n       \"updated_at\": \"2019-04-14T13:42:47.000Z\",\n       \"deleted_at\": null,\n       \"user_id\": 1\n   }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": \"Le bar n'existe pas\"\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": \"Erreur lors de la récupération du bar\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/bar.js",
+    "groupTitle": "Bars",
+    "name": "GetBarsBar_id"
+  },
+  {
+    "type": "get",
+    "url": "bars/?name=name&user_id=user_id",
+    "title": "get all bars",
+    "group": "Bars",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "name",
+            "description": ""
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "user_id",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "   HTTP/1.1 201 Created\n{\n   \"error\": false,\n   \"message\": [\n       {\n           \"id\": 1,\n           \"name\": \"Le dernier bar avant la fin du monde\",\n           \"gpsLatitude\": 48,\n           \"gpsLongitude\": 2.3461672,\n           \"description\": \"Coucou\",\n           \"webSiteLink\": \"https://www.facebook.com/?ref=tn_tnmn\",\n           \"created_at\": \"2019-04-14T13:42:47.000Z\",\n           \"updated_at\": \"2019-04-14T13:42:47.000Z\",\n           \"deleted_at\": null,\n           \"user_id\": 1\n       }\n   ]\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": \"Aucun bar trouvé\"\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": \"Erreur lors de la récupération des bars\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/bar.js",
+    "groupTitle": "Bars",
+    "name": "GetBarsNameNameUser_idUser_id"
+  },
+  {
+    "type": "post",
+    "url": "bars/create",
+    "title": "add a new bar",
+    "group": "Bars",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-access-token",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "name",
+            "description": "<p>obligatoire, unique et entre 2 à 200 caractères</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Double",
+            "optional": false,
+            "field": "gpsLatitude",
+            "description": "<p>obligatoire</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Double",
+            "optional": false,
+            "field": "gpsLongitude",
+            "description": "<p>obligatoire</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Text",
+            "optional": false,
+            "field": "description",
+            "description": ""
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "webSiteLink",
+            "description": "<p>format url</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Input",
+          "content": "{\n  \"name\": \"Le dernier bar avant la fin du monde\",\n  \"gpsLatitude\": \"48.\",\n  \"gpsLongitude\": \"2.3461672\",\n  \"description\": \"Coucou\",\n  \"webSiteLink\": \"https://www.facebook.com/?ref=tn_tnmn\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 201 Created\n{\n    \"error\": false\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 401 Unauthorized\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": \"Erreur lors de la création de votre bar\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/bar.js",
+    "groupTitle": "Bars",
+    "name": "PostBarsCreate"
+  },
+  {
+    "type": "put",
+    "url": "bars/update/:bar_id",
+    "title": "update bar",
+    "group": "Bars",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-access-token",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "name",
+            "description": "<p>unique et entre 2 à 200 caractères</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Double",
+            "optional": false,
+            "field": "gpsLatitude",
+            "description": ""
+          },
+          {
+            "group": "Parameter",
+            "type": "Double",
+            "optional": false,
+            "field": "gpsLongitude",
+            "description": ""
+          },
+          {
+            "group": "Parameter",
+            "type": "Text",
+            "optional": false,
+            "field": "description",
+            "description": ""
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "webSiteLink",
+            "description": "<p>format url</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Input",
+          "content": "{\n  \"name\": \"Le dernier bar avant la fin du monde\",\n  \"gpsLatitude\": \"48.\",\n  \"gpsLongitude\": \"2.3461672\",\n  \"description\": \"Coucou\",\n  \"webSiteLink\": \"https://www.facebook.com/?ref=tn_tnmn\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 201 Created\n{\n    \"error\": false\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 401 Unauthorized\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": message\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/bar.js",
+    "groupTitle": "Bars",
+    "name": "PutBarsUpdateBar_id"
+  },
+  {
+    "type": "delete",
     "url": "users/delete/:user_id",
     "title": "delete user",
     "group": "Users",
@@ -104,7 +399,7 @@
       "examples": [
         {
           "title": "Success",
-          "content": "HTTP/1.1 200 Success\n{\n    \"error\": false,\n     \"result\": buffer\n}",
+          "content": "HTTP/1.1 200 Success\n{\n    \"error\": false,\n    \"buffer\": buffer\n}",
           "type": "json"
         }
       ]
@@ -136,7 +431,7 @@
             "type": "String",
             "optional": false,
             "field": "email",
-            "description": "<p>Optionnel</p>"
+            "description": ""
           }
         ]
       }
