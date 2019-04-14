@@ -39,14 +39,15 @@ function isAuthenticatedUserAccount(req, res, next) {
 
 
 /**
-@api {post} /users/create add a new user
+@api {post} users/create add a new user
 * @apiGroup Users
 * @apiParam {String} email User email
 * @apiParam {String} name User name
 * @apiParam {String} surname User surname
 * @apiParam {String} password User password
 * @apiParam {String} checkPassword User checkPassword
-* @apiParam {String} birthDate User birthDate
+* @apiParam {Date} birthDate User birthDate
+* @apiParam {File} pathPicture User pathPicture
 * @apiParamExample {json} Input
 *  {
 *    "email": "dogui78930@gmail.com",
@@ -56,21 +57,32 @@ function isAuthenticatedUserAccount(req, res, next) {
 *    "checkPassword": "ESGI-tir1997",
 *    "birthDate": "1997-05-22"
 *  }
-* @apiSuccess {Number} id User id
-* @apiSuccess {String} login User login
-* @apiSuccess {Date} updated_at Update date
-* @apiSuccess {Date} created_at create date
 * @apiSuccessExample {json} Success
 *    HTTP/1.1 201 Created
 *    {
-*        "error": false
+*        "error": false,
+*        "user": {
+*            "admin": false,
+*            "id": 1,
+*            "email": "d.alayrangues@gmail.com",
+*            "name": "dorian",
+*            "surname": "alayrangues",
+*            "birthDate": "1997-05-22T00:00:00.000Z",
+*            "updated_at": "2019-04-14T09:20:46.668Z",
+*            "created_at": "2019-04-14T09:20:46.668Z"
+*        }
 *    }
-* @apiErrorExample {json} Register's error
+* @apiErrorExample {json} Error
 *    HTTP/1.1 400 Bad Request
+*    {
+*        "error": true
+*        "message": message
+*    }
+*
 *    HTTP/1.1 500 Internal Server Error
 *    {
 *        "error": true
-*        "error": Erreur lors de la création de l'utilisateur
+*        "message": "Erreur lors de la création de l'utilisateur"
 *    }
 */
 ////////////////////////////////////////////////////
