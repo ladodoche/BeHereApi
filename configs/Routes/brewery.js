@@ -4,12 +4,12 @@ const controllers = require('../../controllers');
 const asyncLib = require('async');
 const jwt = require('jsonwebtoken');
 const auth = require('../auth.js');
-const BarController = controllers.BarController;
+const BreweryController = controllers.BreweryController;
 
-const barRouter = express.Router();
-barRouter.use(bodyParser.json({limit: '10mb'}));
+const breweryRouter = express.Router();
+breweryRouter.use(bodyParser.json({limit: '10mb'}));
 
-function isAuthenticatedBarCreateAccount(req, res, next) {
+function isAuthenticatedBreweryCreateAccount(req, res, next) {
   const token = req.headers['x-access-token'];
 
   if (!token)
@@ -22,24 +22,24 @@ function isAuthenticatedBarCreateAccount(req, res, next) {
   });
 }
 
-function isAuthenticatedBarAccount(req, res, next) {
+function isAuthenticatedBreweryAccount(req, res, next) {
   const token = req.headers['x-access-token'];
 
   if (!token)
     return res.status(401).json({ "error": true, "message": "Problème lors de l'authentification: il manque la clé d'authentification"});
 
-  BarController.getOne(req.params.bar_id)
-  .then((bar) => {
+  BreweryController.getOne(req.params.brewery_id)
+  .then((brewery) => {
     jwt.verify(token, auth.secret, function(err, decoded) {
       if (err)
         return res.status(500).json({ "error": true, "message": "Problème lors de l'authentification"});
-      if ((decoded.id != bar.user_id) && decoded.admin != 1)
+      if ((decoded.id != brewery.user_id) && decoded.admin != 1)
         return res.status(401).json({ "error": true, "message": "Vous ne disposez pas des droits nécessairent"});
       next();
     });
   })
   .catch((err) => {
-    return res.status(500).json({"error": true, "message": "Erreur lors de la récupération du bar"});
+    return res.status(500).json({"error": true, "message": "Erreur lors de la récupération du brasserie"});
   });
 }
 
@@ -54,8 +54,8 @@ function getUserIdHeader(req, next){
 }
 
 /**
-@api {post} bars/create add a new bar
-* @apiGroup Bars
+@api {post} brewerys/create add a new brewery
+* @apiGroup Brewerys
 * @apiHeader {String} x-access-token
 * @apiParam {String} name obligatoire, unique et entre 2 à 200 caractères
 * @apiParam {Double} gpsLatitude obligatoire
@@ -64,7 +64,7 @@ function getUserIdHeader(req, next){
 * @apiParam {String} webSiteLink format url
 * @apiParamExample {json} Input
 *  {
-*    "name": "Le dernier bar avant la fin du monde",
+*    "name": "La dernière brasserie avant la fin du monde",
 *    "gpsLatitude": "48.",
 *    "gpsLongitude": "2.3461672",
 *    "description": "Coucou",
@@ -91,10 +91,10 @@ function getUserIdHeader(req, next){
 *    HTTP/1.1 500 Internal Server Error
 *    {
 *        "error": true,
-*        "message": "Erreur lors de la création de votre bar"
+*        "message": "Erreur lors de la création de votre brasserie"
 *    }
 */
-barRouter.post('/create', isAuthenticatedBarCreateAccount, function(req, res) {
+breweryRouter.post('/create', isAuthenticatedBreweryCreateAccount, function(req, res) {
 
   const name = req.body.name;
   const gpsLatitude = req.body.gpsLatitude;
@@ -102,31 +102,31 @@ barRouter.post('/create', isAuthenticatedBarCreateAccount, function(req, res) {
   const description = req.body.description;
   const webSiteLink = req.body.webSiteLink;
 
-  BarController.add(name, gpsLatitude, gpsLongitude, description, webSiteLink, getUserIdHeader(req))
-  .then((bar) => {
+  BreweryController.add(name, gpsLatitude, gpsLongitude, description, webSiteLink, getUserIdHeader(req))
+  .then((brewery) => {
     return res.status(201).json({"error": false});
   })
   .catch((err) => {
     if(err.errors)
       return res.status(400).json({"error": true, "message": err.errors[0].message});
-    return res.status(500).json({"error": true, "message": "Erreur lors de la création de votre bar"});
+    return res.status(500).json({"error": true, "message": "Erreur lors de la création de votre brasserie"});
   });
 });
 
 /**
-@api {get} bars/?name=name&user_id=user_id get all bars
-* @apiGroup Bars
+@api {get} brewerys/?name=name&user_id=user_id get all brewerys
+* @apiGroup Brewerys
 
 * @apiParam {String} name
 * @apiParam {String} user_id
 * @apiSuccessExample {json} Success
-*    HTTP/1.1 200 Success
+*  HTTP/1.1 200 Success
 * {
 *    "error": false,
 *    "message": [
 *        {
 *            "id": 1,
-*            "name": "Le dernier bar avant la fin du monde",
+*            "name": "La dernière brasserie avant la fin du monde",
 *            "gpsLatitude": 48,
 *            "gpsLongitude": 2.3461672,
 *            "description": "Coucou",
@@ -142,41 +142,41 @@ barRouter.post('/create', isAuthenticatedBarCreateAccount, function(req, res) {
 *    HTTP/1.1 400 Bad Request
 *    {
 *        "error": true,
-*        "message": "Aucun bar trouvé"
+*        "message": "Aucune brasserie trouvé"
 *    }
 *
 *    HTTP/1.1 500 Internal Server Error
 *    {
 *        "error": true,
-*        "message": "Erreur lors de la récupération des bars"
+*        "message": "Erreur lors de la récupération des brasseries"
 *    }
 */
-barRouter.get('/', function(req, res) {
+breweryRouter.get('/', function(req, res) {
 
   const name = req.body.name;
   const user_id = req.body.user_id;
 
-  BarController.getAll(name, user_id)
-  .then((bars) => {
-    if(bars.length == 0)
-      return res.status(400).json({"error": true, "message": "Aucun bar trouvé"});
-    return res.status(200).json({"error": false, "bar": bars});
+  BreweryController.getAll(name, user_id)
+  .then((brewerys) => {
+    if(brewerys.length == 0)
+      return res.status(400).json({"error": true, "message": "Aucune brasserie trouvé"});
+    return res.status(200).json({"error": false, "brewery": brewerys});
   })
   .catch((err) => {
-    return res.status(500).json({"error": true, "message": "Erreur lors de la récupération des bars"});
+    return res.status(500).json({"error": true, "message": "Erreur lors de la récupération des brasseries"});
   });
 });
 
 /**
-@api {get} bars/:bar_id get bar
-* @apiGroup Bars
+@api {get} brewerys/:brewery_id get brewery
+* @apiGroup Brewerys
 * @apiSuccessExample {json} Success
-*    HTTP/1.1 200 Success
+* HTTP/1.1 200 Success
 * {
 *    "error": false,
 *    "message": {
 *        "id": 1,
-*        "name": "Le dernier bar avant la fin du monde",
+*        "name": "La dernière brasserie avant la fin du monde",
 *        "gpsLatitude": 48,
 *        "gpsLongitude": 2.3461672,
 *        "description": "Coucou",
@@ -191,32 +191,32 @@ barRouter.get('/', function(req, res) {
 *    HTTP/1.1 400 Bad Request
 *    {
 *        "error": true,
-*        "message": "Le bar n'existe pas"
+*        "message": "La brasserie n'existe pas"
 *    }
 *
 *    HTTP/1.1 500 Internal Server Error
 *    {
 *        "error": true,
-*        "message": "Erreur lors de la récupération du bar"
+*        "message": "Erreur lors de la récupération de la brasserie"
 *    }
 */
-barRouter.get('/:bar_id', function(req, res) {
-  const bar_id = req.params.bar_id;
+breweryRouter.get('/:brewery_id', function(req, res) {
+  const brewery_id = req.params.brewery_id;
 
-  BarController.getOne(bar_id)
-  .then((bar) => {
-    if(bar === undefined || bar === null)
-      return res.status(400).json({"error": true, "message": "Le bar n'existe pas"});
-    return res.status(200).json({"error": false, "bar": bar});
+  BreweryController.getOne(brewery_id)
+  .then((brewery) => {
+    if(brewery === undefined || brewery === null)
+      return res.status(400).json({"error": true, "message": "La brasserie n'existe pas"});
+    return res.status(200).json({"error": false, "brewery": brewery});
   })
   .catch((err) => {
-    return res.status(500).json({"error": true, "message": "Erreur lors de la récupération du bar"});
+    return res.status(500).json({"error": true, "message": "Erreur lors de la récupération du brewery"});
   });
 });
 
 /**
-@api {put} bars/update/:bar_id update bar
-* @apiGroup Bars
+@api {put} brewerys/update/:brewery_id update brewery
+* @apiGroup Brewerys
 * @apiHeader {String} x-access-token
 * @apiParam {String} name unique et entre 2 à 200 caractères
 * @apiParam {Double} gpsLatitude
@@ -225,14 +225,14 @@ barRouter.get('/:bar_id', function(req, res) {
 * @apiParam {String} webSiteLink format url
 * @apiParamExample {json} Input
 *  {
-*    "name": "Le dernier bar avant la fin du monde",
+*    "name": "La dernière brasserie avant la fin du monde",
 *    "gpsLatitude": "48.",
 *    "gpsLongitude": "2.3461672",
 *    "description": "Coucou",
 *    "webSiteLink": "https://www.facebook.com/?ref=tn_tnmn"
 *  }
 * @apiSuccessExample {json} Success
-*    HTTP/1.1 200 Success
+* HTTP/1.1 200 Success
 *    {
 *        "error": false
 *    }
@@ -255,8 +255,8 @@ barRouter.get('/:bar_id', function(req, res) {
 *        "message": message
 *    }
 */
-barRouter.put('/update/:bar_id', isAuthenticatedBarAccount, function(req, res){
-  const bar_id = req.params.bar_id;
+breweryRouter.put('/update/:brewery_id', isAuthenticatedBreweryAccount, function(req, res){
+  const brewery_id = req.params.brewery_id;
   const name = req.body.name;
   const gpsLatitude = req.body.gpsLatitude;
   const gpsLongitude = req.body.gpsLongitude;
@@ -265,33 +265,33 @@ barRouter.put('/update/:bar_id', isAuthenticatedBarAccount, function(req, res){
 
   asyncLib.waterfall([
     function(done){
-      BarController.getOne(bar_id)
-      .then((bar) => {
-        if(bar === null || bar === undefined)
-          return res.status(400).json({"error": true, "message": "Le bar n'existe pas"});
-        done(null, bar);
+      BreweryController.getOne(brewery_id)
+      .then((brewery) => {
+        if(brewery === null || brewery === undefined)
+          return res.status(400).json({"error": true, "message": "La brasserie n'existe pas"});
+        done(null, brewery);
       })
       .catch((err) => {
-          return res.status(500).json({"error": true, "message": "Erreur lors de la récupération du bar"});
+          return res.status(500).json({"error": true, "message": "Erreur lors de la récupération de la brasserie"});
       });
     },
-    function(bar, done){
-      BarController.update(bar, name, gpsLatitude, gpsLongitude, description, webSiteLink)
-      .then((bar) => {
+    function(brewery, done){
+      BreweryController.update(brewery, name, gpsLatitude, gpsLongitude, description, webSiteLink)
+      .then((brewery) => {
         return res.status(200).json({"error": false});
       })
       .catch((err) => {
         if(err.errors)
           return res.status(400).json({"error": true, "message": err.errors[0].message});
-        return res.status(500).json({"error": true, "message": "Erreur lors de la mise à jour du bar"});
+        return res.status(500).json({"error": true, "message": "Erreur lors de la mise à jour de la brasserie"});
       });
     }
   ]);
 });
 
 /**
-@api {delete} bars/delete/:bar_id delete bar
-* @apiGroup Bars
+@api {delete} brewerys/delete/:brewery_id delete brewery
+* @apiGroup Brewerys
 * @apiHeader {String} x-access-token
 * @apiSuccessExample {json} Success
 *    HTTP/1.1 200 Success
@@ -302,7 +302,7 @@ barRouter.put('/update/:bar_id', isAuthenticatedBarAccount, function(req, res){
 *    HTTP/1.1 400 Bad Request
 *    {
 *        "error": true,
-*        "message": "Le bar n'existe pas"
+*        "message": "La brasserie n'existe pas"
 *    }
 *
 *    HTTP/1.1 401 Unauthorized
@@ -314,31 +314,31 @@ barRouter.put('/update/:bar_id', isAuthenticatedBarAccount, function(req, res){
 *    HTTP/1.1 500 Internal Server Error
 *    {
 *        "error": true,
-*        "message": "Erreur lors de la récupération du bar"
+*        "message": "Erreur lors de la récupération de la brasserie"
 *    }
 */
-barRouter.delete('/delete/:bar_id', isAuthenticatedBarAccount, function(req, res){
-  const bar_id = req.params.bar_id;
+breweryRouter.delete('/delete/:brewery_id', isAuthenticatedBreweryAccount, function(req, res){
+  const brewery_id = req.params.brewery_id;
 
   asyncLib.waterfall([
     function(done){
-      BarController.getOne(bar_id)
-      .then((bar) => {
-        if(bar === null || bar === undefined){
-          return res.status(400).json({"error": true, "message": "Le bar n'existe pas"});
+      BreweryController.getOne(brewery_id)
+      .then((brewery) => {
+        if(brewery === null || brewery === undefined){
+          return res.status(400).json({"error": true, "message": "La brasserie n'existe pas"});
         }
-        done(null, bar);
+        done(null, brewery);
       })
       .catch((err) => {
-          return res.status(500).json({"error": true, "message": "Erreur lors de la récupération du bar"});
+          return res.status(500).json({"error": true, "message": "Erreur lors de la récupération de la brasserie"});
       });
     },
-    function(bar, done){
-      BarController.delete(bar);
+    function(brewery, done){
+      BreweryController.delete(brewery);
       return res.status(200).json({"error": false}).end();
     }
   ]);
 });
 
 
-module.exports = barRouter;
+module.exports = breweryRouter;

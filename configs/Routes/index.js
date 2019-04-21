@@ -6,6 +6,9 @@ RouteManager.attach = function(app) {
   app.use('/authentificate', require('./authentificate'));
   app.use('/users', require('./user'));
   app.use('/bars', require('./bar'));
+  app.use('/brewerys', require('./brewery'));
+  app.use('/typeOfBeers', require('./typeOfBeer'));
+  app.use('/beers', require('./beer'));
 };
 
 module.exports = RouteManager;

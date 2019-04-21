@@ -3,7 +3,10 @@ const bodyParser = require('body-parser');
 const jwt = require('jsonwebtoken');
 const controllers = require('../../controllers');
 const auth = require('../auth.js');
+const asyncLib = require('async');
 const UserController = controllers.UserController;
+const BarController = controllers.BarController;
+const BreweryController = controllers.BreweryController;
 
 const authentificateRouter = express.Router();
 authentificateRouter.use(bodyParser.json());
@@ -52,20 +55,54 @@ const sha256 = require('js-sha256').sha256;
 *        "message": "Erreur lors de la récupération de l'utilisateur"
 *    }
 */
-authentificateRouter.post('/', function(req, res) {
-  var result = new Object();
+authentificateRouter.post('/', function(req, res, next) {
   const email = req.body.email;
   const password = req.body.password;
 
-  UserController.login(email, sha256(password))
-  .then((user) => {
-    if (user === undefined || user === null)
-      return res.status(401).json({ "error": true, "message": "L'email n'existe pas ou l'email et le mot de passe ne correspondent pas"});
-    else{
+  asyncLib.waterfall([
+    function(done){
+      UserController.login(email, sha256(password))
+      .then((user) => {
+        if (user === undefined || user === null)
+          return res.status(401).json({ "error": true, "message": "L'email n'existe pas ou l'email et le mot de passe ne correspondent pas"});
+        else
+          done(null, user)
+      })
+      .catch((err) => {
+        return res.status(500).json({"error": true, "message": "Erreur lors de la récupération de l'utilisateur"});
+      });
+    },
+    function(user, done){
+      BarController.getAll(undefined, user.id)
+      .then((bar) => {
+        if(bar.length == 0)
+          done(null, user, false);
+        else
+          done(null, user, true);
+      })
+      .catch((err) => {
+        return res.status(500).json({"error": true, "message": "Erreur lors de la récupération des brasseries"});
+      });
+    },
+    function(user, bar_status, done){
+      BreweryController.getAll(undefined, user.id)
+      .then((brewery) => {
+        if(brewery.length == 0)
+          done(null, user, bar_status, false);
+        else
+          done(null, user, bar_status, true);
+      })
+      .catch((err) => {
+        return res.status(500).json({"error": true, "message": "Erreur lors de la récupération des brasseries"});
+      });
+    },
+    function(user, bar_status, brewery_status, done){
       const token = jwt.sign(
         {
           id: user.id,
-          admin: user.admin
+          admin: user.admin,
+          barman: bar_status,
+          breweryman: brewery_status,
         },
         auth.secret, {
           expiresIn: 36000 // 10 hours
@@ -73,13 +110,9 @@ authentificateRouter.post('/', function(req, res) {
       );
       delete user["dataValues"]["password"];
       user["dataValues"]["token"] = token;
-      return res.status(200).json({"error": false, "user": user});
+      return res.status(200).json({"error": false, "user": user}).end();
     }
-  })
-  .catch((err) => {
-    console.log(err);
-    return res.status(500).json({"error": true, "message": "Erreur lors de la récupération de l'utilisateur"});
-  });
+  ]);
 });
 
 module.exports = authentificateRouter;

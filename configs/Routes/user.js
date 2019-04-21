@@ -125,7 +125,35 @@ userRouter.post('/create', function(req, res) {
 *                  "admin": false,
 *                  "created_at": "2019-04-14T09:20:46.000Z",
 *                  "updated_at": "2019-04-14T09:20:46.000Z",
-*                  "deleted_at": null
+*                  "deleted_at": null,
+*                  "typeOfBeer": [
+*                        {
+*                            "id": 2,
+*                            "name": "Brune",
+*                            "created_at": "2019-04-20T09:42:06.000Z",
+*                            "updated_at": "2019-04-20T09:42:06.000Z",
+*                            "deleted_at": null,
+*                            "user_typeOfBeer": {
+*                                "created_at": "2019-04-20T09:44:59.000Z",
+*                                "updated_at": "2019-04-20T09:44:59.000Z",
+*                                "user_id": 1,
+*                                "type_of_beer_id": 2
+*                            }
+*                        },
+*                        {
+*                            "id": 3,
+*                            "name": "Blanche",
+*                            "created_at": "2019-04-20T09:42:12.000Z",
+*                            "updated_at": "2019-04-20T09:42:12.000Z",
+*                            "deleted_at": null,
+*                            "user_typeOfBeer": {
+*                                "created_at": "2019-04-20T09:45:01.000Z",
+*                                "updated_at": "2019-04-20T09:45:01.000Z",
+*                                "user_id": 1,
+*                                "type_of_beer_id": 3
+*                            }
+*                        }
+*                    ]
 *              }
 *        ]
 *    }
@@ -174,7 +202,35 @@ userRouter.get('/', function(req, res) {
 *            "surname": "alayrangues",
 *            "birthDate": "1997-05-22T00:00:00.000Z",
 *            "updated_at": "2019-04-14T09:20:46.668Z",
-*            "created_at": "2019-04-14T09:20:46.668Z"
+*            "created_at": "2019-04-14T09:20:46.668Z",
+*            "typeOfBeer": [
+*                        {
+*                            "id": 2,
+*                            "name": "Brune",
+*                            "created_at": "2019-04-20T09:42:06.000Z",
+*                            "updated_at": "2019-04-20T09:42:06.000Z",
+*                            "deleted_at": null,
+*                            "user_typeOfBeer": {
+*                                "created_at": "2019-04-20T09:44:59.000Z",
+*                                "updated_at": "2019-04-20T09:44:59.000Z",
+*                                "user_id": 1,
+*                                "type_of_beer_id": 2
+*                            }
+*                        },
+*                        {
+*                            "id": 3,
+*                            "name": "Blanche",
+*                            "created_at": "2019-04-20T09:42:12.000Z",
+*                            "updated_at": "2019-04-20T09:42:12.000Z",
+*                            "deleted_at": null,
+*                            "user_typeOfBeer": {
+*                                "created_at": "2019-04-20T09:45:01.000Z",
+*                                "updated_at": "2019-04-20T09:45:01.000Z",
+*                                "user_id": 1,
+*                                "type_of_beer_id": 3
+*                            }
+*                        }
+*                    ]
 *        }
 *    }
 * @apiErrorExample {json} Error

@@ -6,7 +6,7 @@ const UserController = function(){};
 
 
 ////////////////////////////////////////////////////
-UserController.add = function(email, password, name, surname, birthDate, pathPicture){
+UserController.add = function(email, password, name, surname, birthDate){
   return User.create({
     email: email,
     password: password,
@@ -15,6 +15,13 @@ UserController.add = function(email, password, name, surname, birthDate, pathPic
     birthDate: birthDate
   });
 };
+
+
+//////////////////////////////////////////////////////
+UserController.addTypeOfBeer = function(user, typeOfBeer){
+  return user.addTypeOfBeer(typeOfBeer);
+};
+
 
 ////////////////////////////////////////////////////
 UserController.login = function(email, password){
@@ -31,7 +38,12 @@ UserController.login = function(email, password){
 
 ////////////////////////////////////////////////////
 UserController.getAll = function(email = undefined){
-  const options = {};
+  const options = {
+    include: [{
+      model: ModelIndex.TypeOfBeer,
+      as: 'typeOfBeer'
+    }]
+  };
   const where = {};
 
   if(email !== undefined){where.email = email};
@@ -43,7 +55,12 @@ UserController.getAll = function(email = undefined){
 
 //////////////////////////////////////////////////////
 UserController.getOne = function(user_id){
-  const options = {};
+  const options = {
+    include: [{
+      model: ModelIndex.TypeOfBeer,
+      as: 'typeOfBeer'
+    }]
+  };
   const where = {};
 
   if(user_id !== undefined){where.id = user_id};
@@ -74,6 +91,12 @@ UserController.update = function(user, email, name, surname, birthDate, pathPict
 //////////////////////////////////////////////////////
 UserController.delete = function(user){
   user.destroy();
+};
+
+
+//////////////////////////////////////////////////////
+UserController.deleteUser = function(user, typeOfBeer){
+  user.removeTypeOfBeer(typeOfBeer);
 };
 
 

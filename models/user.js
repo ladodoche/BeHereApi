@@ -97,5 +97,15 @@ module.exports = function(sequelize, Datatypes){
     underscored: true,
     freezeTableName: true
   });
+  User.associate = _associate;
   return User;
 };
+
+
+function _associate(models) {
+  models.User.belongsToMany(models.TypeOfBeer, {
+    as: 'typeOfBeer',
+    through: 'user_typeOfBeer',
+    foreignKey: 'user_id'
+  });
+}

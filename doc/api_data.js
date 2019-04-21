@@ -104,7 +104,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Success",
-          "content": "{\n   \"error\": false,\n   \"message\": {\n       \"id\": 1,\n       \"name\": \"Le dernier bar avant la fin du monde\",\n       \"gpsLatitude\": 48,\n       \"gpsLongitude\": 2.3461672,\n       \"description\": \"Coucou\",\n       \"webSiteLink\": \"https://www.facebook.com/?ref=tn_tnmn\",\n       \"created_at\": \"2019-04-14T13:42:47.000Z\",\n       \"updated_at\": \"2019-04-14T13:42:47.000Z\",\n       \"deleted_at\": null,\n       \"user_id\": 1\n   }\n}",
+          "content": "   HTTP/1.1 200 Success\n{\n   \"error\": false,\n   \"message\": {\n       \"id\": 1,\n       \"name\": \"Le dernier bar avant la fin du monde\",\n       \"gpsLatitude\": 48,\n       \"gpsLongitude\": 2.3461672,\n       \"description\": \"Coucou\",\n       \"webSiteLink\": \"https://www.facebook.com/?ref=tn_tnmn\",\n       \"created_at\": \"2019-04-14T13:42:47.000Z\",\n       \"updated_at\": \"2019-04-14T13:42:47.000Z\",\n       \"deleted_at\": null,\n       \"user_id\": 1\n   }\n}",
           "type": "json"
         }
       ]
@@ -152,7 +152,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Success",
-          "content": "   HTTP/1.1 201 Created\n{\n   \"error\": false,\n   \"message\": [\n       {\n           \"id\": 1,\n           \"name\": \"Le dernier bar avant la fin du monde\",\n           \"gpsLatitude\": 48,\n           \"gpsLongitude\": 2.3461672,\n           \"description\": \"Coucou\",\n           \"webSiteLink\": \"https://www.facebook.com/?ref=tn_tnmn\",\n           \"created_at\": \"2019-04-14T13:42:47.000Z\",\n           \"updated_at\": \"2019-04-14T13:42:47.000Z\",\n           \"deleted_at\": null,\n           \"user_id\": 1\n       }\n   ]\n}",
+          "content": "   HTTP/1.1 200 Success\n{\n   \"error\": false,\n   \"message\": [\n       {\n           \"id\": 1,\n           \"name\": \"Le dernier bar avant la fin du monde\",\n           \"gpsLatitude\": 48,\n           \"gpsLongitude\": 2.3461672,\n           \"description\": \"Coucou\",\n           \"webSiteLink\": \"https://www.facebook.com/?ref=tn_tnmn\",\n           \"created_at\": \"2019-04-14T13:42:47.000Z\",\n           \"updated_at\": \"2019-04-14T13:42:47.000Z\",\n           \"deleted_at\": null,\n           \"user_id\": 1\n       }\n   ]\n}",
           "type": "json"
         }
       ]
@@ -330,7 +330,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Success",
-          "content": "HTTP/1.1 201 Created\n{\n    \"error\": false\n}",
+          "content": "HTTP/1.1 200 Success\n{\n    \"error\": false\n}",
           "type": "json"
         }
       ]
@@ -348,6 +348,910 @@ define({ "api": [
     "filename": "configs/Routes/bar.js",
     "groupTitle": "Bars",
     "name": "PutBarsUpdateBar_id"
+  },
+  {
+    "type": "delete",
+    "url": "beers/delete/:beer_id",
+    "title": "delete beer",
+    "group": "Beers",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-access-token",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 200 Success\n{\n    \"error\": false\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": \"La bière n'existe pas\"\n}\n\nHTTP/1.1 401 Unauthorized\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": \"Erreur lors de la récupération de la bière\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/beer.js",
+    "groupTitle": "Beers",
+    "name": "DeleteBeersDeleteBeer_id"
+  },
+  {
+    "type": "get",
+    "url": "beers/:beer_id",
+    "title": "get beer",
+    "group": "Beers",
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 200 Success\n{\n    \"error\": false,\n    \"beer\": {\n        \"id\": 1,\n        \"name\": \"Leffe\",\n        \"color\": \"blanche\",\n        \"origin\": \"Belgique\",\n        \"description\": \"La Leffe ou Abbaye de Leffe est une bière belge d'Abbaye reconnue, créée en 1240 par les chanoines de l'ordre de Prémontré de l'abbaye Notre-Dame de Leffe et produite par la brasserie Artois à Louvain.\",\n        \"pathPicture\": null,\n        \"updated_at\": \"2019-04-14T09:20:46.668Z\",\n        \"created_at\": \"2019-04-14T09:20:46.668Z\",\n        \"typeOfBeer\": [\n                    {\n                        \"id\": 2,\n                        \"name\": \"Brune\",\n                        \"created_at\": \"2019-04-20T09:42:06.000Z\",\n                        \"updated_at\": \"2019-04-20T09:42:06.000Z\",\n                        \"deleted_at\": null,\n                        \"beer_typeOfBeer\": {\n                            \"created_at\": \"2019-04-20T09:44:59.000Z\",\n                            \"updated_at\": \"2019-04-20T09:44:59.000Z\",\n                            \"beer_id\": 1,\n                            \"type_of_beer_id\": 2\n                        }\n                    },\n                    {\n                        \"id\": 3,\n                        \"name\": \"Blanche\",\n                        \"created_at\": \"2019-04-20T09:42:12.000Z\",\n                        \"updated_at\": \"2019-04-20T09:42:12.000Z\",\n                        \"deleted_at\": null,\n                        \"beer_typeOfBeer\": {\n                            \"created_at\": \"2019-04-20T09:45:01.000Z\",\n                            \"updated_at\": \"2019-04-20T09:45:01.000Z\",\n                            \"beer_id\": 1,\n                            \"type_of_beer_id\": 3\n                        }\n                    }\n                ]\n    }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": \"La bière n'existe pas\"\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": \"Erreur lors de la récupération de la bières\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/beer.js",
+    "groupTitle": "Beers",
+    "name": "GetBeersBeer_id"
+  },
+  {
+    "type": "get",
+    "url": "beers/?email=email&color=color&origin=origin",
+    "title": "get all beers",
+    "group": "Beers",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "name",
+            "description": ""
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "color",
+            "description": ""
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "origin",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 200 Success\n{\n    \"error\": false,\n    \"message\": [\n          {\n              \"id\": 1,\n              \"name\": \"Leffe\",\n              \"color\": \"blonde\",\n              \"origin\": \"Belgique\",\n              \"description\": \"La Leffe ou Abbaye de Leffe est une bière belge d'Abbaye reconnue, créée en 1240 par les chanoines de l'ordre de Prémontré de l'abbaye Notre-Dame de Leffe et produite par la brasserie Artois à Louvain.\",\n              \"pathPicture\": null,\n              \"created_at\": \"2019-04-14T09:20:46.000Z\",\n              \"updated_at\": \"2019-04-14T09:20:46.000Z\",\n              \"deleted_at\": null,\n              \"typeOfBeer\": [\n                    {\n                        \"id\": 2,\n                        \"name\": \"Brune\",\n                        \"created_at\": \"2019-04-20T09:42:06.000Z\",\n                        \"updated_at\": \"2019-04-20T09:42:06.000Z\",\n                        \"deleted_at\": null,\n                        \"beer_typeOfBeer\": {\n                            \"created_at\": \"2019-04-20T09:44:59.000Z\",\n                            \"updated_at\": \"2019-04-20T09:44:59.000Z\",\n                            \"beer_id\": 1,\n                            \"type_of_beer_id\": 2\n                        }\n                    },\n                    {\n                        \"id\": 3,\n                        \"name\": \"Blanche\",\n                        \"created_at\": \"2019-04-20T09:42:12.000Z\",\n                        \"updated_at\": \"2019-04-20T09:42:12.000Z\",\n                        \"deleted_at\": null,\n                        \"beer_typeOfBeer\": {\n                            \"created_at\": \"2019-04-20T09:45:01.000Z\",\n                            \"updated_at\": \"2019-04-20T09:45:01.000Z\",\n                            \"beer_id\": 1,\n                            \"type_of_beer_id\": 3\n                        }\n                    }\n                ]\n          }\n    ]\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": \"Aucune bière trouvé\"\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": \"Erreur lors de la récupération des bières\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/beer.js",
+    "groupTitle": "Beers",
+    "name": "GetBeersEmailEmailColorColorOriginOrigin"
+  },
+  {
+    "type": "post",
+    "url": "beers/create",
+    "title": "add a new beer",
+    "group": "Beers",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "name",
+            "description": "<p>obligatoire et entre 2 à 200 caractères</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "color",
+            "description": "<p>obligatoire et entre 2 à 100 caractères</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "origin",
+            "description": "<p>obligatoire, entre 2 et 150 caractères, avec au moins une lettre majuscule, majuscule et un chiffre</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Text",
+            "optional": false,
+            "field": "description",
+            "description": ""
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Input",
+          "content": "{\n  \"name\": \"Leffe\",\n  \"color\": \"blonde\",\n  \"origin\": \"Belgique\",\n  \"description\": \"La Leffe ou Abbaye de Leffe est une bière belge d'Abbaye reconnue, créée en 1240 par les chanoines de l'ordre de Prémontré de l'abbaye Notre-Dame de Leffe et produite par la brasserie Artois à Louvain.\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 201 Created\n{\n    \"error\": false,\n    \"beer\": {\n        \"name\": \"Leffe\",\n        \"color\": \"blonde\",\n        \"origin\": \"Belgique\",\n        \"description\": \"La Leffe ou Abbaye de Leffe est une bière belge d'Abbaye reconnue, créée en 1240 par les chanoines de l'ordre de Prémontré de l'abbaye Notre-Dame de Leffe et produite par la brasserie Artois à Louvain.\",\n        \"birthDate\": \"1997-05-22T00:00:00.000Z\",\n        \"updated_at\": \"2019-04-14T09:20:46.668Z\",\n        \"created_at\": \"2019-04-14T09:20:46.668Z\"\n    }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": \"Erreur lors de la création de la bière\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/beer.js",
+    "groupTitle": "Beers",
+    "name": "PostBeersCreate"
+  },
+  {
+    "type": "put",
+    "url": "beers/update/:beer_id",
+    "title": "update beer",
+    "group": "Beers",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-access-token",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "name",
+            "description": "<p>obligatoire et entre 2 à 200 caractères</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "color",
+            "description": "<p>obligatoire et entre 2 à 100 caractères</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "origin",
+            "description": "<p>obligatoire, entre 2 et 150 caractères, avec au moins une lettre majuscule, majuscule et un chiffre</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Text",
+            "optional": false,
+            "field": "description",
+            "description": ""
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Input",
+          "content": "{\n  \"color\": \"Brune\",\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 201 Created\n{\n    \"error\": false,\n    \"beer\": {\n        \"id\": 1,\n        \"name\": \"Leffe\",\n        \"color\": \"blanche\",\n        \"origin\": \"Belgique\",\n        \"description\": \"La Leffe ou Abbaye de Leffe est une bière belge d'Abbaye reconnue, créée en 1240 par les chanoines de l'ordre de Prémontré de l'abbaye Notre-Dame de Leffe et produite par la brasserie Artois à Louvain.\",\n        \"pathPicture\": null,\n        \"updated_at\": \"2019-04-14T09:21:46.668Z\",\n        \"created_at\": \"2019-04-14T09:20:46.668Z\"\n        \"deleted_at\": null\n    }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 401 Unauthorized\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": message\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/beer.js",
+    "groupTitle": "Beers",
+    "name": "PutBeersUpdateBeer_id"
+  },
+  {
+    "type": "delete",
+    "url": "brewerys/delete/:brewery_id",
+    "title": "delete brewery",
+    "group": "Brewerys",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-access-token",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 200 Success\n{\n    \"error\": false\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": \"La brasserie n'existe pas\"\n}\n\nHTTP/1.1 401 Unauthorized\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": \"Erreur lors de la récupération de la brasserie\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/brewery.js",
+    "groupTitle": "Brewerys",
+    "name": "DeleteBrewerysDeleteBrewery_id"
+  },
+  {
+    "type": "get",
+    "url": "brewerys/:brewery_id",
+    "title": "get brewery",
+    "group": "Brewerys",
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 200 Success\n{\n   \"error\": false,\n   \"message\": {\n       \"id\": 1,\n       \"name\": \"La dernière brasserie avant la fin du monde\",\n       \"gpsLatitude\": 48,\n       \"gpsLongitude\": 2.3461672,\n       \"description\": \"Coucou\",\n       \"webSiteLink\": \"https://www.facebook.com/?ref=tn_tnmn\",\n       \"created_at\": \"2019-04-14T13:42:47.000Z\",\n       \"updated_at\": \"2019-04-14T13:42:47.000Z\",\n       \"deleted_at\": null,\n       \"user_id\": 1\n   }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": \"La brasserie n'existe pas\"\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": \"Erreur lors de la récupération de la brasserie\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/brewery.js",
+    "groupTitle": "Brewerys",
+    "name": "GetBrewerysBrewery_id"
+  },
+  {
+    "type": "get",
+    "url": "brewerys/?name=name&user_id=user_id",
+    "title": "get all brewerys",
+    "group": "Brewerys",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "name",
+            "description": ""
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "user_id",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": " HTTP/1.1 200 Success\n{\n   \"error\": false,\n   \"message\": [\n       {\n           \"id\": 1,\n           \"name\": \"La dernière brasserie avant la fin du monde\",\n           \"gpsLatitude\": 48,\n           \"gpsLongitude\": 2.3461672,\n           \"description\": \"Coucou\",\n           \"webSiteLink\": \"https://www.facebook.com/?ref=tn_tnmn\",\n           \"created_at\": \"2019-04-14T13:42:47.000Z\",\n           \"updated_at\": \"2019-04-14T13:42:47.000Z\",\n           \"deleted_at\": null,\n           \"user_id\": 1\n       }\n   ]\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": \"Aucune brasserie trouvé\"\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": \"Erreur lors de la récupération des brasseries\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/brewery.js",
+    "groupTitle": "Brewerys",
+    "name": "GetBrewerysNameNameUser_idUser_id"
+  },
+  {
+    "type": "post",
+    "url": "brewerys/create",
+    "title": "add a new brewery",
+    "group": "Brewerys",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-access-token",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "name",
+            "description": "<p>obligatoire, unique et entre 2 à 200 caractères</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Double",
+            "optional": false,
+            "field": "gpsLatitude",
+            "description": "<p>obligatoire</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Double",
+            "optional": false,
+            "field": "gpsLongitude",
+            "description": "<p>obligatoire</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Text",
+            "optional": false,
+            "field": "description",
+            "description": ""
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "webSiteLink",
+            "description": "<p>format url</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Input",
+          "content": "{\n  \"name\": \"La dernière brasserie avant la fin du monde\",\n  \"gpsLatitude\": \"48.\",\n  \"gpsLongitude\": \"2.3461672\",\n  \"description\": \"Coucou\",\n  \"webSiteLink\": \"https://www.facebook.com/?ref=tn_tnmn\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 201 Created\n{\n    \"error\": false\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 401 Unauthorized\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": \"Erreur lors de la création de votre brasserie\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/brewery.js",
+    "groupTitle": "Brewerys",
+    "name": "PostBrewerysCreate"
+  },
+  {
+    "type": "put",
+    "url": "brewerys/update/:brewery_id",
+    "title": "update brewery",
+    "group": "Brewerys",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-access-token",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "name",
+            "description": "<p>unique et entre 2 à 200 caractères</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Double",
+            "optional": false,
+            "field": "gpsLatitude",
+            "description": ""
+          },
+          {
+            "group": "Parameter",
+            "type": "Double",
+            "optional": false,
+            "field": "gpsLongitude",
+            "description": ""
+          },
+          {
+            "group": "Parameter",
+            "type": "Text",
+            "optional": false,
+            "field": "description",
+            "description": ""
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "webSiteLink",
+            "description": "<p>format url</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Input",
+          "content": "{\n  \"name\": \"La dernière brasserie avant la fin du monde\",\n  \"gpsLatitude\": \"48.\",\n  \"gpsLongitude\": \"2.3461672\",\n  \"description\": \"Coucou\",\n  \"webSiteLink\": \"https://www.facebook.com/?ref=tn_tnmn\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 200 Success\n   {\n       \"error\": false\n   }",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 401 Unauthorized\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": message\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/brewery.js",
+    "groupTitle": "Brewerys",
+    "name": "PutBrewerysUpdateBrewery_id"
+  },
+  {
+    "type": "delete",
+    "url": "typeOfBeers/delete/:typeOfBeer_id",
+    "title": "delete type of beer",
+    "group": "TypeOfBeers",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-access-token",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 200 Success\n{\n    \"error\": false\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": \"Le type de bière n'existe pas\"\n}\n\nHTTP/1.1 401 Unauthorized\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": \"Erreur lors de la récupération du type de bières\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/typeOfBeer.js",
+    "groupTitle": "TypeOfBeers",
+    "name": "DeleteTypeofbeersDeleteTypeofbeer_id"
+  },
+  {
+    "type": "get",
+    "url": "typeOfBeers/?name=name",
+    "title": "get all type of beer",
+    "group": "TypeOfBeers",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "name",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "HTTP/1.1 200 Success",
+          "content": " HTTP/1.1 200 Success\n{\n   \"error\": false,\n   \"message\": [\n       {\n           \"id\": 1,\n           \"name\": \"Blonde\",\n           \"created_at\": \"2019-04-14T13:42:47.000Z\",\n           \"updated_at\": \"2019-04-14T13:42:47.000Z\",\n           \"deleted_at\": null\n       }\n   ]\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": \"Aucun type de bière trouvé\"\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": \"Erreur lors de la récupération des types de bières\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/typeOfBeer.js",
+    "groupTitle": "TypeOfBeers",
+    "name": "GetTypeofbeersNameName"
+  },
+  {
+    "type": "get",
+    "url": "typeOfBeers/:typeOfBeer_id",
+    "title": "get type of beer",
+    "group": "TypeOfBeers",
+    "success": {
+      "examples": [
+        {
+          "title": "HTTP/1.1 200 Success",
+          "content": " HTTP/1.1 200 Success\n{\n   \"error\": false,\n   \"message\": {\n       \"id\": 1,\n       \"name\": \"Blonde\",\n       \"created_at\": \"2019-04-14T13:42:47.000Z\",\n       \"updated_at\": \"2019-04-14T13:42:47.000Z\",\n       \"deleted_at\": null\n   }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": \"Le type de bière n'existe pas\"\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": \"Erreur lors de la récupération du type de bière\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/typeOfBeer.js",
+    "groupTitle": "TypeOfBeers",
+    "name": "GetTypeofbeersTypeofbeer_id"
+  },
+  {
+    "type": "post",
+    "url": "typeOfBeers/create",
+    "title": "add a new type of beer",
+    "group": "TypeOfBeers",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-access-token",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "name",
+            "description": "<p>obligatoire, unique et entre 2 à 200 caractères</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Input",
+          "content": "{\n  \"name\": \"Blonde\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 201 Created\n{\n    \"error\": false\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 401 Unauthorized\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": \"Erreur lors de la création du type de bière\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/typeOfBeer.js",
+    "groupTitle": "TypeOfBeers",
+    "name": "PostTypeofbeersCreate"
+  },
+  {
+    "type": "put",
+    "url": "typeOfBeers/:typeOfBeer_id/addUser",
+    "title": "add link between type of beer and user",
+    "group": "TypeOfBeers",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-access-token",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "user_id",
+            "description": ""
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Input",
+          "content": "{\n  \"user_id\": 1\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 200 Success\n{\n    \"error\": false\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 401 Unauthorized\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": message\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/typeOfBeer.js",
+    "groupTitle": "TypeOfBeers",
+    "name": "PutTypeofbeersTypeofbeer_idAdduser"
+  },
+  {
+    "type": "put",
+    "url": "typeOfBeers/:typeOfBeer_id/deleteUser/:user_id",
+    "title": "delete link between type of beer and user",
+    "group": "TypeOfBeers",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-access-token",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 200 Success\n{\n    \"error\": false\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 401 Unauthorized\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": message\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/typeOfBeer.js",
+    "groupTitle": "TypeOfBeers",
+    "name": "PutTypeofbeersTypeofbeer_idDeleteuserUser_id"
+  },
+  {
+    "type": "put",
+    "url": "typeOfBeers/update/:typeOfBeer_id",
+    "title": "update type of beer",
+    "group": "TypeOfBeers",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-access-token",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "name",
+            "description": "<p>unique et entre 2 à 200 caractères</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Input",
+          "content": "{\n  \"name\": \"Brune\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 200 Success\n{\n    \"error\": false\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 401 Unauthorized\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": message\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/typeOfBeer.js",
+    "groupTitle": "TypeOfBeers",
+    "name": "PutTypeofbeersUpdateTypeofbeer_id"
   },
   {
     "type": "delete",
@@ -440,7 +1344,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Success",
-          "content": "HTTP/1.1 200 Success\n{\n    \"error\": false,\n    \"message\": [\n          {\n              \"id\": 1,\n              \"email\": \"d.alayrangues@gmail.com\",\n              \"name\": \"dorian\",\n              \"surname\": \"alayrangues\",\n              \"birthDate\": \"1997-05-22T00:00:00.000Z\",\n              \"pathPicture\": null,\n              \"admin\": false,\n              \"created_at\": \"2019-04-14T09:20:46.000Z\",\n              \"updated_at\": \"2019-04-14T09:20:46.000Z\",\n              \"deleted_at\": null\n          }\n    ]\n}",
+          "content": "HTTP/1.1 200 Success\n{\n    \"error\": false,\n    \"message\": [\n          {\n              \"id\": 1,\n              \"email\": \"d.alayrangues@gmail.com\",\n              \"name\": \"dorian\",\n              \"surname\": \"alayrangues\",\n              \"birthDate\": \"1997-05-22T00:00:00.000Z\",\n              \"pathPicture\": null,\n              \"admin\": false,\n              \"created_at\": \"2019-04-14T09:20:46.000Z\",\n              \"updated_at\": \"2019-04-14T09:20:46.000Z\",\n              \"deleted_at\": null,\n              \"typeOfBeer\": [\n                    {\n                        \"id\": 2,\n                        \"name\": \"Brune\",\n                        \"created_at\": \"2019-04-20T09:42:06.000Z\",\n                        \"updated_at\": \"2019-04-20T09:42:06.000Z\",\n                        \"deleted_at\": null,\n                        \"user_typeOfBeer\": {\n                            \"created_at\": \"2019-04-20T09:44:59.000Z\",\n                            \"updated_at\": \"2019-04-20T09:44:59.000Z\",\n                            \"user_id\": 1,\n                            \"type_of_beer_id\": 2\n                        }\n                    },\n                    {\n                        \"id\": 3,\n                        \"name\": \"Blanche\",\n                        \"created_at\": \"2019-04-20T09:42:12.000Z\",\n                        \"updated_at\": \"2019-04-20T09:42:12.000Z\",\n                        \"deleted_at\": null,\n                        \"user_typeOfBeer\": {\n                            \"created_at\": \"2019-04-20T09:45:01.000Z\",\n                            \"updated_at\": \"2019-04-20T09:45:01.000Z\",\n                            \"user_id\": 1,\n                            \"type_of_beer_id\": 3\n                        }\n                    }\n                ]\n          }\n    ]\n}",
           "type": "json"
         }
       ]
@@ -468,7 +1372,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Success",
-          "content": "HTTP/1.1 200 Success\n{\n    \"error\": false,\n    \"user\": {\n        \"admin\": false,\n        \"id\": 1,\n        \"email\": \"dogui78930@gmail.com\",\n        \"name\": \"dorian\",\n        \"surname\": \"alayrangues\",\n        \"birthDate\": \"1997-05-22T00:00:00.000Z\",\n        \"updated_at\": \"2019-04-14T09:20:46.668Z\",\n        \"created_at\": \"2019-04-14T09:20:46.668Z\"\n    }\n}",
+          "content": "HTTP/1.1 200 Success\n{\n    \"error\": false,\n    \"user\": {\n        \"admin\": false,\n        \"id\": 1,\n        \"email\": \"dogui78930@gmail.com\",\n        \"name\": \"dorian\",\n        \"surname\": \"alayrangues\",\n        \"birthDate\": \"1997-05-22T00:00:00.000Z\",\n        \"updated_at\": \"2019-04-14T09:20:46.668Z\",\n        \"created_at\": \"2019-04-14T09:20:46.668Z\",\n        \"typeOfBeer\": [\n                    {\n                        \"id\": 2,\n                        \"name\": \"Brune\",\n                        \"created_at\": \"2019-04-20T09:42:06.000Z\",\n                        \"updated_at\": \"2019-04-20T09:42:06.000Z\",\n                        \"deleted_at\": null,\n                        \"user_typeOfBeer\": {\n                            \"created_at\": \"2019-04-20T09:44:59.000Z\",\n                            \"updated_at\": \"2019-04-20T09:44:59.000Z\",\n                            \"user_id\": 1,\n                            \"type_of_beer_id\": 2\n                        }\n                    },\n                    {\n                        \"id\": 3,\n                        \"name\": \"Blanche\",\n                        \"created_at\": \"2019-04-20T09:42:12.000Z\",\n                        \"updated_at\": \"2019-04-20T09:42:12.000Z\",\n                        \"deleted_at\": null,\n                        \"user_typeOfBeer\": {\n                            \"created_at\": \"2019-04-20T09:45:01.000Z\",\n                            \"updated_at\": \"2019-04-20T09:45:01.000Z\",\n                            \"user_id\": 1,\n                            \"type_of_beer_id\": 3\n                        }\n                    }\n                ]\n    }\n}",
           "type": "json"
         }
       ]
