@@ -153,8 +153,8 @@ breweryRouter.post('/create', isAuthenticatedBreweryCreateAccount, function(req,
 */
 breweryRouter.get('/', function(req, res) {
 
-  const name = req.body.name;
-  const user_id = req.body.user_id;
+  const name = req.query.name;
+  const user_id = req.query.user_id;
 
   BreweryController.getAll(name, user_id)
   .then((brewerys) => {

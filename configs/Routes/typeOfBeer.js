@@ -106,7 +106,7 @@ typeOfBeerRouter.post('/create', isAdmin, function(req, res) {
 *    }
 */
 typeOfBeerRouter.get('/', function(req, res) {
-  const name = req.body.name;
+  const name = req.query.name;
 
   TypeOfBeerController.getAll(name)
   .then((typeOfBeers) => {

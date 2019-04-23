@@ -19,12 +19,15 @@ BreweryController.add = function(name, gpsLatitude, gpsLongitude, description, w
 
 ////////////////////////////////////////////////////
 BreweryController.getAll = function(name, user_id){
+  console.log(user_id);
   const options = {};
   const where = {};
 
   if(name !== undefined){where.name = name};
   if(user_id !== undefined){where.user_id = user_id};
   options.where = where;
+
+  console.log(options);
 
   return Brewery.findAll(options);
 };
