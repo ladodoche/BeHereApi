@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const asyncLib = require('async');
 const auth = require('../auth.js');
 const BeerController = controllers.BeerController;
+const TypeOfBeerController = controllers.TypeOfBeerController;
 const fileUpload = require('express-fileupload');
 const fs = require('fs');
 const path = require('path')
@@ -318,23 +319,30 @@ beerRouter.put('/update/:beer_id', isAuthenticatedBeerAccount, function(req, res
     function(done){
       BeerController.getOne(beer_id)
       .then((beer) => {
+        console.log("1");
         if(beer === null || beer === undefined)
           return res.status(400).json({"error": true, "message": "La bière n'existe pas"});
         done(null, beer);
       })
       .catch((err) => {
+        console.log("2");
           return res.status(500).json({"error": true, "message": "Erreur lors de la récupération de la bière"});
       });
     },
     function(beer, done){
-      BeerController.update(name, color, origin, description, pathPicture)
+      console.log("3");
+      BeerController.update(beer, name, color, origin, description)
       .then((beer) => {
+        console.log("4");
         return res.status(201).json({"error": false, "beer": beer});
       })
       .catch((err) => {
+        console.log("5");
         if(err.errors)
           return res.status(400).json({"error": true, "message": err.errors[0].message});
         return res.status(500).json({"error": true, "message": "Erreur lors de la mise à jour de la bière"});
+
+          console.log("6");
       });
     }
   ]);
@@ -386,6 +394,150 @@ beerRouter.delete('/delete/:beer_id', isAuthenticatedBeerAccount, function(req, 
     },
     function(beer, done){
       BeerController.delete(beer);
+      return res.status(200).json({"error": false}).end();
+    }
+  ]);
+});
+
+//////////////////////////////////////////////////////
+/**
+@api {put} beers/:beer_id/addTypeOfBeer add link between type of beer and beer
+* @apiGroup Beers
+* @apiHeader {String} x-access-token
+* @apiParam {String} typeOfBeer_id
+* @apiParamExample {json} Input
+*  {
+*    "typeOfBeer_id": 1
+*  }
+* @apiSuccessExample {json} Success
+*    HTTP/1.1 200 Success
+*    {
+*        "error": false
+*    }
+* @apiErrorExample {json} Error
+*    HTTP/1.1 400 Bad Request
+*    {
+*        "error": true,
+*        "message": message
+*    }
+*
+*    HTTP/1.1 401 Unauthorized
+*    {
+*        "error": true,
+*        "message": message
+*    }
+*
+*    HTTP/1.1 500 Internal Server Error
+*    {
+*        "error": true,
+*        "message": message
+*    }
+*/
+beerRouter.put('/:beer_id/addTypeOfBeer', isAuthenticatedBeerAccount, function(req, res) {
+  const beer_id = req.params.beer_id;
+  const typeOfBeer_id = req.body.typeOfBeer_id;
+
+  if(typeOfBeer_id === undefined || beer_id === undefined)
+    return res.status(400).json({"error": true, "message": "Certains paramètres sont manquant"}).end();
+
+  asyncLib.waterfall([
+    function(done){
+      TypeOfBeerController.getOne(typeOfBeer_id)
+      .then((typeOfBeer) => {
+        if(typeOfBeer === null || typeOfBeer === undefined)
+          return res.status(400).json({"error": true, "message": "Le type de bière n'existe pas"}).end();
+        done(null, typeOfBeer);
+      })
+      .catch((err) => {
+          return res.status(500).json({"error": true, "message": "Erreur lors de la récupération du type de bière"}).end();
+      });
+    },
+    function(typeOfBeer, done){
+      console.log(beer_id);
+      BeerController.getOne(beer_id)
+      .then((beer) => {
+        console.log(beer);
+        if(beer === null || beer === undefined)
+          return res.status(400).json({"error": true, "message": "La bière n'existe pas"}).end();
+        done(null, typeOfBeer, beer);
+      })
+      .catch((err) => {
+          return res.status(500).json({"error": true, "message": "Erreur lors de la récupération de la bière"}).end();
+      });
+    },
+    function(typeOfBeer, beer, done){
+      BeerController.addTypeOfBeer(beer, typeOfBeer)
+      .then((TypeOfBeer_Beer) => {
+        return res.status(200).json({"error": false}).end();
+      })
+      .catch((err) => {
+        return res.status(500).json({"error": true, "message": "Erreur lors de l'ajout du lien entre la bière et le type de bière"}).end();
+      });
+    }
+  ]);
+});
+
+/**
+@api {put} beers/:beer_id/deleteTypeOfBeer/:typeOfBeer_id delete link between type of beer and beer
+* @apiGroup Beers
+* @apiHeader {String} x-access-token
+* @apiSuccessExample {json} Success
+*    HTTP/1.1 200 Success
+*    {
+*        "error": false
+*    }
+* @apiErrorExample {json} Error
+*    HTTP/1.1 400 Bad Request
+*    {
+*        "error": true,
+*        "message": message
+*    }
+*
+*    HTTP/1.1 401 Unauthorized
+*    {
+*        "error": true,
+*        "message": message
+*    }
+*
+*    HTTP/1.1 500 Internal Server Error
+*    {
+*        "error": true,
+*        "message": message
+*    }
+*/
+  beerRouter.delete('/:beer_id/deleteTypeOfBeer/:typeOfBeer_id', isAuthenticatedBeerAccount, function(req, res) {
+  const typeOfBeer_id = req.params.typeOfBeer_id;
+  const beer_id = req.params.beer_id;
+
+  if(typeOfBeer_id === undefined || beer_id === undefined)
+    return res.status(400).json({"error": true, "message": "Certains paramètres sont manquant"}).end();
+
+  asyncLib.waterfall([
+    function(done){
+      TypeOfBeerController.getOne(typeOfBeer_id)
+      .then((typeOfBeer) => {
+        if(typeOfBeer === null || typeOfBeer === undefined){
+          return res.status(400).json({"error": true, "message": "Le type de bière n'existe pas"}).end();
+        }
+        done(null, typeOfBeer);
+      })
+      .catch((err) => {
+          return res.status(500).json({"error": true, "message": "Erreur lors de la récupération du type de bière"}).end();
+      });
+    },
+    function(typeOfBeer, done){
+      BeerController.getOne(beer_id)
+      .then((beer) => {
+        if(beer === null || beer === undefined)
+          return res.status(400).json({"error": true, "message": "La bière n'existe pas"}).end();
+        done(null, typeOfBeer, beer);
+      })
+      .catch((err) => {
+        return res.status(500).json({"error": true, "message": "Erreur lors de la récupération de la bière"}).end();
+      });
+    },
+    function(typeOfBeer, beer, done){
+      BeerController.deleteBeer(beer, typeOfBeer);
       return res.status(200).json({"error": false}).end();
     }
   ]);

@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const asyncLib = require('async');
 const auth = require('../auth.js');
 const UserController = controllers.UserController;
+const TypeOfBeerController = controllers.TypeOfBeerController;
 const fileUpload = require('express-fileupload');
 const fs = require('fs');
 const path = require('path')
@@ -26,6 +27,21 @@ function isAuthenticatedUserAccount(req, res, next) {
       return res.status(500).json({ "error": true, "message": "Problème lors de l'authentification"});
     if ((decoded.id != req.params.user_id) && decoded.admin != 1)
       return res.status(401).json({ "error": true, "message": "Vous ne disposez pas des droits nécessairent"});
+    next();
+  });
+}
+
+function isAuthenticatedUser(req, res, next) {
+  const token = req.headers['x-access-token'];
+
+  if (!token)
+    return res.status(401).json({ "error": true, "message": "Problème lors de l'authentification: il manque la clé d'authentification"}).end();
+
+  jwt.verify(token, auth.secret, function(err, decoded) {
+    if (err)
+      return res.status(500).json({ "error": true, "message": "Problème lors de l'authentification"}).end();
+    if ((decoded.id != req.params.user_id || decoded.id != req.body.user_id) && decoded.admin != 1)
+      return res.status(401).json({ "error": true, "message": "Vous ne disposez pas des droits nécessairent"}).end();
     next();
   });
 }
@@ -509,19 +525,39 @@ userRouter.use(fileUpload());
 *        "message": message
 *    }
 */
+userRouter.use(fileUpload());
+/**
+@api {put} users/upload/:user_id upload picture user
+* @apiGroup Users
+* @apiHeader {String} x-access-token
+* @apiParam {File} file Obligatoire, format png ou jpg
+* @apiSuccessExample {json} Success
+*    HTTP/1.1 201 Created
+*    {
+*        "error": false
+*    }
+* @apiErrorExample {json} Error
+*    HTTP/1.1 400 Bad Request
+*    {
+*        "error": true,
+*        "message": message
+*    }
+*
+*    HTTP/1.1 401 Unauthorized
+*    {
+*        "error": true,
+*        "message": message
+*    }
+*
+*    HTTP/1.1 500 Internal Server Error
+*    {
+*        "error": true,
+*        "message": message
+*    }
+*/
 userRouter.put('/upload/:user_id', isAuthenticatedUserAccount, function(req, res) {
   const user_id = req.params.user_id;
-  const fileToUpload = req.files.file
-  const ext = fileToUpload.name.substr(fileToUpload.name.lastIndexOf('.') + 1).toLowerCase();
-  const regex = new RegExp(' ','g');
-  var src_tracks = artist+"_"+title+"."+ext;
-  src_tracks = src_tracks.replace(regex, '_');
-
-  if(fileToUpload === undefined)
-    return res.status(400).json({"error": true, "message": "Aucune image à upload"}).end();
-  if(ext != "png" && ext != "jpg")
-    return res.status(400).json({"error": true, "message": "Format de l'image non géré (png et jpg)"}).end();
-
+  const fileToUpload = req.files.file;
   asyncLib.waterfall([
     function(done){
       UserController.getOne(user_id)
@@ -535,15 +571,25 @@ userRouter.put('/upload/:user_id', isAuthenticatedUserAccount, function(req, res
       });
     },
     function(user, done){
-      fileToUpload.mv("../medias/users/"+src_tracks, function(err) {
+      const ext = fileToUpload.name.substr(fileToUpload.name.lastIndexOf('.') + 1).toLowerCase();
+      const regex = new RegExp(' ','g');
+      var src_tracks = user.id+"."+ext;
+      src_tracks = src_tracks.replace(regex, '_');
+
+      if(fileToUpload === undefined)
+        return res.status(400).json({"error": true, "message": "Aucune image à upload"}).end();
+      if(ext != "png" && ext != "jpg")
+        return res.status(400).json({"error": true, "message": "Format de l'image non géré (png et jpg)"}).end();
+
+      fileToUpload.mv("medias/users/"+src_tracks, function(err) {
         if (err)
           return res.status(400).json({"error": true, "message": "Erreur lors de l'upload"});
         else
-          done(null, user);
+          done(null, user, src_tracks);
       });
     },
-    function(user, done){
-      UserController.update(user, undefined, undefined, undefined, undefined, pathPicture)
+    function(user, src_tracks, done){
+      UserController.update(user, undefined, undefined, undefined, undefined, src_tracks)
       .then((track) => {
         return res.status(201).json({"error": false});
       })
@@ -555,7 +601,7 @@ userRouter.put('/upload/:user_id', isAuthenticatedUserAccount, function(req, res
 });
 
 /**
-@api {get} users/download/:user_id download picture user
+  @api {get} users/download/:user_id download picture user
 * @apiGroup Users
 * @apiSuccessExample {json} Success
 *    HTTP/1.1 200 Success
@@ -578,22 +624,175 @@ userRouter.put('/upload/:user_id', isAuthenticatedUserAccount, function(req, res
 */
 userRouter.get('/download/:user_id', function(req, res){
   const user_id = req.params.user_id;
-  const pathUsers = path.resolve( __dirname+"/../../../medias/users/");
+  var pathUsersDefault = path.resolve( __dirname+"/../../medias/users/");
 
   UserController.getOne(user_id)
   .then((user) => {
     if(user === null || user === undefined)
-      return res.status(400).json({"error": true, "message": "L'utilisateur n'existe pas"});
-    pathUsers += user.pathPicture;
+      return res.status(401).json({"error": true, "message": "L'utilisateur n'existe pas"});
+    pathUsers = pathUsersDefault + "\\" + user.pathPicture;
+
     if (fs.existsSync(pathUsers)){
-      const buffer = new Buffer(fs.readFileSync(pathUsers), 'binary');
-      res.status(200).end({"error": false, "result": buffer});
-    }else
-      return res.status(400).json({"error": true, "message": "Image non trouvé sur notre serveur"});
-  })
+      const buffer = new Buffer(fs.readFileSync(pathUsers), 'base64');
+      res.writeHead(200, {
+       'Content-Type': 'image/jpeg',
+       'Content-Length': buffer.length
+     });
+     res.end(buffer);
+    }else{
+      const buffer = new Buffer(fs.readFileSync(pathUsersDefault + "\\" + 'defaultprofile.png'), 'base64');
+      res.writeHead(200, {
+       'Content-Type': 'image/png',
+       'Content-Length': buffer.length
+     });
+     res.end(buffer);
+
+  }})
   .catch((err) => {
     return res.status(500).json({"error": true, "message": "Image non trouvé sur notre serveur"});
   });
 })
+
+//////////////////////////////////////////////////////
+/**
+@api {put} users/:user_id/addTypeOfBeer add link between type of beer and user
+* @apiGroup Users
+* @apiHeader {String} x-access-token
+* @apiParam {String} typeOfBeer_id
+* @apiParamExample {json} Input
+*  {
+*    "typeOfBeer_id": 1
+*  }
+* @apiSuccessExample {json} Success
+*    HTTP/1.1 200 Success
+*    {
+*        "error": false
+*    }
+* @apiErrorExample {json} Error
+*    HTTP/1.1 400 Bad Request
+*    {
+*        "error": true,
+*        "message": message
+*    }
+*
+*    HTTP/1.1 401 Unauthorized
+*    {
+*        "error": true,
+*        "message": message
+*    }
+*
+*    HTTP/1.1 500 Internal Server Error
+*    {
+*        "error": true,
+*        "message": message
+*    }
+*/
+userRouter.put('/:user_id/addTypeOfBeer', isAuthenticatedUser, function(req, res) {
+  const user_id = req.params.user_id;
+  const typeOfBeer_id = req.body.typeOfBeer_id;
+
+  if(typeOfBeer_id === undefined || user_id === undefined)
+    return res.status(400).json({"error": true, "message": "Certains paramètres sont manquant"}).end();
+
+  asyncLib.waterfall([
+    function(done){
+      TypeOfBeerController.getOne(typeOfBeer_id)
+      .then((typeOfBeer) => {
+        if(typeOfBeer === null || typeOfBeer === undefined)
+          return res.status(400).json({"error": true, "message": "Le type de bière n'existe pas"}).end();
+        done(null, typeOfBeer);
+      })
+      .catch((err) => {
+          return res.status(500).json({"error": true, "message": "Erreur lors de la récupération du type de bière"}).end();
+      });
+    },
+    function(typeOfBeer, done){
+      UserController.getOne(user_id)
+      .then((user) => {
+        if(user === null || user === undefined)
+          return res.status(400).json({"error": true, "message": "L'utilisateur n'existe pas"}).end();
+        done(null, typeOfBeer, user);
+      })
+      .catch((err) => {
+          return res.status(500).json({"error": true, "message": "Erreur lors de la récupération de l'utilisateur"}).end();
+      });
+    },
+    function(typeOfBeer, user, done){
+      UserController.addTypeOfBeer(user, typeOfBeer)
+      .then((TypeOfBeer_User) => {
+        return res.status(200).json({"error": false}).end();
+      })
+      .catch((err) => {
+        return res.status(500).json({"error": true, "message": "Erreur lors de l'ajout du lien entre l'utilisateur et le type de bière"}).end();
+      });
+    }
+  ]);
+});
+
+/**
+@api {put} users/:user_id/deleteTypeOfBeer/:typeOfBeer_id delete link between type of beer and user
+* @apiGroup Users
+* @apiHeader {String} x-access-token
+* @apiSuccessExample {json} Success
+*    HTTP/1.1 200 Success
+*    {
+*        "error": false
+*    }
+* @apiErrorExample {json} Error
+*    HTTP/1.1 400 Bad Request
+*    {
+*        "error": true,
+*        "message": message
+*    }
+*
+*    HTTP/1.1 401 Unauthorized
+*    {
+*        "error": true,
+*        "message": message
+*    }
+*
+*    HTTP/1.1 500 Internal Server Error
+*    {
+*        "error": true,
+*        "message": message
+*    }
+*/
+userRouter.delete('/:user_id/deleteTypeOfBeer/:typeOfBeer_id', isAuthenticatedUser, function(req, res) {
+  const typeOfBeer_id = req.params.typeOfBeer_id;
+  const user_id = req.params.user_id;
+
+  if(typeOfBeer_id === undefined || user_id === undefined)
+    return res.status(400).json({"error": true, "message": "Certains paramètres sont manquant"}).end();
+
+  asyncLib.waterfall([
+    function(done){
+      TypeOfBeerController.getOne(typeOfBeer_id)
+      .then((typeOfBeer) => {
+        if(typeOfBeer === null || typeOfBeer === undefined){
+          return res.status(400).json({"error": true, "message": "Le type de bière n'existe pas"}).end();
+        }
+        done(null, typeOfBeer);
+      })
+      .catch((err) => {
+          return res.status(500).json({"error": true, "message": "Erreur lors de la récupération du type de bière"}).end();
+      });
+    },
+    function(typeOfBeer, done){
+      UserController.getOne(user_id)
+      .then((user) => {
+        if(user === null || user === undefined)
+          return res.status(400).json({"error": true, "message": "L'utilisateur n'existe pas"}).end();
+        done(null, typeOfBeer, user);
+      })
+      .catch((err) => {
+        return res.status(500).json({"error": true, "message": "Erreur lors de la récupération de l'utilisateur"}).end();
+      });
+    },
+    function(typeOfBeer, user, done){
+      UserController.deleteUser(user, typeOfBeer);
+      return res.status(200).json({"error": false}).end();
+    }
+  ]);
+});
 
 module.exports = userRouter;

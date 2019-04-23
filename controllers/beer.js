@@ -71,7 +71,7 @@ BeerController.update = function(beer, name, color, origin, description, pathPic
   options.where = where;
   options.timezone = '+02:00';
 
-  return Beer.updateAttributes(json);
+  return beer.updateAttributes(json);
 };
 
 //////////////////////////////////////////////////////
