@@ -4,13 +4,13 @@ const controllers = require('../../controllers');
 const asyncLib = require('async');
 const jwt = require('jsonwebtoken');
 const auth = require('../auth.js');
-const NotesBeerController = controllers.NotesBeerController;
-const BeerController = controllers.BeerController;
+const NotesBarController = controllers.NotesBarController;
+const BarController = controllers.BarController;
 
-const notesBeerRouter = express.Router();
-notesBeerRouter.use(bodyParser.json({limit: '10mb'}));
+const notesBarRouter = express.Router();
+notesBarRouter.use(bodyParser.json({limit: '10mb'}));
 
-function isAuthenticatedNotesBeerCreate(req, res, next) {
+function isAuthenticatedNotesBarCreate(req, res, next) {
   const token = req.headers['x-access-token'];
 
   if (!token)
@@ -23,18 +23,18 @@ function isAuthenticatedNotesBeerCreate(req, res, next) {
   });
 }
 
-function isAuthenticatedNotesBeer(req, res, next) {
+function isAuthenticatedNotesBar(req, res, next) {
   const token = req.headers['x-access-token'];
 
   if (!token)
     return res.status(401).json({ "error": true, "message": "Problème lors de l'authentification: il manque la clé d'authentification"});
 
-  NotesBeerController.getOne(req.params.notesBeer_id)
-  .then((notesBeer) => {
+  NotesBarController.getOne(req.params.notesBar_id)
+  .then((notesBar) => {
     jwt.verify(token, auth.secret, function(err, decoded) {
       if (err)
         return res.status(500).json({ "error": true, "message": "Problème lors de l'authentification"});
-      if ((decoded.id != notesBeer.user_id) && decoded.admin != 1)
+      if ((decoded.id != notesBar.user_id) && decoded.admin != 1)
         return res.status(401).json({ "error": true, "message": "Vous ne disposez pas des droits nécessairent"});
       next();
     });
@@ -55,15 +55,15 @@ function getUserIdHeader(req, next){
 }
 
 /**
-@api {post} notesBeers/create add a new notesBeer
-* @apiGroup NotesBeers
+@api {post} notesBars/create add a new notesBar
+* @apiGroup NotesBars
 * @apiHeader {String} x-access-token
 * @apiParam {String} note obligatoire
-* @apiParam {Int} beer_id obligatoire
+* @apiParam {Int} bar_id obligatoire
 * @apiParamExample {json} Input
 *  {
 *    "note": 15,
-*    "beer_id": "1"
+*    "bar_id": "1"
 *  }
 * @apiSuccessExample {json} Success
 *    HTTP/1.1 201 Created
@@ -89,26 +89,26 @@ function getUserIdHeader(req, next){
 *        "message": "Erreur lors de la création de votre note"
 *    }
 */
-notesBeerRouter.post('/create', isAuthenticatedNotesBeerCreate, function(req, res) {
+notesBarRouter.post('/create', isAuthenticatedNotesBarCreate, function(req, res) {
 
   const note = req.body.note;
-  const beer_id = req.body.beer_id;
+  const bar_id = req.body.bar_id;
 
   asyncLib.waterfall([
     function(done){
-      BeerController.getOne(beer_id)
-      .then((beer) => {
-        if(beer === null || beer === undefined)
-          return res.status(400).json({"error": true, "message": "La bière n'existe pas"});
-        done(null, beer);
+      BarController.getOne(bar_id)
+      .then((bar) => {
+        if(bar === null || bar === undefined)
+          return res.status(400).json({"error": true, "message": "Le bar n'existe pas"});
+        done(null, bar);
       })
       .catch((err) => {
           return res.status(500).json({"error": true, "message": "Erreur lors de la récupération de la note"});
       });
     },
-    function(beer, done){
-      NotesBeerController.add(note, getUserIdHeader(req), beer.id)
-      .then((notesBeer) => {
+    function(bar, done){
+      NotesBarController.add(note, getUserIdHeader(req), bar.id)
+      .then((notesBar) => {
         return res.status(201).json({"error": false});
       })
       .catch((err) => {
@@ -121,9 +121,9 @@ notesBeerRouter.post('/create', isAuthenticatedNotesBeerCreate, function(req, re
 });
 
 /**
-@api {get} notesBeers/?beer_id=beer_id&user_id=user_id get all notesBeers
-* @apiGroup NotesBeers
-* @apiParam {String} beer_id
+@api {get} notesBars/?bar_id=bar_id&user_id=user_id get all notesBars
+* @apiGroup NotesBars
+* @apiParam {String} bar_id
 * @apiParam {String} user_id
 * @apiSuccessExample {json} Success
 *  HTTP/1.1 200 Success
@@ -133,7 +133,7 @@ notesBeerRouter.post('/create', isAuthenticatedNotesBeerCreate, function(req, re
 *        {
 *            "id": 1,
 *            "note": 15,
-*            "beer_id": 1,
+*            "bar_id": 1,
 *            "user_id": 1,
 *            "created_at": "2019-04-14T13:42:47.000Z",
 *            "updated_at": "2019-04-14T13:42:47.000Z",
@@ -154,16 +154,16 @@ notesBeerRouter.post('/create', isAuthenticatedNotesBeerCreate, function(req, re
 *        "message": "Erreur lors de la récupération des notes"
 *    }
 */
-notesBeerRouter.get('/', function(req, res) {
+notesBarRouter.get('/', function(req, res) {
 
-  const beer_id = req.query.beer_id;
+  const bar_id = req.query.bar_id;
   const user_id = req.query.user_id;
 
-  NotesBeerController.getAll(user_id, beer_id)
-  .then((notesBeers) => {
-    if(notesBeers.length == 0)
+  NotesBarController.getAll(user_id, bar_id)
+  .then((notesBars) => {
+    if(notesBars.length == 0)
       return res.status(400).json({"error": true, "message": "Aucune note trouvé"});
-    return res.status(200).json({"error": false, "notesBeer": notesBeers});
+    return res.status(200).json({"error": false, "notesBar": notesBars});
   })
   .catch((err) => {
     return res.status(500).json({"error": true, "message": "Erreur lors de la récupération des notes"});
@@ -171,8 +171,8 @@ notesBeerRouter.get('/', function(req, res) {
 });
 
 /**
-@api {get} notesBeers/:notesBeer_id get notesBeer
-* @apiGroup NotesBeers
+@api {get} notesBars/:notesBar_id get notesBar
+* @apiGroup NotesBars
 * @apiSuccessExample {json} Success
 * HTTP/1.1 200 Success
 * {
@@ -180,7 +180,7 @@ notesBeerRouter.get('/', function(req, res) {
 *    "message": {
 *            "id": 1,
 *            "note": 15,
-*            "beer_id": 1,
+*            "bar_id": 1,
 *            "user_id": 1,
 *            "created_at": "2019-04-14T13:42:47.000Z",
 *            "updated_at": "2019-04-14T13:42:47.000Z",
@@ -200,14 +200,14 @@ notesBeerRouter.get('/', function(req, res) {
 *        "message": "Erreur lors de la récupération de la note"
 *    }
 */
-notesBeerRouter.get('/:notesBeer_id', function(req, res) {
-  const notesBeer_id = req.params.notesBeer_id;
+notesBarRouter.get('/:notesBar_id', function(req, res) {
+  const notesBar_id = req.params.notesBar_id;
 
-  NotesBeerController.getOne(notesBeer_id)
-  .then((notesBeer) => {
-    if(notesBeer === undefined || notesBeer === null)
+  NotesBarController.getOne(notesBar_id)
+  .then((notesBar) => {
+    if(notesBar === undefined || notesBar === null)
       return res.status(400).json({"error": true, "message": "La note n'existe pas"});
-    return res.status(200).json({"error": false, "notesBeer": notesBeer});
+    return res.status(200).json({"error": false, "notesBar": notesBar});
   })
   .catch((err) => {
     return res.status(500).json({"error": true, "message": "Erreur lors de la récupération de la note"});
@@ -215,8 +215,8 @@ notesBeerRouter.get('/:notesBeer_id', function(req, res) {
 });
 
 /**
-@api {put} notesBeers/update/:notesBeer_id update notesBeer
-* @apiGroup NotesBeers
+@api {put} notesBars/update/:notesBar_id update notesBar
+* @apiGroup NotesBars
 * @apiHeader {String} x-access-token
 * @apiParam {String} note obligatoire
 * @apiParamExample {json} Input
@@ -247,25 +247,25 @@ notesBeerRouter.get('/:notesBeer_id', function(req, res) {
 *        "message": message
 *    }
 */
-notesBeerRouter.put('/update/:notesBeer_id', isAuthenticatedNotesBeer, function(req, res){
-  const notesBeer_id = req.params.notesBeer_id;
+notesBarRouter.put('/update/:notesBar_id', isAuthenticatedNotesBar, function(req, res){
+  const notesBar_id = req.params.notesBar_id;
   const note = req.body.note;
 
   asyncLib.waterfall([
     function(done){
-      NotesBeerController.getOne(notesBeer_id)
-      .then((notesBeer) => {
-        if(notesBeer === null || notesBeer === undefined)
+      NotesBarController.getOne(notesBar_id)
+      .then((notesBar) => {
+        if(notesBar === null || notesBar === undefined)
           return res.status(400).json({"error": true, "message": "La note n'existe pas"});
-        done(null, notesBeer);
+        done(null, notesBar);
       })
       .catch((err) => {
           return res.status(500).json({"error": true, "message": "Erreur lors de la récupération de la note"});
       });
     },
-    function(notesBeer, done){
-      NotesBeerController.update(notesBeer, note)
-      .then((notesBeer) => {
+    function(notesBar, done){
+      NotesBarController.update(notesBar, note)
+      .then((notesBar) => {
         return res.status(200).json({"error": false});
       })
       .catch((err) => {
@@ -278,8 +278,8 @@ notesBeerRouter.put('/update/:notesBeer_id', isAuthenticatedNotesBeer, function(
 });
 
 /**
-@api {delete} notesBeers/delete/:notesBeer_id delete notesBeer
-* @apiGroup NotesBeers
+@api {delete} notesBars/delete/:notesBar_id delete notesBar
+* @apiGroup NotesBars
 * @apiHeader {String} x-access-token
 * @apiSuccessExample {json} Success
 *    HTTP/1.1 200 Success
@@ -305,28 +305,28 @@ notesBeerRouter.put('/update/:notesBeer_id', isAuthenticatedNotesBeer, function(
 *        "message": "Erreur lors de la récupération de la note"
 *    }
 */
-notesBeerRouter.delete('/delete/:notesBeer_id', isAuthenticatedNotesBeer, function(req, res){
-  const notesBeer_id = req.params.notesBeer_id;
+notesBarRouter.delete('/delete/:notesBar_id', isAuthenticatedNotesBar, function(req, res){
+  const notesBar_id = req.params.notesBar_id;
 
   asyncLib.waterfall([
     function(done){
-      NotesBeerController.getOne(notesBeer_id)
-      .then((notesBeer) => {
-        if(notesBeer === null || notesBeer === undefined){
+      NotesBarController.getOne(notesBar_id)
+      .then((notesBar) => {
+        if(notesBar === null || notesBar === undefined){
           return res.status(400).json({"error": true, "message": "La note n'existe pas"});
         }
-        done(null, notesBeer);
+        done(null, notesBar);
       })
       .catch((err) => {
           return res.status(500).json({"error": true, "message": "Erreur lors de la récupération de la note"});
       });
     },
-    function(notesBeer, done){
-      NotesBeerController.delete(notesBeer);
+    function(notesBar, done){
+      NotesBarController.delete(notesBar);
       return res.status(200).json({"error": false}).end();
     }
   ]);
 });
 
 
-module.exports = notesBeerRouter;
+module.exports = notesBarRouter;
