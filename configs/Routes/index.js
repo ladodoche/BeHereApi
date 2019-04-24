@@ -9,6 +9,7 @@ RouteManager.attach = function(app) {
   app.use('/brewerys', require('./brewery'));
   app.use('/typeOfBeers', require('./typeOfBeer'));
   app.use('/beers', require('./beer'));
+  app.use('/commentsBeers', require('./commentsBeer'));
 };
 
 module.exports = RouteManager;

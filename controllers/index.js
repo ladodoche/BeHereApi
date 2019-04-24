@@ -3,5 +3,6 @@ module.exports = {
   BarController: require('./bar'),
   BreweryController: require('./brewery'),
   TypeOfBeerController: require('./typeOfBeer'),
-  BeerController: require('./beer')
+  BeerController: require('./beer'),
+  CommentsBeerController: require('./commentsBeer')
 }
