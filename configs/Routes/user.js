@@ -40,7 +40,7 @@ function isAuthenticatedUser(req, res, next) {
   jwt.verify(token, auth.secret, function(err, decoded) {
     if (err)
       return res.status(500).json({ "error": true, "message": "Problème lors de l'authentification"}).end();
-    if ((decoded.id != req.params.user_id || decoded.id != req.body.user_id) && decoded.admin != 1)
+    if ((decoded.id != req.params.user_id && decoded.id != req.body.user_id) && decoded.admin != 1)
       return res.status(401).json({ "error": true, "message": "Vous ne disposez pas des droits nécessairent"}).end();
     next();
   });
