@@ -525,36 +525,6 @@ userRouter.use(fileUpload());
 *        "message": message
 *    }
 */
-userRouter.use(fileUpload());
-/**
-@api {put} users/upload/:user_id upload picture user
-* @apiGroup Users
-* @apiHeader {String} x-access-token
-* @apiParam {File} file Obligatoire, format png ou jpg
-* @apiSuccessExample {json} Success
-*    HTTP/1.1 201 Created
-*    {
-*        "error": false
-*    }
-* @apiErrorExample {json} Error
-*    HTTP/1.1 400 Bad Request
-*    {
-*        "error": true,
-*        "message": message
-*    }
-*
-*    HTTP/1.1 401 Unauthorized
-*    {
-*        "error": true,
-*        "message": message
-*    }
-*
-*    HTTP/1.1 500 Internal Server Error
-*    {
-*        "error": true,
-*        "message": message
-*    }
-*/
 userRouter.put('/upload/:user_id', isAuthenticatedUserAccount, function(req, res) {
   const user_id = req.params.user_id;
   const fileToUpload = req.files.file;
