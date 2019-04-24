@@ -8,6 +8,11 @@ module.exports = function(sequelize, Datatypes){
     text: {
       type: Datatypes.TEXT,
       allowNull: false,
+      validate: {
+        notEmpty: {
+          msg: 'Veuillez saisir le contenu de votre commentaire'
+        }
+      }
     }
   }, {
     paranoid: true,

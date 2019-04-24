@@ -4,5 +4,6 @@ module.exports = {
   BreweryController: require('./brewery'),
   TypeOfBeerController: require('./typeOfBeer'),
   BeerController: require('./beer'),
-  CommentsBeerController: require('./commentsBeer')
+  CommentsBeerController: require('./commentsBeer'),
+  NotesBeerController: require('./notesBeer')
 }

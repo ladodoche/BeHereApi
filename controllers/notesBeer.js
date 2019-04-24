@@ -1,13 +1,13 @@
 const ModelIndex  = require('../models');
 const Op = ModelIndex.Op;
-const CommentsBeer = ModelIndex.CommentsBeer;
-const CommentsBeerController = function(){};
+const NotesBeer = ModelIndex.NotesBeer;
+const NotesBeerController = function(){};
 
 
 ////////////////////////////////////////////////////
-CommentsBeerController.add = function(text, user_id, beer_id){
-  return CommentsBeer.create({
-    text: text,
+NotesBeerController.add = function(note, user_id, beer_id){
+  return NotesBeer.create({
+    note: note,
     user_id: user_id,
     beer_id: beer_id
   });
@@ -15,7 +15,7 @@ CommentsBeerController.add = function(text, user_id, beer_id){
 
 
 ////////////////////////////////////////////////////
-CommentsBeerController.getAll = function(user_id = undefined, beer_id = undefined){
+NotesBeerController.getAll = function(user_id = undefined, beer_id = undefined){
   const options = {};
   const where = {};
 
@@ -23,40 +23,40 @@ CommentsBeerController.getAll = function(user_id = undefined, beer_id = undefine
   if(beer_id !== undefined){where.beer_id = user_id};
   options.where = where;
 
-  return CommentsBeer.findAll(options);
+  return NotesBeer.findAll(options);
 };
 
 
 //////////////////////////////////////////////////////
-CommentsBeerController.getOne = function(commentsBeer_id){
+NotesBeerController.getOne = function(notesBeer_id){
   const options = {};
   const where = {};
 
-  if(commentsBeer_id !== undefined){where.id = commentsBeer_id};
+  if(notesBeer_id !== undefined){where.id = notesBeer_id};
   options.where = where;
 
-  return CommentsBeer.find(options);
+  return NotesBeer.find(options);
 }
 
 
 //////////////////////////////////////////////////////
-CommentsBeerController.update = function(commentsBeer, text){
+NotesBeerController.update = function(notesBeer, note){
   const options = {};
   const where = {};
   const json = {};
 
-  if(text !== undefined){json.text = text}
+  if(note !== undefined){json.note = note}
   options.where = where;
   options.timezone = '+02:00';
 
-  return commentsBeer.updateAttributes(json);
+  return notesBeer.updateAttributes(json);
 };
 
 
 //////////////////////////////////////////////////////
-CommentsBeerController.delete = function(commentsBeer){
-  commentsBeer.destroy();
+NotesBeerController.delete = function(notesBeer){
+  notesBeer.destroy();
 };
 
 
-module.exports = CommentsBeerController;
+module.exports = NotesBeerController;

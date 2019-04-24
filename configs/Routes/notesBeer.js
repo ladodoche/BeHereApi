@@ -4,13 +4,13 @@ const controllers = require('../../controllers');
 const asyncLib = require('async');
 const jwt = require('jsonwebtoken');
 const auth = require('../auth.js');
-const CommentsBeerController = controllers.CommentsBeerController;
+const NotesBeerController = controllers.NotesBeerController;
 const BeerController = controllers.BeerController;
 
-const commentsBeerRouter = express.Router();
-commentsBeerRouter.use(bodyParser.json({limit: '10mb'}));
+const notesBeerRouter = express.Router();
+notesBeerRouter.use(bodyParser.json({limit: '10mb'}));
 
-function isAuthenticatedCommentsBeerCreate(req, res, next) {
+function isAuthenticatedNotesBeerCreate(req, res, next) {
   const token = req.headers['x-access-token'];
 
   if (!token)
@@ -23,18 +23,18 @@ function isAuthenticatedCommentsBeerCreate(req, res, next) {
   });
 }
 
-function isAuthenticatedCommentsBeer(req, res, next) {
+function isAuthenticatedNotesBeer(req, res, next) {
   const token = req.headers['x-access-token'];
 
   if (!token)
     return res.status(401).json({ "error": true, "message": "Problème lors de l'authentification: il manque la clé d'authentification"});
 
-  CommentsBeerController.getOne(req.params.commentsBeer_id)
-  .then((commentsBeer) => {
+  NotesBeerController.getOne(req.params.notesBeer_id)
+  .then((notesBeer) => {
     jwt.verify(token, auth.secret, function(err, decoded) {
       if (err)
         return res.status(500).json({ "error": true, "message": "Problème lors de l'authentification"});
-      if ((decoded.id != commentsBeer.user_id) && decoded.admin != 1)
+      if ((decoded.id != notesBeer.user_id) && decoded.admin != 1)
         return res.status(401).json({ "error": true, "message": "Vous ne disposez pas des droits nécessairent"});
       next();
     });
@@ -55,14 +55,14 @@ function getUserIdHeader(req, next){
 }
 
 /**
-@api {post} commentsBeers/create add a new commentsBeer
-* @apiGroup CommentsBeers
+@api {post} notesBeers/create add a new notesBeer
+* @apiGroup NotesBeers
 * @apiHeader {String} x-access-token
-* @apiParam {String} text obligatoire
+* @apiParam {String} note obligatoire
 * @apiParam {Int} beer_id obligatoire
 * @apiParamExample {json} Input
 *  {
-*    "text": "J'adore cette bière",
+*    "note": "J'adore cette bière",
 *    "beer_id": "1"
 *  }
 * @apiSuccessExample {json} Success
@@ -86,12 +86,12 @@ function getUserIdHeader(req, next){
 *    HTTP/1.1 500 Internal Server Error
 *    {
 *        "error": true,
-*        "message": "Erreur lors de la création de votre commentaire"
+*        "message": "Erreur lors de la création de votre note"
 *    }
 */
-commentsBeerRouter.post('/create', isAuthenticatedCommentsBeerCreate, function(req, res) {
+notesBeerRouter.post('/create', isAuthenticatedNotesBeerCreate, function(req, res) {
 
-  const text = req.body.text;
+  const note = req.body.note;
   const beer_id = req.body.beer_id;
 
   asyncLib.waterfall([
@@ -103,26 +103,26 @@ commentsBeerRouter.post('/create', isAuthenticatedCommentsBeerCreate, function(r
         done(null, beer);
       })
       .catch((err) => {
-          return res.status(500).json({"error": true, "message": "Erreur lors de la récupération du commentaire"});
+          return res.status(500).json({"error": true, "message": "Erreur lors de la récupération de la note"});
       });
     },
     function(beer, done){
-      CommentsBeerController.add(text, getUserIdHeader(req), beer.id)
-      .then((commentsBeer) => {
+      NotesBeerController.add(note, getUserIdHeader(req), beer.id)
+      .then((notesBeer) => {
         return res.status(201).json({"error": false});
       })
       .catch((err) => {
         if(err.errors)
           return res.status(400).json({"error": true, "message": err.errors[0].message});
-        return res.status(500).json({"error": true, "message": "Erreur lors de la création de votre commentaire"});
+        return res.status(500).json({"error": true, "message": "Erreur lors de la création de votre note"});
       });
     }
   ]);
 });
 
 /**
-@api {get} commentsBeers/?beer_id=beer_id&user_id=user_id get all commentsBeers
-* @apiGroup CommentsBeers
+@api {get} notesBeers/?beer_id=beer_id&user_id=user_id get all notesBeers
+* @apiGroup NotesBeers
 * @apiParam {String} beer_id
 * @apiParam {String} user_id
 * @apiSuccessExample {json} Success
@@ -132,7 +132,7 @@ commentsBeerRouter.post('/create', isAuthenticatedCommentsBeerCreate, function(r
 *    "message": [
 *        {
 *            "id": 1,
-*            "text": "J'adore cette bière",
+*            "note": "J'adore cette bière",
 *            "beer_id": 1,
 *            "user_id": 1,
 *            "created_at": "2019-04-14T13:42:47.000Z",
@@ -145,41 +145,41 @@ commentsBeerRouter.post('/create', isAuthenticatedCommentsBeerCreate, function(r
 *    HTTP/1.1 400 Bad Request
 *    {
 *        "error": true,
-*        "message": "Aucun commentaire trouvé"
+*        "message": "Aucune note trouvé"
 *    }
 *
 *    HTTP/1.1 500 Internal Server Error
 *    {
 *        "error": true,
-*        "message": "Erreur lors de la récupération des commentaires"
+*        "message": "Erreur lors de la récupération des notes"
 *    }
 */
-commentsBeerRouter.get('/', function(req, res) {
+notesBeerRouter.get('/', function(req, res) {
 
   const beer_id = req.query.beer_id;
   const user_id = req.query.user_id;
 
-  CommentsBeerController.getAll(user_id, beer_id)
-  .then((commentsBeers) => {
-    if(commentsBeers.length == 0)
-      return res.status(400).json({"error": true, "message": "Aucun commentaire trouvé"});
-    return res.status(200).json({"error": false, "commentsBeer": commentsBeers});
+  NotesBeerController.getAll(user_id, beer_id)
+  .then((notesBeers) => {
+    if(notesBeers.length == 0)
+      return res.status(400).json({"error": true, "message": "Aucune note trouvé"});
+    return res.status(200).json({"error": false, "notesBeer": notesBeers});
   })
   .catch((err) => {
-    return res.status(500).json({"error": true, "message": "Erreur lors de la récupération des commentaires"});
+    return res.status(500).json({"error": true, "message": "Erreur lors de la récupération des notes"});
   });
 });
 
 /**
-@api {get} commentsBeers/:commentsBeer_id get commentsBeer
-* @apiGroup CommentsBeers
+@api {get} notesBeers/:notesBeer_id get notesBeer
+* @apiGroup NotesBeers
 * @apiSuccessExample {json} Success
 * HTTP/1.1 200 Success
 * {
 *    "error": false,
 *    "message": {
 *            "id": 1,
-*            "text": "J'adore cette bière",
+*            "note": "J'adore cette bière",
 *            "beer_id": 1,
 *            "user_id": 1,
 *            "created_at": "2019-04-14T13:42:47.000Z",
@@ -191,37 +191,37 @@ commentsBeerRouter.get('/', function(req, res) {
 *    HTTP/1.1 400 Bad Request
 *    {
 *        "error": true,
-*        "message": "Le commentaire n'existe pas"
+*        "message": "La note n'existe pas"
 *    }
 *
 *    HTTP/1.1 500 Internal Server Error
 *    {
 *        "error": true,
-*        "message": "Erreur lors de la récupération du commentaire"
+*        "message": "Erreur lors de la récupération de la note"
 *    }
 */
-commentsBeerRouter.get('/:commentsBeer_id', function(req, res) {
-  const commentsBeer_id = req.params.commentsBeer_id;
+notesBeerRouter.get('/:notesBeer_id', function(req, res) {
+  const notesBeer_id = req.params.notesBeer_id;
 
-  CommentsBeerController.getOne(commentsBeer_id)
-  .then((commentsBeer) => {
-    if(commentsBeer === undefined || commentsBeer === null)
-      return res.status(400).json({"error": true, "message": "le commentaire n'existe pas"});
-    return res.status(200).json({"error": false, "commentsBeer": commentsBeer});
+  NotesBeerController.getOne(notesBeer_id)
+  .then((notesBeer) => {
+    if(notesBeer === undefined || notesBeer === null)
+      return res.status(400).json({"error": true, "message": "La note n'existe pas"});
+    return res.status(200).json({"error": false, "notesBeer": notesBeer});
   })
   .catch((err) => {
-    return res.status(500).json({"error": true, "message": "Erreur lors de la récupération du commentaire"});
+    return res.status(500).json({"error": true, "message": "Erreur lors de la récupération de la note"});
   });
 });
 
 /**
-@api {put} commentsBeers/update/:commentsBeer_id update commentsBeer
-* @apiGroup CommentsBeers
+@api {put} notesBeers/update/:notesBeer_id update notesBeer
+* @apiGroup NotesBeers
 * @apiHeader {String} x-access-token
-* @apiParam {String} text obligatoire
+* @apiParam {String} note obligatoire
 * @apiParamExample {json} Input
 *  {
-*     "text": "J'adore cette bière",
+*     "note": "J'adore cette bière",
 *  }
 * @apiSuccessExample {json} Success
 * HTTP/1.1 200 Success
@@ -247,39 +247,39 @@ commentsBeerRouter.get('/:commentsBeer_id', function(req, res) {
 *        "message": message
 *    }
 */
-commentsBeerRouter.put('/update/:commentsBeer_id', isAuthenticatedCommentsBeer, function(req, res){
-  const commentsBeer_id = req.params.commentsBeer_id;
-  const text = req.body.text;
+notesBeerRouter.put('/update/:notesBeer_id', isAuthenticatedNotesBeer, function(req, res){
+  const notesBeer_id = req.params.notesBeer_id;
+  const note = req.body.note;
 
   asyncLib.waterfall([
     function(done){
-      CommentsBeerController.getOne(commentsBeer_id)
-      .then((commentsBeer) => {
-        if(commentsBeer === null || commentsBeer === undefined)
-          return res.status(400).json({"error": true, "message": "Le commentaire n'existe pas"});
-        done(null, commentsBeer);
+      NotesBeerController.getOne(notesBeer_id)
+      .then((notesBeer) => {
+        if(notesBeer === null || notesBeer === undefined)
+          return res.status(400).json({"error": true, "message": "La note n'existe pas"});
+        done(null, notesBeer);
       })
       .catch((err) => {
-          return res.status(500).json({"error": true, "message": "Erreur lors de la récupération du commentaire"});
+          return res.status(500).json({"error": true, "message": "Erreur lors de la récupération de la note"});
       });
     },
-    function(commentsBeer, done){
-      CommentsBeerController.update(commentsBeer, text)
-      .then((commentsBeer) => {
+    function(notesBeer, done){
+      NotesBeerController.update(notesBeer, note)
+      .then((notesBeer) => {
         return res.status(200).json({"error": false});
       })
       .catch((err) => {
         if(err.errors)
           return res.status(400).json({"error": true, "message": err.errors[0].message});
-        return res.status(500).json({"error": true, "message": "Erreur lors de la mise à jour du commentaire"});
+        return res.status(500).json({"error": true, "message": "Erreur lors de la mise à jour de la note"});
       });
     }
   ]);
 });
 
 /**
-@api {delete} commentsBeers/delete/:commentsBeer_id delete commentsBeer
-* @apiGroup CommentsBeers
+@api {delete} notesBeers/delete/:notesBeer_id delete notesBeer
+* @apiGroup NotesBeers
 * @apiHeader {String} x-access-token
 * @apiSuccessExample {json} Success
 *    HTTP/1.1 200 Success
@@ -290,7 +290,7 @@ commentsBeerRouter.put('/update/:commentsBeer_id', isAuthenticatedCommentsBeer, 
 *    HTTP/1.1 400 Bad Request
 *    {
 *        "error": true,
-*        "message": "Le commentaire n'existe pas"
+*        "message": "La note n'existe pas"
 *    }
 *
 *    HTTP/1.1 401 Unauthorized
@@ -302,31 +302,31 @@ commentsBeerRouter.put('/update/:commentsBeer_id', isAuthenticatedCommentsBeer, 
 *    HTTP/1.1 500 Internal Server Error
 *    {
 *        "error": true,
-*        "message": "Erreur lors de la récupération du commentaire"
+*        "message": "Erreur lors de la récupération de la note"
 *    }
 */
-commentsBeerRouter.delete('/delete/:commentsBeer_id', isAuthenticatedCommentsBeer, function(req, res){
-  const commentsBeer_id = req.params.commentsBeer_id;
+notesBeerRouter.delete('/delete/:notesBeer_id', isAuthenticatedNotesBeer, function(req, res){
+  const notesBeer_id = req.params.notesBeer_id;
 
   asyncLib.waterfall([
     function(done){
-      CommentsBeerController.getOne(commentsBeer_id)
-      .then((commentsBeer) => {
-        if(commentsBeer === null || commentsBeer === undefined){
-          return res.status(400).json({"error": true, "message": "Le commentaire n'existe pas"});
+      NotesBeerController.getOne(notesBeer_id)
+      .then((notesBeer) => {
+        if(notesBeer === null || notesBeer === undefined){
+          return res.status(400).json({"error": true, "message": "La note n'existe pas"});
         }
-        done(null, commentsBeer);
+        done(null, notesBeer);
       })
       .catch((err) => {
-          return res.status(500).json({"error": true, "message": "Erreur lors de la récupération du commentaire"});
+          return res.status(500).json({"error": true, "message": "Erreur lors de la récupération de la note"});
       });
     },
-    function(commentsBeer, done){
-      CommentsBeerController.delete(commentsBeer);
+    function(notesBeer, done){
+      NotesBeerController.delete(notesBeer);
       return res.status(200).json({"error": false}).end();
     }
   ]);
 });
 
 
-module.exports = commentsBeerRouter;
+module.exports = notesBeerRouter;
