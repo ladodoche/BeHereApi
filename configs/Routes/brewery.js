@@ -99,8 +99,8 @@ breweryRouter.post('/create', isAuthenticatedBreweryCreateAccount, function(req,
   const name = req.body.name;
   const gpsLatitude = req.body.gpsLatitude;
   const gpsLongitude = req.body.gpsLongitude;
-  const description = req.body.description;
-  const webSiteLink = req.body.webSiteLink;
+  var description; if(req.body.description!=""){description=req.body.description}else{description=undefined};
+  var webSiteLink; if(req.body.webSiteLink!=""){webSiteLink=req.body.webSiteLink}else{webSiteLink=undefined};
 
   BreweryController.add(name, gpsLatitude, gpsLongitude, description, webSiteLink, getUserIdHeader(req))
   .then((brewery) => {

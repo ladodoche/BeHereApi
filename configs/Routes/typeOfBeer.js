@@ -6,6 +6,9 @@ const jwt = require('jsonwebtoken');
 const auth = require('../auth.js');
 const TypeOfBeerController = controllers.TypeOfBeerController;
 const UserController = controllers.UserController;
+const fileUpload = require('express-fileupload');
+const fs = require('fs');
+const path = require('path')
 
 const typeOfBeerRouter = express.Router();
 typeOfBeerRouter.use(bodyParser.json({limit: '10mb'}));
@@ -308,7 +311,7 @@ typeOfBeerRouter.use(fileUpload());
 *        "message": message
 *    }
 */
-typeOfBeerRouter.put('/upload/:typeOfBeer_id', isAuthenticatedTypeOfBeerAccount, function(req, res) {
+typeOfBeerRouter.put('/upload/:typeOfBeer_id', isAdmin, function(req, res) {
   const typeOfBeer_id = req.params.typeOfBeer_id;
   const fileToUpload = req.files.file;
   asyncLib.waterfall([
@@ -375,7 +378,7 @@ typeOfBeerRouter.put('/upload/:typeOfBeer_id', isAuthenticatedTypeOfBeerAccount,
 *        "message": message
 *    }
 */
-typeOfBeerRouter.get('/download/:typeOfBeer_id', function(req, res){
+typeOfBeerRouter.get('/download/:typeOfBeer_id', isAdmin, function(req, res){
   const typeOfBeer_id = req.params.typeOfBeer_id;
   var pathTypeOfBeersDefault = path.resolve( __dirname+"/../../medias/typeOfBeers/");
 
