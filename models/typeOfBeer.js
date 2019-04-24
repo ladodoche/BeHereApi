@@ -29,6 +29,16 @@ module.exports = function(sequelize, Datatypes){
             })
         }
       }
+    },
+    pathPicture: {
+      type: Datatypes.STRING,
+      allowNull: true,
+      validate: {
+        len: {
+          args: [2,250],
+          msg: 'Chemin non conforme'
+        }
+      }
     }
   }, {
     paranoid: true,

@@ -14,13 +14,14 @@ TypeOfBeerController.add = function(name){
 
 
 //////////////////////////////////////////////////////
-TypeOfBeerController.update = function(typeOfBeer, typeOfBeer_id, name){
+TypeOfBeerController.update = function(typeOfBeer, typeOfBeer_id, name, pathPicture){
   const options = {};
   const where = {};
   const json = {};
 
   if(typeOfBeer_id !== undefined){where.id = typeOfBeer_id};
   if(name !== undefined){json.name = name}
+  if(pathPicture !== undefined){json.pathPicture = pathPicture}
   options.where = where;
   options.timezone = '+02:00';
 

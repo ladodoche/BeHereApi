@@ -278,4 +278,132 @@ typeOfBeerRouter.delete('/delete/:typeOfBeer_id', isAdmin, function(req, res){
   ]);
 });
 
+typeOfBeerRouter.use(fileUpload());
+/**
+@api {put} typeOfBeers/upload/:typeOfBeer_id upload picture typeOfBeer
+* @apiGroup TypeOfBeers
+* @apiHeader {String} x-access-token
+* @apiParam {File} file Obligatoire, format png ou jpg
+* @apiSuccessExample {json} Success
+*    HTTP/1.1 201 Created
+*    {
+*        "error": false
+*    }
+* @apiErrorExample {json} Error
+*    HTTP/1.1 400 Bad Request
+*    {
+*        "error": true,
+*        "message": message
+*    }
+*
+*    HTTP/1.1 401 Unauthorized
+*    {
+*        "error": true,
+*        "message": message
+*    }
+*
+*    HTTP/1.1 500 Internal Server Error
+*    {
+*        "error": true,
+*        "message": message
+*    }
+*/
+typeOfBeerRouter.put('/upload/:typeOfBeer_id', isAuthenticatedTypeOfBeerAccount, function(req, res) {
+  const typeOfBeer_id = req.params.typeOfBeer_id;
+  const fileToUpload = req.files.file;
+  asyncLib.waterfall([
+    function(done){
+      TypeOfBeersController.getOne(typeOfBeer_id)
+      .then((typeOfBeer) => {
+        if(typeOfBeer === null || typeOfBeer === undefined)
+          return res.status(400).json({"error": true, "message": "L'utilisateur n'existe pas"});
+        done(null, typeOfBeer);
+      })
+      .catch((err) => {
+          return res.status(500).json({"error": true, "message": "Erreur lors de la récupération de l'utilisateur"});
+      });
+    },
+    function(typeOfBeer, done){
+      const ext = fileToUpload.name.substr(fileToUpload.name.lastIndexOf('.') + 1).toLowerCase();
+      const regex = new RegExp(' ','g');
+      var src_tracks = typeOfBeer.id+"."+ext;
+      src_tracks = src_tracks.replace(regex, '_');
+
+      if(fileToUpload === undefined)
+        return res.status(400).json({"error": true, "message": "Aucune image à upload"}).end();
+      if(ext != "png" && ext != "jpg")
+        return res.status(400).json({"error": true, "message": "Format de l'image non géré (png et jpg)"}).end();
+
+      fileToUpload.mv("medias/typeOfBeers/"+src_tracks, function(err) {
+        if (err)
+          return res.status(400).json({"error": true, "message": "Erreur lors de l'upload"});
+        else
+          done(null, typeOfBeer, src_tracks);
+      });
+    },
+    function(typeOfBeer, src_tracks, done){
+      TypeOfBeerController.update(typeOfBeer, undefined, undefined, undefined, undefined, src_tracks)
+      .then((track) => {
+        return res.status(201).json({"error": false});
+      })
+      .catch((err) => {
+        return res.status(500).json({"error": true, "message": "Erreur lors de la sauvegarde du chemin"});
+      });
+    }
+  ])
+});
+
+/**
+  @api {get} typeOfBeers/download/:typeOfBeer_id download picture typeOfBeer
+* @apiGroup TypeOfBeers
+* @apiSuccessExample {json} Success
+*    HTTP/1.1 200 Success
+*    {
+*        "error": false,
+*        "buffer": buffer
+*    }
+* @apiErrorExample {json} Error
+*    HTTP/1.1 400 Bad Request
+*    {
+*        "error": true,
+*        "message": message
+*    }
+*
+*    HTTP/1.1 500 Internal Server Error
+*    {
+*        "error": true,
+*        "message": message
+*    }
+*/
+typeOfBeerRouter.get('/download/:typeOfBeer_id', function(req, res){
+  const typeOfBeer_id = req.params.typeOfBeer_id;
+  var pathTypeOfBeersDefault = path.resolve( __dirname+"/../../medias/typeOfBeers/");
+
+  TypeOfBeerController.getOne(typeOfBeer_id)
+  .then((typeOfBeer) => {
+    if(typeOfBeer === null || typeOfBeer === undefined)
+      return res.status(401).json({"error": true, "message": "L'utilisateur n'existe pas"});
+    pathTypeOfBeers = pathTypeOfBeersDefault + "\\" + typeOfBeer.pathPicture;
+
+    if (fs.existsSync(pathTypeOfBeers)){
+      const buffer = new Buffer(fs.readFileSync(pathTypeOfBeers), 'base64');
+      res.writeHead(200, {
+       'Content-Type': 'image/jpeg',
+       'Content-Length': buffer.length
+     });
+     res.end(buffer);
+    }else{
+      const buffer = new Buffer(fs.readFileSync(pathTypeOfBeersDefault + "\\" + 'defaultprofile.png'), 'base64');
+      res.writeHead(200, {
+       'Content-Type': 'image/png',
+       'Content-Length': buffer.length
+     });
+     res.end(buffer);
+
+  }})
+  .catch((err) => {
+    return res.status(500).json({"error": true, "message": "Image non trouvé sur notre serveur"});
+  });
+})
+
 module.exports = typeOfBeerRouter;
