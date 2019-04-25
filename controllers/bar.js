@@ -30,7 +30,6 @@ BarController.getAll = function(name, user_id){
   if(name !== undefined){where.name = name};
   if(user_id !== undefined){where.user_id = user_id};
   options.where = where;
-  console.log(options);
   return Bar.findAll(options);
 };
 

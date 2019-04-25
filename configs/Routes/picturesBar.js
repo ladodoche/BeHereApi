@@ -285,4 +285,52 @@ picturesBarRouter.delete('/delete/:picturesBar_id', isAuthenticatedUserBar, func
   ]);
 });
 
+/**
+@api {get} picturesBars/?bar_id=bar_id get all picturesBars
+* @apiGroup PicturesBars
+
+* @apiParam {String} bar_id
+* @apiSuccessExample {json} Success
+*    HTTP/1.1 200 Success
+* {
+*    "error": false,
+*    "message": [
+*        {
+*            "id": 1,
+*            "pathPicture": "a.png,
+*            "created_at": "2019-04-14T13:42:47.000Z",
+*            "updated_at": "2019-04-14T13:42:47.000Z",
+*            "deleted_at": null,
+*            "bar_id": 1
+*        }
+*    ]
+* }
+* @apiErrorExample {json} Error
+*    HTTP/1.1 400 Bad Request
+*    {
+*        "error": true,
+*        "message": message
+*    }
+*
+*    HTTP/1.1 500 Internal Server Error
+*    {
+*        "error": true,
+*        "message": message
+*    }
+*/
+picturesBarRouter.get('/', function(req, res) {
+
+  const bar_id = req.query.bar_id;
+
+  PicturesBarController.getAll(bar_id)
+  .then((picturesBars) => {
+    if(picturesBars.length == 0)
+      return res.status(400).json({"error": true, "message": "Aucune image du bar trouvé"});
+    return res.status(200).json({"error": false, "picturesBar": picturesBars});
+  })
+  .catch((err) => {
+    return res.status(500).json({"error": true, "message": "Erreur lors de la récupération des images du bar"});
+  });
+});
+
 module.exports = picturesBarRouter;
