@@ -9,5 +9,7 @@ module.exports = {
   CommentsBreweryController: require('./commentsBrewery'),
   NotesBeerController: require('./notesBeer'),
   NotesBarController: require('./notesBar'),
-  NotesBreweryController: require('./notesBrewery')
+  NotesBreweryController: require('./notesBrewery'),
+  PicturesBarController: require('./picturesBar'),
+  PicturesBreweryController: require('./picturesBrewery')
 }
