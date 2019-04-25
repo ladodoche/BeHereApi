@@ -6,15 +6,18 @@ const BarController = function(){};
 
 
 ////////////////////////////////////////////////////
-BarController.add = function(name, gpsLatitude, gpsLongitude, description, webSiteLink, earlyHappyHours, lateHappyHours, user_id){
+BarController.add = function(name, gpsLatitude, gpsLongitude, description, earlyHappyHours, lateHappyHours, webSiteLink, facebokLink, twitterLink, instagramLink, user_id){
   return Bar.create({
     name: name,
     gpsLatitude: gpsLatitude,
     gpsLongitude: gpsLongitude,
     description: description,
-    webSiteLink: webSiteLink,
     earlyHappyHours: earlyHappyHours,
     lateHappyHours: lateHappyHours,
+    webSiteLink: webSiteLink,
+    facebokLink: facebokLink,
+    twitterLink: twitterLink,
+    instagramLink: instagramLink,
     user_id: user_id
   });
 };
@@ -45,7 +48,7 @@ BarController.getOne = function(bar_id){
 
 
 //////////////////////////////////////////////////////
-BarController.update = function(bar, name, gpsLatitude, gpsLongitude, description, webSiteLink, earlyHappyHours, lateHappyHours){
+BarController.update = function(bar, name, gpsLatitude, gpsLongitude, description, earlyHappyHours, lateHappyHours, webSiteLink, facebokLink, twitterLink, instagramLink){
   const options = {};
   const where = {};
   const json = {};
@@ -54,9 +57,12 @@ BarController.update = function(bar, name, gpsLatitude, gpsLongitude, descriptio
   if(gpsLatitude !== undefined){json.gpsLatitude = gpsLatitude}
   if(gpsLongitude !== undefined){json.gpsLongitude = gpsLongitude}
   if(description !== undefined){json.description = description}
-  if(webSiteLink !== undefined){json.webSiteLink = webSiteLink}
   if(earlyHappyHours !== undefined){json.earlyHappyHours = earlyHappyHours}
   if(lateHappyHours !== undefined){json.lateHappyHours = lateHappyHours}
+  if(webSiteLink !== undefined){json.webSiteLink = webSiteLink}
+  if(facebokLink !== undefined){json.facebokLink = facebokLink}
+  if(twitterLink !== undefined){json.twitterLink = twitterLink}
+  if(instagramLink !== undefined){json.instagramLink = instagramLink}
   options.where = where;
   options.timezone = '+02:00';
 

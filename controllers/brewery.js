@@ -6,13 +6,16 @@ const BreweryController = function(){};
 
 
 ////////////////////////////////////////////////////
-BreweryController.add = function(name, gpsLatitude, gpsLongitude, description, webSiteLink, user_id){
+BreweryController.add = function(name, gpsLatitude, gpsLongitude, description, webSiteLink, facebokLink, twitterLink, instagramLink, user_id){
   return Brewery.create({
     name: name,
     gpsLatitude: gpsLatitude,
     gpsLongitude: gpsLongitude,
     description: description,
     webSiteLink: webSiteLink,
+    facebokLink: facebokLink,
+    twitterLink: twitterLink,
+    instagramLink: instagramLink,
     user_id: user_id
   });
 };
@@ -46,7 +49,7 @@ BreweryController.getOne = function(brewery_id){
 
 
 //////////////////////////////////////////////////////
-BreweryController.update = function(brewery, name, gpsLatitude, gpsLongitude, description, webSiteLink){
+BreweryController.update = function(brewery, name, gpsLatitude, gpsLongitude, description, webSiteLink, facebokLink, twitterLink, instagramLink){
   const options = {};
   const where = {};
   const json = {};
@@ -56,6 +59,9 @@ BreweryController.update = function(brewery, name, gpsLatitude, gpsLongitude, de
   if(gpsLongitude !== undefined){json.gpsLongitude = gpsLongitude}
   if(description !== undefined){json.description = description}
   if(webSiteLink !== undefined){json.webSiteLink = webSiteLink}
+  if(facebokLink !== undefined){json.facebokLink = facebokLink}
+  if(twitterLink !== undefined){json.twitterLink = twitterLink}
+  if(instagramLink !== undefined){json.instagramLink = instagramLink}
   options.where = where;
   options.timezone = '+02:00';
 

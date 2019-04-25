@@ -96,6 +96,33 @@ module.exports = function(sequelize, Datatypes){
           msg: 'Le format de votre url n\'est pas correcte'
         }
       }
+    },
+    facebokLink: {
+      type: Datatypes.STRING,
+      allowNull: true,
+      validate: {
+        isUrl: {
+          msg: 'Le format de votre url n\'est pas correcte'
+        }
+      }
+    },
+    twitterLink: {
+      type: Datatypes.STRING,
+      allowNull: true,
+      validate: {
+        isUrl: {
+          msg: 'Le format de votre url n\'est pas correcte'
+        }
+      }
+    },
+    instagramLink: {
+      type: Datatypes.STRING,
+      allowNull: true,
+      validate: {
+        isUrl: {
+          msg: 'Le format de votre url n\'est pas correcte'
+        }
+      }
     }
   }, {
     paranoid: true,

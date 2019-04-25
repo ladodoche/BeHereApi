@@ -62,13 +62,19 @@ function getUserIdHeader(req, next){
 * @apiParam {Double} gpsLongitude obligatoire
 * @apiParam {Text} description
 * @apiParam {String} webSiteLink format url
+* @apiParam {String} facebokLink format url
+* @apiParam {String} twitterLink format url
+* @apiParam {String} instagramLink format url
 * @apiParamExample {json} Input
 *  {
 *    "name": "La dernière brasserie avant la fin du monde",
 *    "gpsLatitude": "48.",
 *    "gpsLongitude": "2.3461672",
 *    "description": "Coucou",
-*    "webSiteLink": "https://www.facebook.com/?ref=tn_tnmn"
+*    "webSiteLink": "https://www.facebook.com/?ref=tn_tnmn",
+*    "facebokLink": "https://www.facebook.com/?ref=tn_tnmn",
+*    "twitterLink": "https://www.facebook.com/?ref=tn_tnmn",
+*    "instagramLink": "https://www.facebook.com/?ref=tn_tnmn"
 *  }
 * @apiSuccessExample {json} Success
 *    HTTP/1.1 201 Created
@@ -101,8 +107,11 @@ breweryRouter.post('/create', isAuthenticatedBreweryCreateAccount, function(req,
   const gpsLongitude = req.body.gpsLongitude;
   var description; if(req.body.description!=""){description=req.body.description}else{description=undefined};
   var webSiteLink; if(req.body.webSiteLink!=""){webSiteLink=req.body.webSiteLink}else{webSiteLink=undefined};
+  var facebokLink; if(req.body.facebokLink!=""){facebokLink=req.body.facebokLink}else{facebokLink=undefined};
+  var twitterLink; if(req.body.twitterLink!=""){twitterLink=req.body.twitterLink}else{twitterLink=undefined};
+  var instagramLink; if(req.body.instagramLink!=""){instagramLink=req.body.instagramLink}else{instagramLink=undefined};
 
-  BreweryController.add(name, gpsLatitude, gpsLongitude, description, webSiteLink, getUserIdHeader(req))
+  BreweryController.add(name, gpsLatitude, gpsLongitude, description, webSiteLink, facebokLink, twitterLink, instagramLink, getUserIdHeader(req))
   .then((brewery) => {
     return res.status(201).json({"error": false});
   })
@@ -223,13 +232,19 @@ breweryRouter.get('/:brewery_id', function(req, res) {
 * @apiParam {Double} gpsLongitude
 * @apiParam {Text} description
 * @apiParam {String} webSiteLink format url
+* @apiParam {String} facebokLink format url
+* @apiParam {String} twitterLink format url
+* @apiParam {String} instagramLink format url
 * @apiParamExample {json} Input
 *  {
 *    "name": "La dernière brasserie avant la fin du monde",
 *    "gpsLatitude": "48.",
 *    "gpsLongitude": "2.3461672",
 *    "description": "Coucou",
-*    "webSiteLink": "https://www.facebook.com/?ref=tn_tnmn"
+*    "webSiteLink": "https://www.facebook.com/?ref=tn_tnmn",
+*    "facebokLink": "https://www.facebook.com/?ref=tn_tnmn",
+*    "twitterLink": "https://www.facebook.com/?ref=tn_tnmn",
+*    "instagramLink": "https://www.facebook.com/?ref=tn_tnmn"
 *  }
 * @apiSuccessExample {json} Success
 * HTTP/1.1 200 Success
@@ -260,8 +275,11 @@ breweryRouter.put('/update/:brewery_id', isAuthenticatedBreweryAccount, function
   const name = req.body.name;
   const gpsLatitude = req.body.gpsLatitude;
   const gpsLongitude = req.body.gpsLongitude;
-  const description = req.body.description;
-  const webSiteLink = req.body.webSiteLink;
+  var description; if(req.body.description!=""){description=req.body.description}else{description=undefined};
+  var webSiteLink; if(req.body.webSiteLink!=""){webSiteLink=req.body.webSiteLink}else{webSiteLink=undefined};
+  var facebokLink; if(req.body.facebokLink!=""){facebokLink=req.body.facebokLink}else{facebokLink=undefined};
+  var twitterLink; if(req.body.twitterLink!=""){twitterLink=req.body.twitterLink}else{twitterLink=undefined};
+  var instagramLink; if(req.body.instagramLink!=""){instagramLink=req.body.instagramLink}else{instagramLink=undefined};
 
   asyncLib.waterfall([
     function(done){
@@ -276,7 +294,7 @@ breweryRouter.put('/update/:brewery_id', isAuthenticatedBreweryAccount, function
       });
     },
     function(brewery, done){
-      BreweryController.update(brewery, name, gpsLatitude, gpsLongitude, description, webSiteLink)
+      BreweryController.update(brewery, name, gpsLatitude, gpsLongitude, description, webSiteLink, facebokLink, twitterLink, instagramLink)
       .then((brewery) => {
         return res.status(200).json({"error": false});
       })

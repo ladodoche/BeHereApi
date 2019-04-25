@@ -64,15 +64,21 @@ function getUserIdHeader(req, next){
 * @apiParam {String} webSiteLink format url
 * @apiParam {String} earlyHappyHours format heure obligatoire
 * @apiParam {String} lateHappyHours format heure obligatoire
+* @apiParam {String} facebokLink format url
+* @apiParam {String} twitterLink format url
+* @apiParam {String} instagramLink format url
 * @apiParamExample {json} Input
 *  {
 *    "name": "Le dernier bar avant la fin du monde",
 *    "gpsLatitude": "48.",
 *    "gpsLongitude": "2.3461672",
 *    "description": "Coucou",
-*    "webSiteLink": "https://www.facebook.com/?ref=tn_tnmn",
 *    "earlyHappyHours": "19:00",
-*    "lateHappyHours": "21:00"
+*    "lateHappyHours": "21:00",
+*    "webSiteLink": "https://www.facebook.com/?ref=tn_tnmn",
+*    "facebokLink": "https://www.facebook.com/?ref=tn_tnmn",
+*    "twitterLink": "https://www.facebook.com/?ref=tn_tnmn",
+*    "instagramLink": "https://www.facebook.com/?ref=tn_tnmn"
 *  }
 * @apiSuccessExample {json} Success
 *    HTTP/1.1 201 Created
@@ -104,11 +110,14 @@ barRouter.post('/create', isAuthenticatedBarCreateAccount, function(req, res) {
   const gpsLatitude = req.body.gpsLatitude;
   const gpsLongitude = req.body.gpsLongitude;
   var description; if(req.body.description!=""){description=req.body.description}else{description=undefined};
-  var webSiteLink; if(req.body.webSiteLink!=""){webSiteLink=req.body.webSiteLink}else{webSiteLink=undefined};
   var earlyHappyHours; if(req.body.earlyHappyHours!=""){earlyHappyHours=req.body.earlyHappyHours}else{earlyHappyHours=undefined};
   var lateHappyHours; if(req.body.lateHappyHours!=""){lateHappyHours=req.body.lateHappyHours}else{lateHappyHours=undefined};
+  var webSiteLink; if(req.body.webSiteLink!=""){webSiteLink=req.body.webSiteLink}else{webSiteLink=undefined};
+  var facebokLink; if(req.body.facebokLink!=""){facebokLink=req.body.facebokLink}else{facebokLink=undefined};
+  var twitterLink; if(req.body.twitterLink!=""){twitterLink=req.body.twitterLink}else{twitterLink=undefined};
+  var instagramLink; if(req.body.instagramLink!=""){instagramLink=req.body.instagramLink}else{instagramLink=undefined};
 
-  BarController.add(name, gpsLatitude, gpsLongitude, description, webSiteLink, earlyHappyHours, lateHappyHours, getUserIdHeader(req))
+  BarController.add(name, gpsLatitude, gpsLongitude, description, earlyHappyHours, lateHappyHours, webSiteLink, facebokLink, twitterLink, instagramLink, getUserIdHeader(req))
   .then((bar) => {
     return res.status(201).json({"error": false});
   })
@@ -228,9 +237,12 @@ barRouter.get('/:bar_id', function(req, res) {
 * @apiParam {Double} gpsLatitude
 * @apiParam {Double} gpsLongitude
 * @apiParam {Text} description
-* @apiParam {String} webSiteLink format url
 * @apiParam {String} earlyHappyHours format url
 * @apiParam {String} lateHappyHours format url
+* @apiParam {String} webSiteLink format url
+* @apiParam {String} facebokLink format url
+* @apiParam {String} twitterLink format url
+* @apiParam {String} instagramLink format url
 * @apiParamExample {json} Input
 *  {
 *    "name": "Le dernier bar avant la fin du monde",
@@ -238,6 +250,9 @@ barRouter.get('/:bar_id', function(req, res) {
 *    "gpsLongitude": "2.3461672",
 *    "description": "Coucou",
 *    "webSiteLink": "https://www.facebook.com/?ref=tn_tnmn",
+*    "facebokLink": "https://www.facebook.com/?ref=tn_tnmn",
+*    "twitterLink": "https://www.facebook.com/?ref=tn_tnmn",
+*    "instagramLink": "https://www.facebook.com/?ref=tn_tnmn",
 *    "earlyHappyHours": "19:00",
 *    "lateHappyHours": "21:00"
 *  }
@@ -271,9 +286,12 @@ barRouter.put('/update/:bar_id', isAuthenticatedBarAccount, function(req, res){
   const gpsLatitude = req.body.gpsLatitude;
   const gpsLongitude = req.body.gpsLongitude;
   var description; if(req.body.description!=""){description=req.body.description}else{description=undefined};
-  var webSiteLink; if(req.body.webSiteLink!=""){webSiteLink=req.body.webSiteLink}else{webSiteLink=undefined};
   var earlyHappyHours; if(req.body.earlyHappyHours!=""){earlyHappyHours=req.body.earlyHappyHours}else{earlyHappyHours=undefined};
   var lateHappyHours; if(req.body.lateHappyHours!=""){lateHappyHours=req.body.lateHappyHours}else{lateHappyHours=undefined};
+  var webSiteLink; if(req.body.webSiteLink!=""){webSiteLink=req.body.webSiteLink}else{webSiteLink=undefined};
+  var facebokLink; if(req.body.facebokLink!=""){facebokLink=req.body.facebokLink}else{facebokLink=undefined};
+  var twitterLink; if(req.body.twitterLink!=""){twitterLink=req.body.twitterLink}else{twitterLink=undefined};
+  var instagramLink; if(req.body.instagramLink!=""){instagramLink=req.body.instagramLink}else{instagramLink=undefined};
 
   asyncLib.waterfall([
     function(done){
@@ -288,7 +306,7 @@ barRouter.put('/update/:bar_id', isAuthenticatedBarAccount, function(req, res){
       });
     },
     function(bar, done){
-      BarController.update(bar, name, gpsLatitude, gpsLongitude, description, earlyHappyHours, lateHappyHours, webSiteLink)
+      BarController.update(bar, name, gpsLatitude, gpsLongitude, description, earlyHappyHours, lateHappyHours, webSiteLink, facebokLink, twitterLink, instagramLink)
       .then((bar) => {
         return res.status(200).json({"error": false});
       })
