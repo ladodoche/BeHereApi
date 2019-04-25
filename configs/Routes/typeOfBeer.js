@@ -319,11 +319,11 @@ typeOfBeerRouter.put('/upload/:typeOfBeer_id', isAdmin, function(req, res) {
       TypeOfBeersController.getOne(typeOfBeer_id)
       .then((typeOfBeer) => {
         if(typeOfBeer === null || typeOfBeer === undefined)
-          return res.status(400).json({"error": true, "message": "L'utilisateur n'existe pas"});
+          return res.status(400).json({"error": true, "message": "Le type de bière n'existe pas"});
         done(null, typeOfBeer);
       })
       .catch((err) => {
-          return res.status(500).json({"error": true, "message": "Erreur lors de la récupération de l'utilisateur"});
+          return res.status(500).json({"error": true, "message": "Erreur lors de la récupération du type de bière"});
       });
     },
     function(typeOfBeer, done){
@@ -385,7 +385,7 @@ typeOfBeerRouter.get('/download/:typeOfBeer_id', isAdmin, function(req, res){
   TypeOfBeerController.getOne(typeOfBeer_id)
   .then((typeOfBeer) => {
     if(typeOfBeer === null || typeOfBeer === undefined)
-      return res.status(401).json({"error": true, "message": "L'utilisateur n'existe pas"});
+      return res.status(401).json({"error": true, "message": "Le type de bière n'existe pas"});
     pathTypeOfBeers = pathTypeOfBeersDefault + "\\" + typeOfBeer.pathPicture;
 
     if (fs.existsSync(pathTypeOfBeers)){
