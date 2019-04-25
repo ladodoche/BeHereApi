@@ -93,7 +93,7 @@ authentificateRouter.post('/', function(req, res, next) {
           done(null, user, bar_status, true);
       })
       .catch((err) => {
-        return res.status(500).json({"error": true, "message": "Erreur lors de la récupération des brasseries"});
+        return res.status(500).json({"error": true, "message": "Erreur lors de la récupération des bars"});
       });
     },
     function(user, bar_status, brewery_status, done){

@@ -6,13 +6,15 @@ const BarController = function(){};
 
 
 ////////////////////////////////////////////////////
-BarController.add = function(name, gpsLatitude, gpsLongitude, description, webSiteLink, user_id){
+BarController.add = function(name, gpsLatitude, gpsLongitude, description, webSiteLink, earlyHappyHours, lateHappyHours, user_id){
   return Bar.create({
     name: name,
     gpsLatitude: gpsLatitude,
     gpsLongitude: gpsLongitude,
     description: description,
     webSiteLink: webSiteLink,
+    earlyHappyHours: earlyHappyHours,
+    lateHappyHours: lateHappyHours,
     user_id: user_id
   });
 };
@@ -25,7 +27,7 @@ BarController.getAll = function(name, user_id){
   if(name !== undefined){where.name = name};
   if(user_id !== undefined){where.user_id = user_id};
   options.where = where;
-
+  console.log(options);
   return Bar.findAll(options);
 };
 
@@ -43,7 +45,7 @@ BarController.getOne = function(bar_id){
 
 
 //////////////////////////////////////////////////////
-BarController.update = function(bar, name, gpsLatitude, gpsLongitude, description, webSiteLink){
+BarController.update = function(bar, name, gpsLatitude, gpsLongitude, description, webSiteLink, earlyHappyHours, lateHappyHours){
   const options = {};
   const where = {};
   const json = {};
@@ -53,6 +55,8 @@ BarController.update = function(bar, name, gpsLatitude, gpsLongitude, descriptio
   if(gpsLongitude !== undefined){json.gpsLongitude = gpsLongitude}
   if(description !== undefined){json.description = description}
   if(webSiteLink !== undefined){json.webSiteLink = webSiteLink}
+  if(earlyHappyHours !== undefined){json.earlyHappyHours = earlyHappyHours}
+  if(lateHappyHours !== undefined){json.lateHappyHours = lateHappyHours}
   options.where = where;
   options.timezone = '+02:00';
 

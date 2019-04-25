@@ -64,6 +64,26 @@ module.exports = function(sequelize, Datatypes){
         }
       }
     },
+    earlyHappyHours: {
+      type: Datatypes.STRING,
+      allowNull: true,
+      validate: {
+        is: {
+          args: /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/i,
+          msg: 'Le format n\'est pas bon'
+        }
+      }
+    },
+    lateHappyHours: {
+      type: Datatypes.STRING,
+      allowNull: true,
+      validate: {
+        is: {
+          args: /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/i,
+          msg: 'Le format n\'est pas bon'
+        }
+      }
+    },
     description: {
       type: Datatypes.TEXT,
       allowNull: true
