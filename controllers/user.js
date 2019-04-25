@@ -23,6 +23,18 @@ UserController.addTypeOfBeer = function(user, typeOfBeer){
 };
 
 
+//////////////////////////////////////////////////////
+UserController.addBar = function(user, bar){
+  return user.addBar(bar);
+};
+
+
+//////////////////////////////////////////////////////
+UserController.addBrewery = function(user, brewery){
+  return user.addBrewery(brewery);
+};
+
+
 ////////////////////////////////////////////////////
 UserController.login = function(email, password){
   const options = {};
@@ -42,6 +54,12 @@ UserController.getAll = function(email = undefined){
     include: [{
       model: ModelIndex.TypeOfBeer,
       as: 'typeOfBeer'
+    },{
+      model: ModelIndex.Bar,
+      as: 'bar'
+    },{
+      model: ModelIndex.Brewery,
+      as: 'brewery'
     }]
   };
   const where = {};
@@ -59,6 +77,12 @@ UserController.getOne = function(user_id){
     include: [{
       model: ModelIndex.TypeOfBeer,
       as: 'typeOfBeer'
+    },{
+      model: ModelIndex.Bar,
+      as: 'bar'
+    },{
+      model: ModelIndex.Brewery,
+      as: 'brewery'
     }]
   };
   const where = {};
@@ -88,6 +112,7 @@ UserController.update = function(user, email, name, surname, birthDate, pathPict
   return user.updateAttributes(json);
 };
 
+
 //////////////////////////////////////////////////////
 UserController.delete = function(user){
   user.destroy();
@@ -95,8 +120,20 @@ UserController.delete = function(user){
 
 
 //////////////////////////////////////////////////////
-UserController.deleteUser = function(user, typeOfBeer){
+UserController.deleteTypeOfBeer = function(user, typeOfBeer){
   user.removeTypeOfBeer(typeOfBeer);
+};
+
+
+//////////////////////////////////////////////////////
+UserController.deleteBar = function(user, bar){
+  user.removeBar(bar);
+};
+
+
+//////////////////////////////////////////////////////
+UserController.deleteBrewery = function(user, brewery){
+  user.removeBrewery(brewery);
 };
 
 

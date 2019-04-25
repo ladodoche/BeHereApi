@@ -6,6 +6,8 @@ const asyncLib = require('async');
 const auth = require('../auth.js');
 const UserController = controllers.UserController;
 const TypeOfBeerController = controllers.TypeOfBeerController;
+const BarController = controllers.BarController;
+const BreweryController = controllers.BreweryController;
 const fileUpload = require('express-fileupload');
 const fs = require('fs');
 const path = require('path')
@@ -759,7 +761,291 @@ userRouter.delete('/:user_id/deleteTypeOfBeer/:typeOfBeer_id', isAuthenticatedUs
       });
     },
     function(typeOfBeer, user, done){
-      UserController.deleteUser(user, typeOfBeer);
+      UserController.deleteTypeOfBeer(user, typeOfBeer);
+      return res.status(200).json({"error": false}).end();
+    }
+  ]);
+});
+
+//////////////////////////////////////////////////////
+/**
+@api {put} users/:user_id/addBar add link between type of beer and user
+* @apiGroup Users
+* @apiHeader {String} x-access-token
+* @apiParam {String} bar_id
+* @apiParamExample {json} Input
+*  {
+*    "bar_id": 1
+*  }
+* @apiSuccessExample {json} Success
+*    HTTP/1.1 200 Success
+*    {
+*        "error": false
+*    }
+* @apiErrorExample {json} Error
+*    HTTP/1.1 400 Bad Request
+*    {
+*        "error": true,
+*        "message": message
+*    }
+*
+*    HTTP/1.1 401 Unauthorized
+*    {
+*        "error": true,
+*        "message": message
+*    }
+*
+*    HTTP/1.1 500 Internal Server Error
+*    {
+*        "error": true,
+*        "message": message
+*    }
+*/
+userRouter.put('/:user_id/addBar', isAuthenticatedUser, function(req, res) {
+  const user_id = req.params.user_id;
+  const bar_id = req.body.bar_id;
+
+  if(bar_id === undefined || user_id === undefined)
+    return res.status(400).json({"error": true, "message": "Certains paramètres sont manquant"}).end();
+
+  asyncLib.waterfall([
+    function(done){
+      BarController.getOne(bar_id)
+      .then((bar) => {
+        if(bar === null || bar === undefined)
+          return res.status(400).json({"error": true, "message": "Le bar n'existe pas"}).end();
+        done(null, bar);
+      })
+      .catch((err) => {
+          return res.status(500).json({"error": true, "message": "Erreur lors de la récupération du bar"}).end();
+      });
+    },
+    function(bar, done){
+      UserController.getOne(user_id)
+      .then((user) => {
+        if(user === null || user === undefined)
+          return res.status(400).json({"error": true, "message": "L'utilisateur n'existe pas"}).end();
+        done(null, bar, user);
+      })
+      .catch((err) => {
+          return res.status(500).json({"error": true, "message": "Erreur lors de la récupération de l'utilisateur"}).end();
+      });
+    },
+    function(bar, user, done){
+      UserController.addBar(user, bar)
+      .then((bar_User) => {
+        return res.status(200).json({"error": false}).end();
+      })
+      .catch((err) => {
+        return res.status(500).json({"error": true, "message": "Erreur lors de l'ajout du lien entre l'utilisateur et le bar"}).end();
+      });
+    }
+  ]);
+});
+
+/**
+@api {put} users/:user_id/deleteBar/:bar_id delete link between type of beer and user
+* @apiGroup Users
+* @apiHeader {String} x-access-token
+* @apiSuccessExample {json} Success
+*    HTTP/1.1 200 Success
+*    {
+*        "error": false
+*    }
+* @apiErrorExample {json} Error
+*    HTTP/1.1 400 Bad Request
+*    {
+*        "error": true,
+*        "message": message
+*    }
+*
+*    HTTP/1.1 401 Unauthorized
+*    {
+*        "error": true,
+*        "message": message
+*    }
+*
+*    HTTP/1.1 500 Internal Server Error
+*    {
+*        "error": true,
+*        "message": message
+*    }
+*/
+userRouter.delete('/:user_id/deleteBar/:bar_id', isAuthenticatedUser, function(req, res) {
+  const bar_id = req.params.bar_id;
+  const user_id = req.params.user_id;
+
+  if(bar_id === undefined || user_id === undefined)
+    return res.status(400).json({"error": true, "message": "Certains paramètres sont manquant"}).end();
+
+  asyncLib.waterfall([
+    function(done){
+      BarController.getOne(bar_id)
+      .then((bar) => {
+        if(bar === null || bar === undefined){
+          return res.status(400).json({"error": true, "message": "Le bar n'existe pas"}).end();
+        }
+        done(null, bar);
+      })
+      .catch((err) => {
+          return res.status(500).json({"error": true, "message": "Erreur lors de la récupération du bar"}).end();
+      });
+    },
+    function(bar, done){
+      UserController.getOne(user_id)
+      .then((user) => {
+        if(user === null || user === undefined)
+          return res.status(400).json({"error": true, "message": "L'utilisateur n'existe pas"}).end();
+        done(null, bar, user);
+      })
+      .catch((err) => {
+        return res.status(500).json({"error": true, "message": "Erreur lors de la récupération de l'utilisateur"}).end();
+      });
+    },
+    function(bar, user, done){
+      UserController.deleteBar(user, bar);
+      return res.status(200).json({"error": false}).end();
+    }
+  ]);
+});
+
+//////////////////////////////////////////////////////
+/**
+@api {put} users/:user_id/addBrewery add link between type of beer and user
+* @apiGroup Users
+* @apiHeader {String} x-access-token
+* @apiParam {String} brewery_id
+* @apiParamExample {json} Input
+*  {
+*    "brewery_id": 1
+*  }
+* @apiSuccessExample {json} Success
+*    HTTP/1.1 200 Success
+*    {
+*        "error": false
+*    }
+* @apiErrorExample {json} Error
+*    HTTP/1.1 400 Bad Request
+*    {
+*        "error": true,
+*        "message": message
+*    }
+*
+*    HTTP/1.1 401 Unauthorized
+*    {
+*        "error": true,
+*        "message": message
+*    }
+*
+*    HTTP/1.1 500 Internal Server Error
+*    {
+*        "error": true,
+*        "message": message
+*    }
+*/
+userRouter.put('/:user_id/addBrewery', isAuthenticatedUser, function(req, res) {
+  const user_id = req.params.user_id;
+  const brewery_id = req.body.brewery_id;
+
+  if(brewery_id === undefined || user_id === undefined)
+    return res.status(400).json({"error": true, "message": "Certains paramètres sont manquant"}).end();
+
+  asyncLib.waterfall([
+    function(done){
+      BreweryController.getOne(brewery_id)
+      .then((brewery) => {
+        if(brewery === null || brewery === undefined)
+          return res.status(400).json({"error": true, "message": "La brasserie n'existe pas"}).end();
+        done(null, brewery);
+      })
+      .catch((err) => {
+          return res.status(500).json({"error": true, "message": "Erreur lors de la récupération de la brasserie"}).end();
+      });
+    },
+    function(brewery, done){
+      UserController.getOne(user_id)
+      .then((user) => {
+        if(user === null || user === undefined)
+          return res.status(400).json({"error": true, "message": "L'utilisateur n'existe pas"}).end();
+        done(null, brewery, user);
+      })
+      .catch((err) => {
+          return res.status(500).json({"error": true, "message": "Erreur lors de la récupération de l'utilisateur"}).end();
+      });
+    },
+    function(brewery, user, done){
+      UserController.addBrewery(user, brewery)
+      .then((brewery_User) => {
+        return res.status(200).json({"error": false}).end();
+      })
+      .catch((err) => {
+        return res.status(500).json({"error": true, "message": "Erreur lors de l'ajout du lien entre l'utilisateur et la brasserie"}).end();
+      });
+    }
+  ]);
+});
+
+/**
+@api {put} users/:user_id/deleteBrewery/:brewery_id delete link between type of beer and user
+* @apiGroup Users
+* @apiHeader {String} x-access-token
+* @apiSuccessExample {json} Success
+*    HTTP/1.1 200 Success
+*    {
+*        "error": false
+*    }
+* @apiErrorExample {json} Error
+*    HTTP/1.1 400 Bad Request
+*    {
+*        "error": true,
+*        "message": message
+*    }
+*
+*    HTTP/1.1 401 Unauthorized
+*    {
+*        "error": true,
+*        "message": message
+*    }
+*
+*    HTTP/1.1 500 Internal Server Error
+*    {
+*        "error": true,
+*        "message": message
+*    }
+*/
+userRouter.delete('/:user_id/deleteBrewery/:brewery_id', isAuthenticatedUser, function(req, res) {
+  const brewery_id = req.params.brewery_id;
+  const user_id = req.params.user_id;
+
+  if(brewery_id === undefined || user_id === undefined)
+    return res.status(400).json({"error": true, "message": "Certains paramètres sont manquant"}).end();
+
+  asyncLib.waterfall([
+    function(done){
+      BreweryController.getOne(brewery_id)
+      .then((brewery) => {
+        if(brewery === null || brewery === undefined){
+          return res.status(400).json({"error": true, "message": "La brasserie n'existe pas"}).end();
+        }
+        done(null, brewery);
+      })
+      .catch((err) => {
+          return res.status(500).json({"error": true, "message": "Erreur lors de la récupération de la brasserie"}).end();
+      });
+    },
+    function(brewery, done){
+      UserController.getOne(user_id)
+      .then((user) => {
+        if(user === null || user === undefined)
+          return res.status(400).json({"error": true, "message": "L'utilisateur n'existe pas"}).end();
+        done(null, brewery, user);
+      })
+      .catch((err) => {
+        return res.status(500).json({"error": true, "message": "Erreur lors de la récupération de l'utilisateur"}).end();
+      });
+    },
+    function(brewery, user, done){
+      UserController.deleteBrewery(user, brewery);
       return res.status(200).json({"error": false}).end();
     }
   ]);

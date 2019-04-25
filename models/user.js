@@ -108,4 +108,14 @@ function _associate(models) {
     through: 'user_typeOfBeer',
     foreignKey: 'user_id'
   });
+  models.User.belongsToMany(models.Bar, {
+    as: 'bar',
+    through: 'subscriptionBar',
+    foreignKey: 'user_id'
+  });
+  models.User.belongsToMany(models.Brewery, {
+    as: 'brewery',
+    through: 'subscriptionBrewery',
+    foreignKey: 'user_id'
+  });
 }
