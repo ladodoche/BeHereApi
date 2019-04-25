@@ -103,7 +103,7 @@ commentsBarRouter.post('/create', isAuthenticatedCommentsBarCreate, function(req
         done(null, bar);
       })
       .catch((err) => {
-          return res.status(500).json({"error": true, "message": "Erreur lors de la récupération du commentaire"});
+          return res.status(500).json({"error": true, "message": "Erreur lors de la récupération du bar"});
       });
     },
     function(bar, done){

@@ -20,7 +20,7 @@ CommentsBarController.getAll = function(user_id = undefined, bar_id = undefined)
   const where = {};
 
   if(user_id !== undefined){where.user_id = user_id};
-  if(bar_id !== undefined){where.bar_id = user_id};
+  if(bar_id !== undefined){where.bar_id = bar_id};
   options.where = where;
 
   return CommentsBar.findAll(options);

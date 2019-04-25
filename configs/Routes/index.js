@@ -17,6 +17,7 @@ RouteManager.attach = function(app) {
   app.use('/notesBrewerys', require('./notesBrewery'));
   app.use('/picturesBars', require('./picturesBar'));
   app.use('/picturesBrewerys', require('./picturesBrewery'));
+  app.use('/MenusBeers', require('./menusBeer'));
 };
 
 module.exports = RouteManager;

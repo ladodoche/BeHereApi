@@ -11,5 +11,6 @@ module.exports = {
   NotesBarController: require('./notesBar'),
   NotesBreweryController: require('./notesBrewery'),
   PicturesBarController: require('./picturesBar'),
-  PicturesBreweryController: require('./picturesBrewery')
+  PicturesBreweryController: require('./picturesBrewery'),
+  MenusBeerController: require('./menusBeer')
 }
