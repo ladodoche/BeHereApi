@@ -226,13 +226,48 @@
             "optional": false,
             "field": "webSiteLink",
             "description": "<p>format url</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "earlyHappyHours",
+            "description": "<p>format heure obligatoire</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "lateHappyHours",
+            "description": "<p>format heure obligatoire</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "facebokLink",
+            "description": "<p>format url</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "twitterLink",
+            "description": "<p>format url</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "instagramLink",
+            "description": "<p>format url</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "Input",
-          "content": "{\n  \"name\": \"Le dernier bar avant la fin du monde\",\n  \"gpsLatitude\": \"48.\",\n  \"gpsLongitude\": \"2.3461672\",\n  \"description\": \"Coucou\",\n  \"webSiteLink\": \"https://www.facebook.com/?ref=tn_tnmn\"\n}",
+          "content": "{\n  \"name\": \"Le dernier bar avant la fin du monde\",\n  \"gpsLatitude\": \"48.\",\n  \"gpsLongitude\": \"2.3461672\",\n  \"description\": \"Coucou\",\n  \"earlyHappyHours\": \"19:00\",\n  \"lateHappyHours\": \"21:00\",\n  \"webSiteLink\": \"https://www.facebook.com/?ref=tn_tnmn\",\n  \"facebokLink\": \"https://www.facebook.com/?ref=tn_tnmn\",\n  \"twitterLink\": \"https://www.facebook.com/?ref=tn_tnmn\",\n  \"instagramLink\": \"https://www.facebook.com/?ref=tn_tnmn\"\n}",
           "type": "json"
         }
       ]
@@ -313,7 +348,42 @@
             "group": "Parameter",
             "type": "String",
             "optional": false,
+            "field": "earlyHappyHours",
+            "description": "<p>format url</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "lateHappyHours",
+            "description": "<p>format url</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
             "field": "webSiteLink",
+            "description": "<p>format url</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "facebokLink",
+            "description": "<p>format url</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "twitterLink",
+            "description": "<p>format url</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "instagramLink",
             "description": "<p>format url</p>"
           }
         ]
@@ -321,7 +391,7 @@
       "examples": [
         {
           "title": "Input",
-          "content": "{\n  \"name\": \"Le dernier bar avant la fin du monde\",\n  \"gpsLatitude\": \"48.\",\n  \"gpsLongitude\": \"2.3461672\",\n  \"description\": \"Coucou\",\n  \"webSiteLink\": \"https://www.facebook.com/?ref=tn_tnmn\"\n}",
+          "content": "{\n  \"name\": \"Le dernier bar avant la fin du monde\",\n  \"gpsLatitude\": \"48.\",\n  \"gpsLongitude\": \"2.3461672\",\n  \"description\": \"Coucou\",\n  \"webSiteLink\": \"https://www.facebook.com/?ref=tn_tnmn\",\n  \"facebokLink\": \"https://www.facebook.com/?ref=tn_tnmn\",\n  \"twitterLink\": \"https://www.facebook.com/?ref=tn_tnmn\",\n  \"instagramLink\": \"https://www.facebook.com/?ref=tn_tnmn\",\n  \"earlyHappyHours\": \"19:00\",\n  \"lateHappyHours\": \"21:00\"\n}",
           "type": "json"
         }
       ]
@@ -417,6 +487,34 @@
     "filename": "configs/Routes/beer.js",
     "groupTitle": "Beers",
     "name": "GetBeersBeer_id"
+  },
+  {
+    "type": "get",
+    "url": "beers/download/:beer_id",
+    "title": "download picture beer",
+    "group": "Beers",
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 200 Success\n{\n    \"error\": false,\n    \"buffer\": buffer\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": message\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/beer.js",
+    "groupTitle": "Beers",
+    "name": "GetBeersDownloadBeer_id"
   },
   {
     "type": "get",
@@ -727,6 +825,60 @@
     "name": "PutBeersUpdateBeer_id"
   },
   {
+    "type": "put",
+    "url": "beers/upload/:beer_id",
+    "title": "upload picture beer",
+    "group": "Beers",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-access-token",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "File",
+            "optional": false,
+            "field": "file",
+            "description": "<p>Obligatoire, format png ou jpg</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 201 Created\n{\n    \"error\": false\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 401 Unauthorized\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": message\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/beer.js",
+    "groupTitle": "Beers",
+    "name": "PutBeersUploadBeer_id"
+  },
+  {
     "type": "delete",
     "url": "brewerys/delete/:brewery_id",
     "title": "delete brewery",
@@ -898,13 +1050,34 @@
             "optional": false,
             "field": "webSiteLink",
             "description": "<p>format url</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "facebokLink",
+            "description": "<p>format url</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "twitterLink",
+            "description": "<p>format url</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "instagramLink",
+            "description": "<p>format url</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "Input",
-          "content": "{\n  \"name\": \"La dernière brasserie avant la fin du monde\",\n  \"gpsLatitude\": \"48.\",\n  \"gpsLongitude\": \"2.3461672\",\n  \"description\": \"Coucou\",\n  \"webSiteLink\": \"https://www.facebook.com/?ref=tn_tnmn\"\n}",
+          "content": "{\n  \"name\": \"La dernière brasserie avant la fin du monde\",\n  \"gpsLatitude\": \"48.\",\n  \"gpsLongitude\": \"2.3461672\",\n  \"description\": \"Coucou\",\n  \"webSiteLink\": \"https://www.facebook.com/?ref=tn_tnmn\",\n  \"facebokLink\": \"https://www.facebook.com/?ref=tn_tnmn\",\n  \"twitterLink\": \"https://www.facebook.com/?ref=tn_tnmn\",\n  \"instagramLink\": \"https://www.facebook.com/?ref=tn_tnmn\"\n}",
           "type": "json"
         }
       ]
@@ -987,13 +1160,34 @@
             "optional": false,
             "field": "webSiteLink",
             "description": "<p>format url</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "facebokLink",
+            "description": "<p>format url</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "twitterLink",
+            "description": "<p>format url</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "instagramLink",
+            "description": "<p>format url</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "Input",
-          "content": "{\n  \"name\": \"La dernière brasserie avant la fin du monde\",\n  \"gpsLatitude\": \"48.\",\n  \"gpsLongitude\": \"2.3461672\",\n  \"description\": \"Coucou\",\n  \"webSiteLink\": \"https://www.facebook.com/?ref=tn_tnmn\"\n}",
+          "content": "{\n  \"name\": \"La dernière brasserie avant la fin du monde\",\n  \"gpsLatitude\": \"48.\",\n  \"gpsLongitude\": \"2.3461672\",\n  \"description\": \"Coucou\",\n  \"webSiteLink\": \"https://www.facebook.com/?ref=tn_tnmn\",\n  \"facebokLink\": \"https://www.facebook.com/?ref=tn_tnmn\",\n  \"twitterLink\": \"https://www.facebook.com/?ref=tn_tnmn\",\n  \"instagramLink\": \"https://www.facebook.com/?ref=tn_tnmn\"\n}",
           "type": "json"
         }
       ]
@@ -1515,6 +1709,444 @@
   },
   {
     "type": "delete",
+    "url": "commentsBrewerys/delete/:commentsBrewery_id",
+    "title": "delete commentsBrewery",
+    "group": "CommentsBrewerys",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-access-token",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 200 Success\n{\n    \"error\": false\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": \"Le commentaire n'existe pas\"\n}\n\nHTTP/1.1 401 Unauthorized\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": \"Erreur lors de la récupération du commentaire\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/commentsBrewery.js",
+    "groupTitle": "CommentsBrewerys",
+    "name": "DeleteCommentsbrewerysDeleteCommentsbrewery_id"
+  },
+  {
+    "type": "get",
+    "url": "commentsBrewerys/?brewery_id=brewery_id&user_id=user_id",
+    "title": "get all commentsBrewerys",
+    "group": "CommentsBrewerys",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "brewery_id",
+            "description": ""
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "user_id",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": " HTTP/1.1 200 Success\n{\n   \"error\": false,\n   \"message\": [\n       {\n           \"id\": 1,\n           \"text\": \"J'adore cette brasserie\",\n           \"brewery_id\": 1,\n           \"user_id\": 1,\n           \"created_at\": \"2019-04-14T13:42:47.000Z\",\n           \"updated_at\": \"2019-04-14T13:42:47.000Z\",\n           \"deleted_at\": null\n       }\n   ]\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": \"Aucun commentaire trouvé\"\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": \"Erreur lors de la récupération des commentaires\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/commentsBrewery.js",
+    "groupTitle": "CommentsBrewerys",
+    "name": "GetCommentsbrewerysBrewery_idBrewery_idUser_idUser_id"
+  },
+  {
+    "type": "get",
+    "url": "commentsBrewerys/:commentsBrewery_id",
+    "title": "get commentsBrewery",
+    "group": "CommentsBrewerys",
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 200 Success\n{\n   \"error\": false,\n   \"message\": {\n           \"id\": 1,\n           \"text\": \"J'adore cette brasserie\",\n           \"brewery_id\": 1,\n           \"user_id\": 1,\n           \"created_at\": \"2019-04-14T13:42:47.000Z\",\n           \"updated_at\": \"2019-04-14T13:42:47.000Z\",\n           \"deleted_at\": null\n   }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": \"Le commentaire n'existe pas\"\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": \"Erreur lors de la récupération du commentaire\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/commentsBrewery.js",
+    "groupTitle": "CommentsBrewerys",
+    "name": "GetCommentsbrewerysCommentsbrewery_id"
+  },
+  {
+    "type": "post",
+    "url": "commentsBrewerys/create",
+    "title": "add a new commentsBrewery",
+    "group": "CommentsBrewerys",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-access-token",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "text",
+            "description": "<p>obligatoire</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "brewery_id",
+            "description": "<p>obligatoire</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Input",
+          "content": "{\n  \"text\": \"J'adore cette brasserie\",\n  \"brewery_id\": \"1\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 201 Created\n{\n    \"error\": false\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 401 Unauthorized\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": \"Erreur lors de la création de votre commentaire\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/commentsBrewery.js",
+    "groupTitle": "CommentsBrewerys",
+    "name": "PostCommentsbrewerysCreate"
+  },
+  {
+    "type": "put",
+    "url": "commentsBrewerys/update/:commentsBrewery_id",
+    "title": "update commentsBrewery",
+    "group": "CommentsBrewerys",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-access-token",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "text",
+            "description": "<p>obligatoire</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Input",
+          "content": "{\n   \"text\": \"J'adore cette brasserie\",\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 200 Success\n   {\n       \"error\": false\n   }",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 401 Unauthorized\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": message\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/commentsBrewery.js",
+    "groupTitle": "CommentsBrewerys",
+    "name": "PutCommentsbrewerysUpdateCommentsbrewery_id"
+  },
+  {
+    "type": "delete",
+    "url": "menusBeers/delete/:menusBeer_id",
+    "title": "delete menusBeer",
+    "group": "MenusBeers",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-access-token",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 200 Success\n{\n    \"error\": false\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 401 Unauthorized\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": message\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/menusBeer.js",
+    "groupTitle": "MenusBeers",
+    "name": "DeleteMenusbeersDeleteMenusbeer_id"
+  },
+  {
+    "type": "get",
+    "url": "menusBeers/?bar_id=bar_id&beer_id=beer_id",
+    "title": "get all menusBeers",
+    "group": "MenusBeers",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "bar_id",
+            "description": ""
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "beer_id",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": " HTTP/1.1 200 Success\n{\n   \"error\": false,\n   \"message\": [\n       {\n           \"id\": 1,\n           \"price\": \"10.00\",\n           \"bar_id\": 1,\n           \"beer_id\": 1,\n           \"created_at\": \"2019-04-14T13:42:47.000Z\",\n           \"updated_at\": \"2019-04-14T13:42:47.000Z\",\n           \"deleted_at\": null\n       }\n   ]\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": message\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/menusBeer.js",
+    "groupTitle": "MenusBeers",
+    "name": "GetMenusbeersBar_idBar_idBeer_idBeer_id"
+  },
+  {
+    "type": "get",
+    "url": "menusBeers/:menusBeer_id",
+    "title": "get menusBeer",
+    "group": "MenusBeers",
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 200 Success\n{\n   \"error\": false,\n   \"message\": {\n           \"id\": 1,\n           \"price\": \"10.00\",\n           \"bar_id\": 1,\n           \"beer_id\": 1,\n           \"created_at\": \"2019-04-14T13:42:47.000Z\",\n           \"updated_at\": \"2019-04-14T13:42:47.000Z\",\n           \"deleted_at\": null\n   }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": message\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/menusBeer.js",
+    "groupTitle": "MenusBeers",
+    "name": "GetMenusbeersMenusbeer_id"
+  },
+  {
+    "type": "post",
+    "url": "menusBeers/create",
+    "title": "add a new menusBeer",
+    "group": "MenusBeers",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-access-token",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "price",
+            "description": "<p>obligatoire</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "bar_id",
+            "description": "<p>obligatoire</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "beer_id",
+            "description": "<p>obligatoire</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Input",
+          "content": "{\n  \"price\": \"8.60\",\n  \"beer_id\": \"1\",\n  \"bar_id\": \"1\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 201 Created\n{\n    \"error\": false\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 401 Unauthorized\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": message\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/menusBeer.js",
+    "groupTitle": "MenusBeers",
+    "name": "PostMenusbeersCreate"
+  },
+  {
+    "type": "delete",
     "url": "notesBars/delete/:notesBar_id",
     "title": "delete notesBar",
     "group": "NotesBars",
@@ -2007,6 +2639,608 @@
   },
   {
     "type": "delete",
+    "url": "notesBrewerys/delete/:notesBrewery_id",
+    "title": "delete notesBrewery",
+    "group": "NotesBrewerys",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-access-token",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 200 Success\n{\n    \"error\": false\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": \"La note n'existe pas\"\n}\n\nHTTP/1.1 401 Unauthorized\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": \"Erreur lors de la récupération de la note\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/notesBrewery.js",
+    "groupTitle": "NotesBrewerys",
+    "name": "DeleteNotesbrewerysDeleteNotesbrewery_id"
+  },
+  {
+    "type": "get",
+    "url": "notesBrewerys/?brewery_id=brewery_id&user_id=user_id",
+    "title": "get all notesBrewerys",
+    "group": "NotesBrewerys",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "brewery_id",
+            "description": ""
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "user_id",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": " HTTP/1.1 200 Success\n{\n   \"error\": false,\n   \"message\": [\n       {\n           \"id\": 1,\n           \"note\": 15,\n           \"brewery_id\": 1,\n           \"user_id\": 1,\n           \"created_at\": \"2019-04-14T13:42:47.000Z\",\n           \"updated_at\": \"2019-04-14T13:42:47.000Z\",\n           \"deleted_at\": null\n       }\n   ]\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": \"Aucune note trouvé\"\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": \"Erreur lors de la récupération des notes\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/notesBrewery.js",
+    "groupTitle": "NotesBrewerys",
+    "name": "GetNotesbrewerysBrewery_idBrewery_idUser_idUser_id"
+  },
+  {
+    "type": "get",
+    "url": "notesBrewerys/:notesBrewery_id",
+    "title": "get notesBrewery",
+    "group": "NotesBrewerys",
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 200 Success\n{\n   \"error\": false,\n   \"message\": {\n           \"id\": 1,\n           \"note\": 15,\n           \"brewery_id\": 1,\n           \"user_id\": 1,\n           \"created_at\": \"2019-04-14T13:42:47.000Z\",\n           \"updated_at\": \"2019-04-14T13:42:47.000Z\",\n           \"deleted_at\": null\n   }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": \"La note n'existe pas\"\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": \"Erreur lors de la récupération de la note\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/notesBrewery.js",
+    "groupTitle": "NotesBrewerys",
+    "name": "GetNotesbrewerysNotesbrewery_id"
+  },
+  {
+    "type": "post",
+    "url": "notesBrewerys/create",
+    "title": "add a new notesBrewery",
+    "group": "NotesBrewerys",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-access-token",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "note",
+            "description": "<p>obligatoire</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "brewery_id",
+            "description": "<p>obligatoire</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Input",
+          "content": "{\n  \"note\": 15,\n  \"brewery_id\": \"1\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 201 Created\n{\n    \"error\": false\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 401 Unauthorized\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": \"Erreur lors de la création de votre note\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/notesBrewery.js",
+    "groupTitle": "NotesBrewerys",
+    "name": "PostNotesbrewerysCreate"
+  },
+  {
+    "type": "put",
+    "url": "notesBrewerys/update/:notesBrewery_id",
+    "title": "update notesBrewery",
+    "group": "NotesBrewerys",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-access-token",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "note",
+            "description": "<p>obligatoire</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Input",
+          "content": "{\n   \"note\": 15,\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 200 Success\n   {\n       \"error\": false\n   }",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 401 Unauthorized\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": message\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/notesBrewery.js",
+    "groupTitle": "NotesBrewerys",
+    "name": "PutNotesbrewerysUpdateNotesbrewery_id"
+  },
+  {
+    "type": "get",
+    "url": "picturesBars/download/:picturesBar_id",
+    "title": "download picture bar",
+    "group": "PicturesBar",
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 200 Success\n{\n    \"error\": false,\n    \"buffer\": buffer\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": message\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/picturesBar.js",
+    "groupTitle": "PicturesBar",
+    "name": "GetPicturesbarsDownloadPicturesbar_id"
+  },
+  {
+    "type": "delete",
+    "url": "picturesBars/delete/:picturesBar_id",
+    "title": "delete picturesBar",
+    "group": "PicturesBars",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-access-token",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 200 Success\n{\n    \"error\": false\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": \"L'utilisateur n'existe pas\"\n}\n\nHTTP/1.1 401 Unauthorized\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": \"Erreur lors de la récupération de l'utilisateurs\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/picturesBar.js",
+    "groupTitle": "PicturesBars",
+    "name": "DeletePicturesbarsDeletePicturesbar_id"
+  },
+  {
+    "type": "get",
+    "url": "picturesBars/?bar_id=bar_id",
+    "title": "get all picturesBars",
+    "group": "PicturesBars",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "bar_id",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "   HTTP/1.1 200 Success\n{\n   \"error\": false,\n   \"message\": [\n       {\n           \"id\": 1,\n           \"pathPicture\": \"a.png,\n           \"created_at\": \"2019-04-14T13:42:47.000Z\",\n           \"updated_at\": \"2019-04-14T13:42:47.000Z\",\n           \"deleted_at\": null,\n           \"bar_id\": 1\n       }\n   ]\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": message\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/picturesBar.js",
+    "groupTitle": "PicturesBars",
+    "name": "GetPicturesbarsBar_idBar_id"
+  },
+  {
+    "type": "post",
+    "url": "picturesBars/create",
+    "title": "add a new picture to bar",
+    "group": "PicturesBars",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-access-token",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "File",
+            "optional": false,
+            "field": "file",
+            "description": "<p>Obligatoire, format png ou jpg</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "bar_id",
+            "description": ""
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Input",
+          "content": "{\n  \"bar_id\": 1\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 201 Created\n{\n    \"error\": false\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 401 Unauthorized\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": message\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/picturesBar.js",
+    "groupTitle": "PicturesBars",
+    "name": "PostPicturesbarsCreate"
+  },
+  {
+    "type": "get",
+    "url": "picturesBrewerys/download/:picturesBrewery_id",
+    "title": "download picture brewery",
+    "group": "PicturesBrewery",
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 200 Success\n{\n    \"error\": false,\n    \"buffer\": buffer\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": message\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/picturesBrewery.js",
+    "groupTitle": "PicturesBrewery",
+    "name": "GetPicturesbrewerysDownloadPicturesbrewery_id"
+  },
+  {
+    "type": "delete",
+    "url": "picturesBrewerys/delete/:picturesBrewery_id",
+    "title": "delete picturesBrewery",
+    "group": "PicturesBrewerys",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-access-token",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 200 Success\n{\n    \"error\": false\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": \"L'utilisateur n'existe pas\"\n}\n\nHTTP/1.1 401 Unauthorized\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": \"Erreur lors de la récupération de l'utilisateurs\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/picturesBrewery.js",
+    "groupTitle": "PicturesBrewerys",
+    "name": "DeletePicturesbrewerysDeletePicturesbrewery_id"
+  },
+  {
+    "type": "get",
+    "url": "picturesBrewerys/?brewery_id=brewery_id",
+    "title": "get all picturesBrewerys",
+    "group": "PicturesBrewerys",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "brewery_id",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "   HTTP/1.1 200 Success\n{\n   \"error\": false,\n   \"message\": [\n       {\n           \"id\": 1,\n           \"pathPicture\": \"a.png,\n           \"created_at\": \"2019-04-14T13:42:47.000Z\",\n           \"updated_at\": \"2019-04-14T13:42:47.000Z\",\n           \"deleted_at\": null,\n           \"brewery_id\": 1\n       }\n   ]\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": message\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/picturesBrewery.js",
+    "groupTitle": "PicturesBrewerys",
+    "name": "GetPicturesbrewerysBrewery_idBrewery_id"
+  },
+  {
+    "type": "post",
+    "url": "picturesBrewerys/create",
+    "title": "add a new picture to brewery",
+    "group": "PicturesBrewerys",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-access-token",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "File",
+            "optional": false,
+            "field": "file",
+            "description": "<p>Obligatoire, format png ou jpg</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "brewery_id",
+            "description": ""
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Input",
+          "content": "{\n  \"brewery_id\": 1\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 201 Created\n{\n    \"error\": false\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 401 Unauthorized\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": message\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/picturesBrewery.js",
+    "groupTitle": "PicturesBrewerys",
+    "name": "PostPicturesbrewerysCreate"
+  },
+  {
+    "type": "delete",
     "url": "typeOfBeers/delete/:typeOfBeer_id",
     "title": "delete type of beer",
     "group": "TypeOfBeers",
@@ -2045,6 +3279,34 @@
     "filename": "configs/Routes/typeOfBeer.js",
     "groupTitle": "TypeOfBeers",
     "name": "DeleteTypeofbeersDeleteTypeofbeer_id"
+  },
+  {
+    "type": "get",
+    "url": "typeOfBeers/download/:typeOfBeer_id",
+    "title": "download picture typeOfBeer",
+    "group": "TypeOfBeers",
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 200 Success\n{\n    \"error\": false,\n    \"buffer\": buffer\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": message\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/typeOfBeer.js",
+    "groupTitle": "TypeOfBeers",
+    "name": "GetTypeofbeersDownloadTypeofbeer_id"
   },
   {
     "type": "get",
@@ -2236,6 +3498,60 @@
     "filename": "configs/Routes/typeOfBeer.js",
     "groupTitle": "TypeOfBeers",
     "name": "PutTypeofbeersUpdateTypeofbeer_id"
+  },
+  {
+    "type": "put",
+    "url": "typeOfBeers/upload/:typeOfBeer_id",
+    "title": "upload picture typeOfBeer",
+    "group": "TypeOfBeers",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-access-token",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "File",
+            "optional": false,
+            "field": "file",
+            "description": "<p>Obligatoire, format png ou jpg</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 201 Created\n{\n    \"error\": false\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 401 Unauthorized\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": message\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/typeOfBeer.js",
+    "groupTitle": "TypeOfBeers",
+    "name": "PutTypeofbeersUploadTypeofbeer_id"
   },
   {
     "type": "delete",
@@ -2671,8 +3987,8 @@
   },
   {
     "type": "put",
-    "url": "users/upload/:user_id",
-    "title": "upload picture user",
+    "url": "users/:user_id/addBar",
+    "title": "add link between type of beer and user",
     "group": "Users",
     "header": {
       "fields": {
@@ -2692,19 +4008,26 @@
         "Parameter": [
           {
             "group": "Parameter",
-            "type": "File",
+            "type": "String",
             "optional": false,
-            "field": "file",
-            "description": "<p>Obligatoire, format png ou jpg</p>"
+            "field": "bar_id",
+            "description": ""
           }
         ]
-      }
+      },
+      "examples": [
+        {
+          "title": "Input",
+          "content": "{\n  \"bar_id\": 1\n}",
+          "type": "json"
+        }
+      ]
     },
     "success": {
       "examples": [
         {
           "title": "Success",
-          "content": "HTTP/1.1 201 Created\n{\n    \"error\": false\n}",
+          "content": "HTTP/1.1 200 Success\n{\n    \"error\": false\n}",
           "type": "json"
         }
       ]
@@ -2721,7 +4044,68 @@
     "version": "0.0.0",
     "filename": "configs/Routes/user.js",
     "groupTitle": "Users",
-    "name": "PutUsersUploadUser_id"
+    "name": "PutUsersUser_idAddbar"
+  },
+  {
+    "type": "put",
+    "url": "users/:user_id/addBrewery",
+    "title": "add link between type of beer and user",
+    "group": "Users",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-access-token",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "brewery_id",
+            "description": ""
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Input",
+          "content": "{\n  \"brewery_id\": 1\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 200 Success\n{\n    \"error\": false\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 401 Unauthorized\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": message\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/user.js",
+    "groupTitle": "Users",
+    "name": "PutUsersUser_idAddbrewery"
   },
   {
     "type": "put",
@@ -2786,6 +4170,88 @@
   },
   {
     "type": "put",
+    "url": "users/:user_id/deleteBar/:bar_id",
+    "title": "delete link between type of beer and user",
+    "group": "Users",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-access-token",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 200 Success\n{\n    \"error\": false\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 401 Unauthorized\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": message\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/user.js",
+    "groupTitle": "Users",
+    "name": "PutUsersUser_idDeletebarBar_id"
+  },
+  {
+    "type": "put",
+    "url": "users/:user_id/deleteBrewery/:brewery_id",
+    "title": "delete link between type of beer and user",
+    "group": "Users",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-access-token",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 200 Success\n{\n    \"error\": false\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 401 Unauthorized\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": message\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/user.js",
+    "groupTitle": "Users",
+    "name": "PutUsersUser_idDeletebreweryBrewery_id"
+  },
+  {
+    "type": "put",
     "url": "users/:user_id/deleteTypeOfBeer/:typeOfBeer_id",
     "title": "delete link between type of beer and user",
     "group": "Users",
@@ -2824,5 +4290,66 @@
     "filename": "configs/Routes/user.js",
     "groupTitle": "Users",
     "name": "PutUsersUser_idDeletetypeofbeerTypeofbeer_id"
+  },
+  {
+    "type": "put",
+    "url": "menusBeers/update/:menusBeer_id",
+    "title": "update menusBeer",
+    "group": "menusBeers",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-access-token",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "price",
+            "description": "<p>obligatoire</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Input",
+          "content": "{\n   \"price\": \"10.00\",\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 200 Success\n   {\n       \"error\": false\n   }",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 401 Unauthorized\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": message\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/menusBeer.js",
+    "groupTitle": "menusBeers",
+    "name": "PutMenusbeersUpdateMenusbeer_id"
   }
 ]
