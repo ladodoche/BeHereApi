@@ -34,7 +34,7 @@ function isAuthenticatedUserCreateMenu(req, res, next) {
   });
 }
 
-function isAuthenticatedUserBenu(req, res, next) {
+function isAuthenticatedUserMenu(req, res, next) {
   const token = req.headers['x-access-token'];
   const menusBeer_id = req.params.menusBeer_id;
 
@@ -46,11 +46,11 @@ function isAuthenticatedUserBenu(req, res, next) {
       MenusBeerController.getOne(menusBeer_id)
       .then((menuBeer) => {
         if(menuBeer === null || menuBeer === undefined)
-          return res.status(400).json({"error": true, "message": "L'image n'existe pas"});
+          return res.status(400).json({"error": true, "message": "Le menu n'existe pas"});
         else
           done(null, menuBeer);
       }).catch((err) => {
-          return res.status(500).json({"error": true, "message": "Erreur lors de la récupération de l'image"});
+          return res.status(500).json({"error": true, "message": "Erreur lors de la récupération du menu"});
       });
     },
     function(menuBeer, done){
@@ -279,7 +279,7 @@ menusBeerRouter.get('/:menusBeer_id', function(req, res) {
 *        "message": message
 *    }
 */
-menusBeerRouter.put('/update/:menusBeer_id', isAuthenticatedUserBenu, function(req, res){
+menusBeerRouter.put('/update/:menusBeer_id', isAuthenticatedUserMenu, function(req, res){
   const menusBeer_id = req.params.menusBeer_id;
   const price = req.body.price;
   const hidden = req.body.hidden;
@@ -338,7 +338,7 @@ menusBeerRouter.put('/update/:menusBeer_id', isAuthenticatedUserBenu, function(r
 *        "message": message
 *    }
 */
-menusBeerRouter.delete('/delete/:menusBeer_id', isAuthenticatedUserBenu, function(req, res){
+menusBeerRouter.delete('/delete/:menusBeer_id', isAuthenticatedUserMenu, function(req, res){
   const menusBeer_id = req.params.menusBeer_id;
 
   asyncLib.waterfall([
