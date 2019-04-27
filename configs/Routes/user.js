@@ -281,6 +281,92 @@ userRouter.get('/:user_id', function(req, res) {
 });
 
 /**
+@api {get} users/establishment/:user_id get user
+* @apiGroup Users
+* @apiSuccessExample {json} Success
+*    HTTP/1.1 200 Success
+*    {
+*        "error": false,
+*        "establishment": [
+*          {
+*           "id": 1,
+*           "name": "Le dernier bar avant la fin du monde 2",
+*           "gpsLatitude": 48,
+*           "gpsLongitude": 2.3461672,
+*           "earlyHappyHours": "19:00",
+*           "lateHappyHours": "02:00",
+*           "description": "Coucou",
+*           "webSiteLink": "https://www.facebook.com/?ref=tn_tnmn",
+*           "facebokLink": null,
+*           "twitterLink": null,
+*           "instagramLink": null,
+*           "created_at": "2019-04-27T11:12:52.000Z",
+*           "updated_at": "2019-04-27T11:12:52.000Z",
+*           "deleted_at": null,
+*           "user_id": 1,
+*           "establishment": "bar"
+*         }
+*       ]
+*    }
+* @apiErrorExample {json} Error
+*    HTTP/1.1 400 Bad Request
+*    {
+*        "error": true,
+*        "message": message
+*    }
+*
+*    HTTP/1.1 500 Internal Server Error
+*    {
+*        "error": true,
+*        "message": message
+*    }
+*/
+userRouter.get('/establishment/:user_id', function(req, res) {
+  const user_id = req.params.user_id;
+	var result = [];
+
+  asyncLib.waterfall([
+    function(done){
+      UserController.getOne(user_id)
+      .then((user) => {
+        if(user === null || user === undefined)
+          return res.status(400).json({"error": true, "message": "L'utilisateur n'existe pas"});
+        done(null, user);
+      })
+      .catch((err) => {
+          return res.status(500).json({"error": true, "message": "Erreur lors de la récupération de l'utilisateur"});
+      });
+    },
+    function(user, done){
+      BarController.getAll(undefined, user_id)
+      .then((bars) => {
+          done(null, user, bars);
+      })
+      .catch((err) => {
+        return res.status(500).json({"error": true, "message": "Erreur lors de la récupération du bar"});
+      });
+    },
+    function(user, bars, done){
+      BreweryController.getAll(undefined, user_id)
+      .then((brewerys) => {
+        bars.forEach(function(element) {
+          element["dataValues"]["establishment"] = "bar";
+          result.push(element);
+        });
+        brewerys.forEach(function(element) {
+          element["dataValues"]["establishment"] = "brewery";
+          result.push(element);
+        });
+        return res.status(200).json({"error": false, "establishment": result});
+      })
+      .catch((err) => {
+        return res.status(500).json({"error": true, "message": "Erreur lors de la récupération de la brasserie"});
+      });
+    }
+  ]);
+});
+
+/**
 @api {put} users/update/:user_id update user
 * @apiGroup Users
 * @apiHeader {String} x-access-token
