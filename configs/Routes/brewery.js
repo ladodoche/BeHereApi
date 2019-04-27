@@ -4,6 +4,9 @@ const controllers = require('../../controllers');
 const asyncLib = require('async');
 const jwt = require('jsonwebtoken');
 const auth = require('../auth.js');
+const fileUpload = require('express-fileupload');
+const fs = require('fs');
+const path = require('path');
 const BreweryController = controllers.BreweryController;
 
 const breweryRouter = express.Router();
@@ -357,6 +360,134 @@ breweryRouter.delete('/delete/:brewery_id', isAuthenticatedBreweryAccount, funct
     }
   ]);
 });
+
+breweryRouter.use(fileUpload());
+/**
+@api {put} brewerys/upload/:brewery_id upload picture brewery
+* @apiGroup Brewerys
+* @apiHeader {String} x-access-token
+* @apiParam {File} file Obligatoire, format png ou jpg
+* @apiSuccessExample {json} Success
+*    HTTP/1.1 201 Created
+*    {
+*        "error": false
+*    }
+* @apiErrorExample {json} Error
+*    HTTP/1.1 400 Bad Request
+*    {
+*        "error": true,
+*        "message": message
+*    }
+*
+*    HTTP/1.1 401 Unauthorized
+*    {
+*        "error": true,
+*        "message": message
+*    }
+*
+*    HTTP/1.1 500 Internal Server Error
+*    {
+*        "error": true,
+*        "message": message
+*    }
+*/
+breweryRouter.put('/upload/:brewery_id', isAuthenticatedBreweryAccount, function(req, res) {
+  const brewery_id = req.params.brewery_id;
+  const fileToUpload = req.files.file;
+  asyncLib.waterfall([
+    function(done){
+      BreweryController.getOne(brewery_id)
+      .then((brewery) => {
+        if(brewery === null || brewery === undefined)
+          return res.status(400).json({"error": true, "message": "La brasserie n'existe pas"});
+        done(null, brewery);
+      })
+      .catch((err) => {
+          return res.status(500).json({"error": true, "message": "Erreur lors de la récupération de la brasserie"});
+      });
+    },
+    function(brewery, done){
+      const ext = fileToUpload.name.substr(fileToUpload.name.lastIndexOf('.') + 1).toLowerCase();
+      const regex = new RegExp(' ','g');
+      var src_tracks = brewery.id+"."+ext;
+      src_tracks = src_tracks.replace(regex, '_');
+
+      if(fileToUpload === undefined)
+        return res.status(400).json({"error": true, "message": "Aucune image à upload"}).end();
+      if(ext != "png" && ext != "jpg")
+        return res.status(400).json({"error": true, "message": "Format de l'image non géré (png et jpg)"}).end();
+
+      fileToUpload.mv("medias/brewerys/"+src_tracks, function(err) {
+        if (err)
+          return res.status(400).json({"error": true, "message": "Erreur lors de l'upload"});
+        else
+          done(null, brewery, src_tracks);
+      });
+    },
+    function(brewery, src_tracks, done){
+      BreweryController.update(brewery, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, src_tracks)
+      .then((track) => {
+        return res.status(201).json({"error": false});
+      })
+      .catch((err) => {
+        return res.status(500).json({"error": true, "message": "Erreur lors de la sauvegarde du chemin"});
+      });
+    }
+  ])
+});
+
+/**
+  @api {get} brewerys/download/:brewery_id download picture brewery
+* @apiGroup Brewerys
+* @apiSuccessExample {json} Success
+*    HTTP/1.1 200 Success
+*    {
+*        "error": false,
+*        "buffer": buffer
+*    }
+* @apiErrorExample {json} Error
+*    HTTP/1.1 400 Bad Request
+*    {
+*        "error": true,
+*        "message": message
+*    }
+*
+*    HTTP/1.1 500 Internal Server Error
+*    {
+*        "error": true,
+*        "message": message
+*    }
+*/
+breweryRouter.get('/download/:brewery_id', function(req, res){
+  const brewery_id = req.params.brewery_id;
+  var pathBrewerysDefault = path.resolve( __dirname+"/../../medias/brewerys/");
+
+  BreweryController.getOne(brewery_id)
+  .then((brewery) => {
+    if(brewery === null || brewery === undefined)
+      return res.status(401).json({"error": true, "message": "La brasserie n'existe pas"});
+    pathBrewerys = pathBrewerysDefault + "\\" + brewery.pathPicture;
+
+    if (fs.existsSync(pathBrewerys)){
+      const buffer = new Buffer(fs.readFileSync(pathBrewerys), 'base64');
+      res.writeHead(200, {
+       'Content-Type': 'image/jpeg',
+       'Content-Length': buffer.length
+     });
+     res.end(buffer);
+    }else{
+      const buffer = new Buffer(fs.readFileSync(pathBrewerysDefault + "\\" + 'defaultprofile.png'), 'base64');
+      res.writeHead(200, {
+       'Content-Type': 'image/png',
+       'Content-Length': buffer.length
+     });
+     res.end(buffer);
+
+  }})
+  .catch((err) => {
+    return res.status(500).json({"error": true, "message": "Image non trouvé sur notre serveur"});
+  });
+})
 
 
 module.exports = breweryRouter;

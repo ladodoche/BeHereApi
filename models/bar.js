@@ -123,6 +123,16 @@ module.exports = function(sequelize, Datatypes){
           msg: 'Le format de votre url n\'est pas correcte'
         }
       }
+    },
+    pathPicture: {
+      type: Datatypes.STRING,
+      allowNull: true,
+      validate: {
+        len: {
+          args: [2,250],
+          msg: 'Chemin non conforme'
+        }
+      }
     }
   }, {
     paranoid: true,

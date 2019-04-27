@@ -46,7 +46,7 @@ BreweryController.getOne = function(brewery_id){
 
 
 //////////////////////////////////////////////////////
-BreweryController.update = function(brewery, name, gpsLatitude, gpsLongitude, description, webSiteLink, facebokLink, twitterLink, instagramLink){
+BreweryController.update = function(brewery, name, gpsLatitude, gpsLongitude, description, webSiteLink, facebokLink, twitterLink, instagramLink, pathPicture){
   const options = {};
   const where = {};
   const json = {};
@@ -59,6 +59,7 @@ BreweryController.update = function(brewery, name, gpsLatitude, gpsLongitude, de
   if(facebokLink !== undefined){json.facebokLink = facebokLink}
   if(twitterLink !== undefined){json.twitterLink = twitterLink}
   if(instagramLink !== undefined){json.instagramLink = instagramLink}
+  if(pathPicture !== undefined){json.pathPicture = pathPicture}
   options.where = where;
   options.timezone = '+02:00';
 

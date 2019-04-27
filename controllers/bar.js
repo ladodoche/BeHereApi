@@ -47,7 +47,7 @@ BarController.getOne = function(bar_id){
 
 
 //////////////////////////////////////////////////////
-BarController.update = function(bar, name, gpsLatitude, gpsLongitude, description, earlyHappyHours, lateHappyHours, webSiteLink, facebokLink, twitterLink, instagramLink){
+BarController.update = function(bar, name, gpsLatitude, gpsLongitude, description, earlyHappyHours, lateHappyHours, webSiteLink, facebokLink, twitterLink, instagramLink, pathPicture){
   const options = {};
   const where = {};
   const json = {};
@@ -62,6 +62,7 @@ BarController.update = function(bar, name, gpsLatitude, gpsLongitude, descriptio
   if(facebokLink !== undefined){json.facebokLink = facebokLink}
   if(twitterLink !== undefined){json.twitterLink = twitterLink}
   if(instagramLink !== undefined){json.instagramLink = instagramLink}
+  if(pathPicture !== undefined){json.pathPicture = pathPicture}
   options.where = where;
   options.timezone = '+02:00';
 
