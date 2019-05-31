@@ -14,5 +14,6 @@ module.exports = {
   PicturesBreweryController: require('./picturesBrewery'),
   MenusBeerController: require('./menusBeer'),
   ReservationController: require('./reservation'),
-  OrderMenuBeerController: require('./OrderMenuBeer')
+  OrderMenuBeerController: require('./OrderMenuBeer'),
+  EventController: require('./Event')
 }
