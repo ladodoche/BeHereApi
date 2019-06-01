@@ -125,6 +125,34 @@ define({ "api": [
   },
   {
     "type": "get",
+    "url": "bars/download/:bar_id",
+    "title": "download picture bar",
+    "group": "Bars",
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 200 Success\n{\n    \"error\": false,\n    \"buffer\": buffer\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": message\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/bar.js",
+    "groupTitle": "Bars",
+    "name": "GetBarsDownloadBar_id"
+  },
+  {
+    "type": "get",
     "url": "bars/?name=name&user_id=user_id",
     "title": "get all bars",
     "group": "Bars",
@@ -170,6 +198,47 @@ define({ "api": [
     "filename": "configs/Routes/bar.js",
     "groupTitle": "Bars",
     "name": "GetBarsNameNameUser_idUser_id"
+  },
+  {
+    "type": "get",
+    "url": "bars/research/:data",
+    "title": "research bars",
+    "group": "Bars",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "data",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "   HTTP/1.1 200 Success\n{\n   \"error\": false,\n   \"message\": [\n       {\n           \"id\": 1,\n           \"name\": \"Le dernier bar avant la fin du monde\",\n           \"gpsLatitude\": 48,\n           \"gpsLongitude\": 2.3461672,\n           \"description\": \"Coucou\",\n           \"webSiteLink\": \"https://www.facebook.com/?ref=tn_tnmn\",\n           \"created_at\": \"2019-04-14T13:42:47.000Z\",\n           \"updated_at\": \"2019-04-14T13:42:47.000Z\",\n           \"deleted_at\": null,\n           \"user_id\": 1\n       }\n   ]\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": \"Aucun bar trouvé\"\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": \"Erreur lors de la recherche des bars\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/bar.js",
+    "groupTitle": "Bars",
+    "name": "GetBarsResearchData"
   },
   {
     "type": "post",
@@ -420,6 +489,60 @@ define({ "api": [
     "name": "PutBarsUpdateBar_id"
   },
   {
+    "type": "put",
+    "url": "bars/upload/:bar_id",
+    "title": "upload picture bar",
+    "group": "Bars",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-access-token",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "File",
+            "optional": false,
+            "field": "file",
+            "description": "<p>Obligatoire, format png ou jpg</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 201 Created\n{\n    \"error\": false\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 401 Unauthorized\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": message\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/bar.js",
+    "groupTitle": "Bars",
+    "name": "PutBarsUploadBar_id"
+  },
+  {
     "type": "delete",
     "url": "beers/delete/:beer_id",
     "title": "delete beer",
@@ -570,6 +693,47 @@ define({ "api": [
     "filename": "configs/Routes/beer.js",
     "groupTitle": "Beers",
     "name": "GetBeersEmailEmailColorColorOriginOrigin"
+  },
+  {
+    "type": "get",
+    "url": "beers/research/:data",
+    "title": "research beers",
+    "group": "Beers",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "data",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "   HTTP/1.1 200 Success\n{\n   \"error\": false,\n       \"message\": [\n             {\n                 \"id\": 1,\n                 \"name\": \"Leffe\",\n                 \"color\": \"blonde\",\n                 \"origin\": \"Belgique\",\n                 \"description\": \"La Leffe ou Abbaye de Leffe est une bière belge d'Abbaye reconnue, créée en 1240 par les chanoines de l'ordre de Prémontré de l'abbaye Notre-Dame de Leffe et produite par la brasserie Artois à Louvain.\",\n                 \"pathPicture\": null,\n                 \"created_at\": \"2019-04-14T09:20:46.000Z\",\n                 \"updated_at\": \"2019-04-14T09:20:46.000Z\",\n                 \"deleted_at\": null,\n                 \"typeOfBeer\": [\n                       {\n                           \"id\": 2,\n                           \"name\": \"Brune\",\n                           \"created_at\": \"2019-04-20T09:42:06.000Z\",\n                           \"updated_at\": \"2019-04-20T09:42:06.000Z\",\n                           \"deleted_at\": null,\n                           \"beer_typeOfBeer\": {\n                               \"created_at\": \"2019-04-20T09:44:59.000Z\",\n                               \"updated_at\": \"2019-04-20T09:44:59.000Z\",\n                               \"beer_id\": 1,\n                               \"type_of_beer_id\": 2\n                           }\n                       },\n                       {\n                           \"id\": 3,\n                           \"name\": \"Blanche\",\n                           \"created_at\": \"2019-04-20T09:42:12.000Z\",\n                           \"updated_at\": \"2019-04-20T09:42:12.000Z\",\n                           \"deleted_at\": null,\n                           \"beer_typeOfBeer\": {\n                               \"created_at\": \"2019-04-20T09:45:01.000Z\",\n                               \"updated_at\": \"2019-04-20T09:45:01.000Z\",\n                               \"beer_id\": 1,\n                               \"type_of_beer_id\": 3\n                           }\n                       }\n                   ]\n             }\n       ]\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": \"Aucune bière trouvé\"\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": \"Erreur lors de la recherche des bières\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/beer.js",
+    "groupTitle": "Beers",
+    "name": "GetBeersResearchData"
   },
   {
     "type": "post",
@@ -949,6 +1113,34 @@ define({ "api": [
   },
   {
     "type": "get",
+    "url": "brewerys/download/:brewery_id",
+    "title": "download picture brewery",
+    "group": "Brewerys",
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 200 Success\n{\n    \"error\": false,\n    \"buffer\": buffer\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": message\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/brewery.js",
+    "groupTitle": "Brewerys",
+    "name": "GetBrewerysDownloadBrewery_id"
+  },
+  {
+    "type": "get",
     "url": "brewerys/?name=name&user_id=user_id",
     "title": "get all brewerys",
     "group": "Brewerys",
@@ -994,6 +1186,47 @@ define({ "api": [
     "filename": "configs/Routes/brewery.js",
     "groupTitle": "Brewerys",
     "name": "GetBrewerysNameNameUser_idUser_id"
+  },
+  {
+    "type": "get",
+    "url": "brewerys/research/:data",
+    "title": "research brewerys",
+    "group": "Brewerys",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "data",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "   HTTP/1.1 200 Success\n{\n   \"error\": false,\n   \"message\": [\n       {\n           \"id\": 1,\n           \"name\": \"La dernière brasserie avant la fin du monde\",\n           \"gpsLatitude\": 48,\n           \"gpsLongitude\": 2.3461672,\n           \"description\": \"Coucou\",\n           \"webSiteLink\": \"https://www.facebook.com/?ref=tn_tnmn\",\n           \"created_at\": \"2019-04-14T13:42:47.000Z\",\n           \"updated_at\": \"2019-04-14T13:42:47.000Z\",\n           \"deleted_at\": null,\n           \"user_id\": 1\n       }\n   ]\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": \"Aucune brasserie trouvé\"\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": \"Erreur lors de la recherche des brasseries\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/brewery.js",
+    "groupTitle": "Brewerys",
+    "name": "GetBrewerysResearchData"
   },
   {
     "type": "post",
@@ -1214,6 +1447,60 @@ define({ "api": [
     "filename": "configs/Routes/brewery.js",
     "groupTitle": "Brewerys",
     "name": "PutBrewerysUpdateBrewery_id"
+  },
+  {
+    "type": "put",
+    "url": "brewerys/upload/:brewery_id",
+    "title": "upload picture brewery",
+    "group": "Brewerys",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-access-token",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "File",
+            "optional": false,
+            "field": "file",
+            "description": "<p>Obligatoire, format png ou jpg</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 201 Created\n{\n    \"error\": false\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 401 Unauthorized\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": message\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/brewery.js",
+    "groupTitle": "Brewerys",
+    "name": "PutBrewerysUploadBrewery_id"
   },
   {
     "type": "delete",
@@ -1952,6 +2239,191 @@ define({ "api": [
     "filename": "configs/Routes/commentsBrewery.js",
     "groupTitle": "CommentsBrewerys",
     "name": "PutCommentsbrewerysUpdateCommentsbrewery_id"
+  },
+  {
+    "type": "delete",
+    "url": "events/delete/:event_id",
+    "title": "delete event",
+    "group": "Events",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-access-token",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 200 Success\n{\n    \"error\": false\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": \"L'évènement n'existe pas\"\n}\n\nHTTP/1.1 401 Unauthorized\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": \"Erreur lors de la récupération de l'évènement\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/event.js",
+    "groupTitle": "Events",
+    "name": "DeleteEventsDeleteEvent_id"
+  },
+  {
+    "type": "get",
+    "url": "events/:events_id",
+    "title": "get event",
+    "group": "Events",
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 200 Success\n{\n   \"error\": false,\n   \"message\": [\n       {\n           \"title\": \"soirée Jazz\",\n           \"date\": \"2019-12-12\",\n           \"description\": \"\",\n           \"bar_id\": \"1\",\n           \"brewery_id\": null\n           \"created_at\": \"2019-04-14T13:42:47.000Z\",\n           \"updated_at\": \"2019-04-14T13:42:47.000Z\",\n           \"deleted_at\": null\n       }\n   ]\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": \"L'évènement n'existe pas\"\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": \"Erreur lors de la récupération de l'évènement\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/event.js",
+    "groupTitle": "Events",
+    "name": "GetEventsEvents_id"
+  },
+  {
+    "type": "get",
+    "url": "events/research/:data",
+    "title": "research events",
+    "group": "Events",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "data",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "   HTTP/1.1 200 Success\n{\n   \"error\": false,\n   \"message\": [\n       {\n           \"title\": \"soirée Jazz\",\n           \"date\": \"2019-12-12\",\n           \"description\": \"\",\n           \"bar_id\": \"1\",\n           \"brewery_id\": null\n           \"created_at\": \"2019-04-14T13:42:47.000Z\",\n           \"updated_at\": \"2019-04-14T13:42:47.000Z\",\n           \"deleted_at\": null\n       }\n   ]\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": \"Aucun évènement trouvé\"\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": \"Erreur lors de la recherche des évènements\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/event.js",
+    "groupTitle": "Events",
+    "name": "GetEventsResearchData"
+  },
+  {
+    "type": "put",
+    "url": "events/update/:event_id",
+    "title": "update brewery",
+    "group": "Events",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-access-token",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "title",
+            "description": "<p>obligatoire</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Date",
+            "optional": false,
+            "field": "date",
+            "description": "<p>obligatoire</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Texte",
+            "optional": false,
+            "field": "description",
+            "description": ""
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Input",
+          "content": "{\n  \"title\": \"soirée Jazz\",\n  \"date\": \"2019-12-12\",\n  \"description\": \"\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 200 Success\n   {\n       \"error\": false\n   }",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 401 Unauthorized\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": message\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/event.js",
+    "groupTitle": "Events",
+    "name": "PutEventsUpdateEvent_id"
   },
   {
     "type": "delete",
@@ -4899,6 +5371,143 @@ define({ "api": [
     "filename": "configs/Routes/user.js",
     "groupTitle": "Users",
     "name": "PutUsersUser_idDeletetypeofbeerTypeofbeer_id"
+  },
+  {
+    "type": "get",
+    "url": "events/?bar_id=bar_id&brewery_id=brewery_id",
+    "title": "get all events",
+    "group": "brewerys",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "bar_id",
+            "description": ""
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "brewery_id",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": " HTTP/1.1 200 Success\n{\n   \"error\": false,\n   \"message\": [\n       {\n           \"title\": \"soirée Jazz\",\n           \"date\": \"2019-12-12\",\n           \"description\": \"\",\n           \"bar_id\": \"1\",\n           \"brewery_id\": null\n           \"created_at\": \"2019-04-14T13:42:47.000Z\",\n           \"updated_at\": \"2019-04-14T13:42:47.000Z\",\n           \"deleted_at\": null\n       }\n   ]\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": \"Aucun évènement trouvé\"\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": \"Erreur lors de la récupération des évènements\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/event.js",
+    "groupTitle": "brewerys",
+    "name": "GetEventsBar_idBar_idBrewery_idBrewery_id"
+  },
+  {
+    "type": "post",
+    "url": "events/create",
+    "title": "add a new event",
+    "group": "events",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-access-token",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "title",
+            "description": "<p>obligatoire</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Date",
+            "optional": false,
+            "field": "date",
+            "description": "<p>obligatoire</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Texte",
+            "optional": false,
+            "field": "description",
+            "description": ""
+          },
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "bar_id",
+            "description": ""
+          },
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "brewery_id",
+            "description": ""
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Input",
+          "content": "{\n  \"title\": \"soirée Jazz\",\n  \"date\": \"2019-12-12\",\n  \"description\": \"\",\n  \"bar_id\": \"1\",\n  \"brewery_id\": null\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 201 Created\n{\n    \"error\": false\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 401 Unauthorized\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": \"Erreur lors de la création de votre évènement\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/event.js",
+    "groupTitle": "events",
+    "name": "PostEventsCreate"
   },
   {
     "type": "put",

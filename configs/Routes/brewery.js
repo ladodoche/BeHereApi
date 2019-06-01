@@ -226,6 +226,59 @@ breweryRouter.get('/:brewery_id', function(req, res) {
   });
 });
 
+
+/**
+@api {get} brewerys/research/:data research brewerys
+* @apiGroup Brewerys
+* @apiParam {String} data
+* @apiSuccessExample {json} Success
+*    HTTP/1.1 200 Success
+* {
+*    "error": false,
+*    "message": [
+*        {
+*            "id": 1,
+*            "name": "La dernière brasserie avant la fin du monde",
+*            "gpsLatitude": 48,
+*            "gpsLongitude": 2.3461672,
+*            "description": "Coucou",
+*            "webSiteLink": "https://www.facebook.com/?ref=tn_tnmn",
+*            "created_at": "2019-04-14T13:42:47.000Z",
+*            "updated_at": "2019-04-14T13:42:47.000Z",
+*            "deleted_at": null,
+*            "user_id": 1
+*        }
+*    ]
+* }
+* @apiErrorExample {json} Error
+*    HTTP/1.1 400 Bad Request
+*    {
+*        "error": true,
+*        "message": "Aucune brasserie trouvé"
+*    }
+*
+*    HTTP/1.1 500 Internal Server Error
+*    {
+*        "error": true,
+*        "message": "Erreur lors de la recherche des brasseries"
+*    }
+*/
+////////////////////////////////////////////////////
+breweryRouter.get('/research/:data', function(req, res) {
+  const data = req.params.data;
+
+  BreweryController.research(data)
+  .then((brewerys) => {
+    if(brewerys === undefined || brewerys === null)
+      return res.status(400).json({"error": true, "message": "Aucune brasserie trouvé"});
+    return res.status(200).json({"error": false, "brewery": brewerys});
+  })
+  .catch((err) => {
+    return res.status(500).json({"error": true, "message": "Erreur lors de la recherche des brasseries"});
+  });
+});
+
+
 /**
 @api {put} brewerys/update/:brewery_id update brewery
 * @apiGroup Brewerys

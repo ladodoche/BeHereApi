@@ -237,7 +237,8 @@ eventRouter.get('/', function(req, res) {
 * HTTP/1.1 200 Success
 * {
 *    "error": false,
-*    "message": {
+*    "message": [
+*        {
 *            "title": "soirée Jazz",
 *            "date": "2019-12-12",
 *            "description": "",
@@ -246,7 +247,8 @@ eventRouter.get('/', function(req, res) {
 *            "created_at": "2019-04-14T13:42:47.000Z",
 *            "updated_at": "2019-04-14T13:42:47.000Z",
 *            "deleted_at": null
-*    }
+*        }
+*    ]
 * }
 * @apiErrorExample {json} Error
 *    HTTP/1.1 400 Bad Request
@@ -274,6 +276,57 @@ eventRouter.get('/:event_id', function(req, res) {
     return res.status(500).json({"error": true, "message": "Erreur lors de la récupération de l'évènement"});
   });
 });
+
+
+/**
+@api {get} events/research/:data research events
+* @apiGroup Events
+* @apiParam {String} data
+* @apiSuccessExample {json} Success
+*    HTTP/1.1 200 Success
+* {
+*    "error": false,
+*    "message": [
+*        {
+*            "title": "soirée Jazz",
+*            "date": "2019-12-12",
+*            "description": "",
+*            "bar_id": "1",
+*            "brewery_id": null
+*            "created_at": "2019-04-14T13:42:47.000Z",
+*            "updated_at": "2019-04-14T13:42:47.000Z",
+*            "deleted_at": null
+*        }
+*    ]
+* }
+* @apiErrorExample {json} Error
+*    HTTP/1.1 400 Bad Request
+*    {
+*        "error": true,
+*        "message": "Aucun évènement trouvé"
+*    }
+*
+*    HTTP/1.1 500 Internal Server Error
+*    {
+*        "error": true,
+*        "message": "Erreur lors de la recherche des évènements"
+*    }
+*/
+////////////////////////////////////////////////////
+eventRouter.get('/research/:data', function(req, res) {
+  const data = req.params.data;
+
+  EventController.research(data)
+  .then((events) => {
+    if(events === undefined || events === null)
+      return res.status(400).json({"error": true, "message": "Aucun évènement trouvé"});
+    return res.status(200).json({"error": false, "event": events});
+  })
+  .catch((err) => {
+    return res.status(500).json({"error": true, "message": "Erreur lors de la recherche des évènements"});
+  });
+});
+
 
 /**
 @api {put} events/update/:event_id update brewery

@@ -46,6 +46,17 @@ BarController.getOne = function(bar_id){
 }
 
 
+////////////////////////////////////////////////////
+BarController.research = function(data){
+  const options = {};
+  const where = {};
+  where.name = { like: '%' + data + '%' }
+  options.where = where;
+
+  return Bar.findAll(options);
+};
+
+
 //////////////////////////////////////////////////////
 BarController.update = function(bar, name, gpsLatitude, gpsLongitude, description, earlyHappyHours, lateHappyHours, webSiteLink, facebokLink, twitterLink, instagramLink, pathPicture){
   const options = {};

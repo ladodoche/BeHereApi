@@ -219,6 +219,7 @@ barRouter.get('/', function(req, res) {
 *    }
 */
 barRouter.get('/:bar_id', function(req, res) {
+  console.log("a");
   const bar_id = req.params.bar_id;
 
   BarController.getOne(bar_id)
@@ -231,6 +232,59 @@ barRouter.get('/:bar_id', function(req, res) {
     return res.status(500).json({"error": true, "message": "Erreur lors de la récupération du bar"});
   });
 });
+
+
+/**
+@api {get} bars/research/:data research bars
+* @apiGroup Bars
+* @apiParam {String} data
+* @apiSuccessExample {json} Success
+*    HTTP/1.1 200 Success
+* {
+*    "error": false,
+*    "message": [
+*        {
+*            "id": 1,
+*            "name": "Le dernier bar avant la fin du monde",
+*            "gpsLatitude": 48,
+*            "gpsLongitude": 2.3461672,
+*            "description": "Coucou",
+*            "webSiteLink": "https://www.facebook.com/?ref=tn_tnmn",
+*            "created_at": "2019-04-14T13:42:47.000Z",
+*            "updated_at": "2019-04-14T13:42:47.000Z",
+*            "deleted_at": null,
+*            "user_id": 1
+*        }
+*    ]
+* }
+* @apiErrorExample {json} Error
+*    HTTP/1.1 400 Bad Request
+*    {
+*        "error": true,
+*        "message": "Aucun bar trouvé"
+*    }
+*
+*    HTTP/1.1 500 Internal Server Error
+*    {
+*        "error": true,
+*        "message": "Erreur lors de la recherche des bars"
+*    }
+*/
+////////////////////////////////////////////////////
+barRouter.get('/research/:data', function(req, res) {
+  const data = req.params.data;
+
+  BarController.research(data)
+  .then((bars) => {
+    if(bars === undefined || bars === null)
+      return res.status(400).json({"error": true, "message": "Aucun bar trouvé"});
+    return res.status(200).json({"error": false, "bar": bars});
+  })
+  .catch((err) => {
+    return res.status(500).json({"error": true, "message": "Erreur lors de la recherche des bars"});
+  });
+});
+
 
 /**
 @api {put} bars/update/:bar_id update bar

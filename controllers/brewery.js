@@ -45,6 +45,17 @@ BreweryController.getOne = function(brewery_id){
 }
 
 
+////////////////////////////////////////////////////
+BreweryController.research = function(data){
+  const options = {};
+  const where = {};
+  where.name = { like: '%' + data + '%' }
+  options.where = where;
+
+  return Brewery.findAll(options);
+};
+
+
 //////////////////////////////////////////////////////
 BreweryController.update = function(brewery, name, gpsLatitude, gpsLongitude, description, webSiteLink, facebokLink, twitterLink, instagramLink, pathPicture){
   const options = {};

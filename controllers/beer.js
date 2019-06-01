@@ -57,6 +57,21 @@ BeerController.getOne = function(beer_id){
 }
 
 
+////////////////////////////////////////////////////
+BeerController.research = function(data){
+  const options = {};
+  const where = {};
+  const or = {};
+  or.name = { like: '%' + data + '%' }
+  or.color = { like: '%' + data + '%' }
+  or.origin = { like: '%' + data + '%' }
+  where.or = or;
+  options.where = where;
+
+  return Beer.findAll(options);
+};
+
+
 //////////////////////////////////////////////////////
 BeerController.update = function(beer, name, color, origin, description, pathPicture){
   const options = {};

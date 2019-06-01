@@ -57,6 +57,24 @@ EventController.getOne = function(event_id){
   return Event.find(options);
 }
 
+////////////////////////////////////////////////////
+EventController.research = function(data){
+  const options = {
+    include: [{
+        model: ModelIndex.Bar,
+        as: 'bar'
+      },{
+        model: ModelIndex.Brewery,
+        as: 'brewery'
+    }]
+  };
+  const where = {};
+  where.title = { like: '%' + data + '%' }
+  options.where = where;
+
+  return Event.findAll(options);
+};
+
 
 //////////////////////////////////////////////////////
 EventController.update = function(event, title, date, description){

@@ -257,9 +257,89 @@ beerRouter.get('/:beer_id', function(req, res) {
     return res.status(200).json({"error": false, "beer": beer});
   })
   .catch((err) => {
-    return res.status(500).json({"error": true, "message": "Erreur lors de la récupération de la bières"});
+    return res.status(500).json({"error": true, "message": "Erreur lors de la récupération de la bière"});
   });
 });
+
+
+/**
+@api {get} beers/research/:data research beers
+* @apiGroup Beers
+* @apiParam {String} data
+* @apiSuccessExample {json} Success
+*    HTTP/1.1 200 Success
+* {
+*    "error": false,
+*        "message": [
+*              {
+*                  "id": 1,
+*                  "name": "Leffe",
+*                  "color": "blonde",
+*                  "origin": "Belgique",
+*                  "description": "La Leffe ou Abbaye de Leffe est une bière belge d'Abbaye reconnue, créée en 1240 par les chanoines de l'ordre de Prémontré de l'abbaye Notre-Dame de Leffe et produite par la brasserie Artois à Louvain.",
+*                  "pathPicture": null,
+*                  "created_at": "2019-04-14T09:20:46.000Z",
+*                  "updated_at": "2019-04-14T09:20:46.000Z",
+*                  "deleted_at": null,
+*                  "typeOfBeer": [
+*                        {
+*                            "id": 2,
+*                            "name": "Brune",
+*                            "created_at": "2019-04-20T09:42:06.000Z",
+*                            "updated_at": "2019-04-20T09:42:06.000Z",
+*                            "deleted_at": null,
+*                            "beer_typeOfBeer": {
+*                                "created_at": "2019-04-20T09:44:59.000Z",
+*                                "updated_at": "2019-04-20T09:44:59.000Z",
+*                                "beer_id": 1,
+*                                "type_of_beer_id": 2
+*                            }
+*                        },
+*                        {
+*                            "id": 3,
+*                            "name": "Blanche",
+*                            "created_at": "2019-04-20T09:42:12.000Z",
+*                            "updated_at": "2019-04-20T09:42:12.000Z",
+*                            "deleted_at": null,
+*                            "beer_typeOfBeer": {
+*                                "created_at": "2019-04-20T09:45:01.000Z",
+*                                "updated_at": "2019-04-20T09:45:01.000Z",
+*                                "beer_id": 1,
+*                                "type_of_beer_id": 3
+*                            }
+*                        }
+*                    ]
+*              }
+*        ]
+* }
+* @apiErrorExample {json} Error
+*    HTTP/1.1 400 Bad Request
+*    {
+*        "error": true,
+*        "message": "Aucune bière trouvé"
+*    }
+*
+*    HTTP/1.1 500 Internal Server Error
+*    {
+*        "error": true,
+*        "message": "Erreur lors de la recherche des bières"
+*    }
+*/
+////////////////////////////////////////////////////
+beerRouter.get('/research/:data', function(req, res) {
+  const data = req.params.data;
+
+  BeerController.research(data)
+  .then((beers) => {
+    if(beers === undefined || beers === null)
+      return res.status(400).json({"error": true, "message": "Aucune bière trouvé"});
+    return res.status(200).json({"error": false, "beer": beers});
+  })
+  .catch((err) => {
+    return res.status(500).json({"error": true, "message": "Erreur lors de la recherche des bières"});
+  });
+});
+
 
 /**
 @api {put} beers/update/:beer_id update beer
