@@ -82,14 +82,16 @@ function getUserIdHeader(req, next){
 * @apiGroup events
 * @apiHeader {String} x-access-token
 * @apiParam {String} title obligatoire
-* @apiParam {Date} date obligatoire
+* @apiParam {Date} startDate obligatoire
+* @apiParam {Date} endDate obligatoire
 * @apiParam {Texte} description
 * @apiParam {Int} bar_id
 * @apiParam {Int} brewery_id
 * @apiParamExample {json} Input
 *  {
 *    "title": "soirée Jazz",
-*    "date": "2019-12-12",
+*    "startDate": "2019-12-12 20:00",
+*    "endDate": "2019-12-12 23:00",
 *    "description": "",
 *    "bar_id": "1",
 *    "brewery_id": null
@@ -121,12 +123,16 @@ function getUserIdHeader(req, next){
 eventRouter.post('/create', isAuthenticatedBreweryOrBarCreate, function(req, res) {
 
   const title = req.body.title;
-  const date = req.body.date;
+  const startDate = req.body.startDate;
+  const endDate = req.body.endDate;
   const description = req.body.description;
   const bar_id = req.body.bar_id;
   const brewery_id = req.body.brewery_id;
 
-  if(bar_id !== null || bar_id !== undefined){
+  console.log("--------------");
+  console.log(bar_id);
+  console.log(brewery_id);
+  if(bar_id !== null && bar_id !== undefined){
     asyncLib.waterfall([
       function(done){
         BarController.getOne(bar_id)
@@ -140,7 +146,7 @@ eventRouter.post('/create', isAuthenticatedBreweryOrBarCreate, function(req, res
         });
       },
       function(bar, done){
-        EventController.add(title, date, description, bar.id, undefined)
+        EventController.add(title, startDate, endDate, description, bar.id, undefined)
         .then((event) => {
           return res.status(201).json({"error": false});
         })
@@ -151,7 +157,7 @@ eventRouter.post('/create', isAuthenticatedBreweryOrBarCreate, function(req, res
         });
       }
     ]);
-  }else if(brewery_id !== null || brewery_id !== undefined){
+  }else if(brewery_id !== null && brewery_id !== undefined){
     asyncLib.waterfall([
       function(done){
         BreweryController.getOne(brewery_id)
@@ -165,7 +171,7 @@ eventRouter.post('/create', isAuthenticatedBreweryOrBarCreate, function(req, res
         });
       },
       function(brewery, done){
-        EventController.add(title, date, description, undefined, brewery.id)
+        EventController.add(title, startDate, endDate, description, undefined, brewery.id)
         .then((brewery) => {
           return res.status(201).json({"error": false});
         })
@@ -176,6 +182,8 @@ eventRouter.post('/create', isAuthenticatedBreweryOrBarCreate, function(req, res
         });
       }
     ]);
+  }else{
+    return res.status(400).json({"error": true, "message": "Veuillez renseigner le bar ou la brasserie pour l'évènement"});
   }
 });
 
@@ -191,7 +199,8 @@ eventRouter.post('/create', isAuthenticatedBreweryOrBarCreate, function(req, res
 *    "message": [
 *        {
 *            "title": "soirée Jazz",
-*            "date": "2019-12-12",
+*            "startDate": "2019-12-12: 20:00",
+*            "endDate": "2019-12-12 23:00",
 *            "description": "",
 *            "bar_id": "1",
 *            "brewery_id": null
@@ -240,7 +249,8 @@ eventRouter.get('/', function(req, res) {
 *    "message": [
 *        {
 *            "title": "soirée Jazz",
-*            "date": "2019-12-12",
+*            "StartDate": "2019-12-12 20:00",
+*            "endDate": "2019-12-12 24:00",
 *            "description": "",
 *            "bar_id": "1",
 *            "brewery_id": null
@@ -289,7 +299,8 @@ eventRouter.get('/:event_id', function(req, res) {
 *    "message": [
 *        {
 *            "title": "soirée Jazz",
-*            "date": "2019-12-12",
+*            "startDate": "2019-12-12 20;00",
+*            "endDate": "2019-12-12 23:00",
 *            "description": "",
 *            "bar_id": "1",
 *            "brewery_id": null
@@ -333,12 +344,14 @@ eventRouter.get('/research/:data', function(req, res) {
 * @apiGroup Events
 * @apiHeader {String} x-access-token
 * @apiParam {String} title obligatoire
-* @apiParam {Date} date obligatoire
+* @apiParam {Date} startDate obligatoire
+* @apiParam {Date} endDate obligatoire
 * @apiParam {Texte} description
 * @apiParamExample {json} Input
 *  {
 *    "title": "soirée Jazz",
-*    "date": "2019-12-12",
+*    "startDate": "2019-12-12 20:00",
+*    "endDate": "2019-12-12 23:00",
 *    "description": ""
 *  }
 * @apiSuccessExample {json} Success
@@ -368,7 +381,8 @@ eventRouter.get('/research/:data', function(req, res) {
 eventRouter.put('/update/:event_id', isAuthenticatedBreweryOrBar, function(req, res){
   const event_id = req.params.event_id;
   const title = req.body.title;
-  const date = req.body.date;
+  const startDate = req.body.startDate;
+  const endDate = req.body.endDate;
   const description = req.body.description;
 
   asyncLib.waterfall([
@@ -384,7 +398,7 @@ eventRouter.put('/update/:event_id', isAuthenticatedBreweryOrBar, function(req, 
       });
     },
     function(event, done){
-      EventController.update(event, title, date, description)
+      EventController.update(event, title, startDate, endDate, description)
       .then((event) => {
         return res.status(200).json({"error": false});
       })

@@ -6,10 +6,11 @@ const EventController = function(){};
 const dateFormat = require('dateformat');
 
 ////////////////////////////////////////////////////
-EventController.add = function(title, date, description, bar_id, brewery_id){
+EventController.add = function(title, startDate, endDate, description, bar_id, brewery_id){
   return Event.create({
     title: title,
-    date: date,
+    startDate: startDate,
+    endDate: endDate,
     description: description,
     bar_id : bar_id,
     brewery_id: brewery_id
@@ -77,13 +78,14 @@ EventController.research = function(data){
 
 
 //////////////////////////////////////////////////////
-EventController.update = function(event, title, date, description){
+EventController.update = function(event, title, startDate, endDate, description){
   const options = {};
   const where = {};
   const json = {};
 
   if(title !== undefined){json.title = title}
-  if(date !== undefined){json.date = date}
+  if(startDate !== undefined){json.startDate = startDate}
+  if(endDate !== undefined){json.endDate = endDate}
   if(description !== undefined){json.description = description}
   options.where = where;
   options.timezone = '+02:00';

@@ -20,16 +20,30 @@ module.exports = function(sequelize, Datatypes){
         }
       }
     },
-    date: {
-      type: Datatypes.DATE,
+    startDate: {
+      type: Datatypes.STRING,
       allowNull: false,
       validate: {
         isDate: {
           msg: 'Le format de votre date d\'évènement n\'est pas bon'
         },
         isAfter: {
-          args: dateFormat(new Date().setDate(new Date().getDate() + 1), "yyyy-mm-dd"),
+          args: dateFormat(new Date().setDate(new Date().getDate() + 1), "yyyy-mm-dd HH:MM"),
           msg: 'L\'évènement doit être créer minimum 24h à l\'avance'
+        }
+      }
+    },
+    endDate: {
+      type: Datatypes.STRING,
+      allowNull: false,
+      validate: {
+        isDate: {
+          msg: 'Le format de votre date d\'évènement n\'est pas bon'
+        },
+        isAfter: function (endDate, done) {
+          if(this.startDate < this.endDate)
+            done();
+          done("La date de fin ne doit pas être antérieure à la date de début");
         }
       }
     },
