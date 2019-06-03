@@ -19,6 +19,14 @@ module.exports = function(sequelize, Datatypes){
         isIn: {
           args: [['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche']],
           msg: 'Le jour de la semaine selectionné n\'est pas valide'
+        },
+        isUnique: function (day, done) {
+          OpeningHour.findAll({ where: { day: this.day, bar_id: this.bar_id } })
+            .then((result) => {
+              if(result.length != 0)
+                done('Horaire déjà existante pour ce jour');
+              done();
+            })
         }
       }
     },

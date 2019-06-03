@@ -48,13 +48,15 @@ function isAuthenticatedOpeningHour(req, res, next) {
 * @apiParam {String} closing obligatoire
 * @apiParam {String} earlyHappyHour
 * @apiParam {String} lateHappyHour
+* @apiParam {String} bar_id
 * @apiParamExample {json} Input
 *  {
 *    "day": "lundi",
 *    "opening": "14:00",
 *    "closing": "23:00",
 *    "earlyHappyHour": "17:00",
-*    "lateHappyHour": "20:00"
+*    "lateHappyHour": "20:00",
+*    "bar_id": "1"
 *  }
 * @apiSuccessExample {json} Success
 *    HTTP/1.1 201 Created
@@ -111,15 +113,15 @@ openingHourRouter.post('/create', isAuthenticatedOpeningHour, function(req, res)
 *    "message": [
 *        {
 *            "id": 1,
-*            "name": "Le dernier bar avant la fin du monde",
-*            "gpsLatitude": 48,
-*            "gpsLongitude": 2.3461672,
-*            "description": "Coucou",
-*            "webSiteLink": "https://www.facebook.com/?ref=tn_tnmn",
-*            "created_at": "2019-04-14T13:42:47.000Z",
-*            "updated_at": "2019-04-14T13:42:47.000Z",
+*            "day": "samedi",
+*            "opening": "10:00",
+*            "closing": "23:00",
+*            "earlyHappyHour": "17:00",
+*            "lateHappyHour": "20:00",
+*            "created_at": "2019-06-03T16:37:58.000Z",
+*            "updated_at": "2019-06-03T16:37:58.000Z",
 *            "deleted_at": null,
-*            "user_id": 1
+*            "bar_id": 1
 *        }
 *    ]
 * }
@@ -151,5 +153,181 @@ openingHourRouter.get('/', function(req, res) {
   });
 });
 
+/**
+@api {get} openingHours/:openingHour_id get opening hour
+* @apiGroup OpeningHours
+* @apiSuccessExample {json} Success
+*    HTTP/1.1 200 Success
+* {
+*    "error": false,
+*    "message": {
+*            "id": 1,
+*            "day": "samedi",
+*            "opening": "10:00",
+*            "closing": "23:00",
+*            "earlyHappyHour": "17:00",
+*            "lateHappyHour": "20:00",
+*            "created_at": "2019-06-03T16:37:58.000Z",
+*            "updated_at": "2019-06-03T16:37:58.000Z",
+*            "deleted_at": null,
+*            "bar_id": 1
+*    }
+* }
+* @apiErrorExample {json} Error
+*    HTTP/1.1 400 Bad Request
+*    {
+*        "error": true,
+*        "message": "L'horaire n'existe pas"
+*    }
+*
+*    HTTP/1.1 500 Internal Server Error
+*    {
+*        "error": true,
+*        "message": "Erreur lors de la récupération de l'horaire"
+*    }
+*/
+openingHourRouter.get('/:openingHour_id', function(req, res) {
+  const openingHour_id = req.params.openingHour_id;
+
+  OpeningHourController.getOne(openingHour_id)
+  .then((openingHour) => {
+    if(openingHour === undefined || openingHour === null)
+      return res.status(400).json({"error": true, "message": "L'horaire n'existe pas"});
+    return res.status(200).json({"error": false, "openingHour": openingHour});
+  })
+  .catch((err) => {
+    return res.status(500).json({"error": true, "message": "Erreur lors de la récupération de l'horaire"});
+  });
+});
+
+
+/**
+@api {put} openingHours/update/:openingHour_id update openingHour
+* @apiGroup OpeningHours
+* @apiHeader {String} x-access-token
+* @apiParam {String} name unique et entre 2 à 200 caractères
+* @apiParam {Double} gpsLatitude
+* @apiParam {Double} gpsLongitude
+* @apiParam {Text} description
+* @apiParam {String} webSiteLink format url
+* @apiParam {String} facebokLink format url
+* @apiParam {String} twitterLink format url
+* @apiParam {String} instagramLink format url
+* @apiParamExample {json} Input
+*  {
+*    "day": "lundi",
+*    "opening": "14:00",
+*    "closing": "23:00",
+*    "earlyHappyHour": "17:00",
+*    "lateHappyHour": "20:00"
+*  }
+* @apiSuccessExample {json} Success
+*    HTTP/1.1 200 Success
+*    {
+*        "error": false
+*    }
+* @apiErrorExample {json} Error
+*    HTTP/1.1 400 Bad Request
+*    {
+*        "error": true,
+*        "message": message
+*    }
+*
+*    HTTP/1.1 401 Unauthorized
+*    {
+*        "error": true,
+*        "message": message
+*    }
+*
+*    HTTP/1.1 500 Internal Server Error
+*    {
+*        "error": true,
+*        "message": message
+*    }
+*/
+openingHourRouter.put('/update/:openingHour_id', isAuthenticatedOpeningHour, function(req, res){
+  const openingHour_id = req.params.openingHour_id;
+  const day = req.body.day;
+  const opening = req.body.opening;
+  const closing = req.body.closing;
+  const earlyHappyHour = req.body.earlyHappyHour;
+  const lateHappyHour = req.body.lateHappyHour;
+
+  asyncLib.waterfall([
+    function(done){
+      OpeningHourController.getOne(openingHour_id)
+      .then((openingHour) => {
+        if(openingHour === null || openingHour === undefined)
+          return res.status(400).json({"error": true, "message": "L'horaire n'existe pas"});
+        done(null, openingHour);
+      })
+      .catch((err) => {
+          return res.status(500).json({"error": true, "message": "Erreur lors de la récupération de l'horaire"});
+      });
+    },
+    function(openingHour, done){
+      OpeningHourController.update(openingHour, day, opening, closing, earlyHappyHour, lateHappyHour)
+      .then((openingHour) => {
+        return res.status(200).json({"error": false});
+      })
+      .catch((err) => {
+        if(err.errors)
+          return res.status(400).json({"error": true, "message": err.errors[0].message});
+        return res.status(500).json({"error": true, "message": "Erreur lors de la mise à jour de l'horaire"});
+      });
+    }
+  ]);
+});
+
+/**
+@api {delete} openingHours/delete/:openingHour_id delete openingHour
+* @apiGroup openingHours
+* @apiHeader {String} x-access-token
+* @apiSuccessExample {json} Success
+*    HTTP/1.1 200 Success
+*    {
+*        "error": false
+*    }
+* @apiErrorExample {json} Error
+*    HTTP/1.1 400 Bad Request
+*    {
+*        "error": true,
+*        "message": "L'horaire n'existe pas"
+*    }
+*
+*    HTTP/1.1 401 Unauthorized
+*    {
+*        "error": true,
+*        "message": message
+*    }
+*
+*    HTTP/1.1 500 Internal Server Error
+*    {
+*        "error": true,
+*        "message": "Erreur lors de la récupération de l'horaire"
+*    }
+*/
+openingHourRouter.delete('/delete/:openingHour_id', isAuthenticatedOpeningHour, function(req, res){
+  const openingHour_id = req.params.openingHour_id;
+
+  asyncLib.waterfall([
+    function(done){
+      OpeningHourController.getOne(openingHour_id)
+      .then((openingHour) => {
+        if(openingHour === null || openingHour === undefined){
+          return res.status(400).json({"error": true, "message": "L'horaire n'existe pas"});
+        }
+        done(null, openingHour);
+      })
+      .catch((err) => {
+          return res.status(500).json({"error": true, "message": "Erreur lors de la récupération de l'horaire"});
+      });
+    },
+    function(openingHour, done){
+      OpeningHourController.delete(openingHour);
+      return res.status(200).json({"error": false}).end();
+    }
+  ]);
+});
 
 module.exports = openingHourRouter;

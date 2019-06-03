@@ -212,7 +212,6 @@ barRouter.get('/', function(req, res) {
 *    }
 */
 barRouter.get('/:bar_id', function(req, res) {
-  console.log("a");
   const bar_id = req.params.bar_id;
 
   BarController.getOne(bar_id)

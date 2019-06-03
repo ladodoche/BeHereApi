@@ -42,7 +42,7 @@ OpeningHourController.getOne = function(openingHour_id){
 
 
 //////////////////////////////////////////////////////
-OpeningHourController.update = function(openingHour, day, openingHour, closing, earlyHappyHour, lateHappyHour){
+OpeningHourController.update = function(openingHour, day, opening, closing, earlyHappyHour, lateHappyHour){
   const options = {};
   const where = {};
   const json = {};

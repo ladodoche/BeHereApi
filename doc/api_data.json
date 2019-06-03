@@ -3376,6 +3376,82 @@
     "name": "PutNotesbrewerysUpdateNotesbrewery_id"
   },
   {
+    "type": "get",
+    "url": "openingHours/?day=day&bar_id=bar_id",
+    "title": "get all openingHours",
+    "group": "OpeningHours",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "day",
+            "description": ""
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "bar_id",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "   HTTP/1.1 200 Success\n{\n   \"error\": false,\n   \"message\": [\n       {\n           \"id\": 1,\n           \"day\": \"samedi\",\n           \"opening\": \"10:00\",\n           \"closing\": \"23:00\",\n           \"earlyHappyHour\": \"17:00\",\n           \"lateHappyHour\": \"20:00\",\n           \"created_at\": \"2019-06-03T16:37:58.000Z\",\n           \"updated_at\": \"2019-06-03T16:37:58.000Z\",\n           \"deleted_at\": null,\n           \"bar_id\": 1\n       }\n   ]\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": \"Aucun horaire trouvé\"\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": \"Erreur lors de la récupération des horaires\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/openingHour.js",
+    "groupTitle": "OpeningHours",
+    "name": "GetOpeninghoursDayDayBar_idBar_id"
+  },
+  {
+    "type": "get",
+    "url": "openingHours/:openingHour_id",
+    "title": "get opening hour",
+    "group": "OpeningHours",
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "   HTTP/1.1 200 Success\n{\n   \"error\": false,\n   \"message\": {\n           \"id\": 1,\n           \"day\": \"samedi\",\n           \"opening\": \"10:00\",\n           \"closing\": \"23:00\",\n           \"earlyHappyHour\": \"17:00\",\n           \"lateHappyHour\": \"20:00\",\n           \"created_at\": \"2019-06-03T16:37:58.000Z\",\n           \"updated_at\": \"2019-06-03T16:37:58.000Z\",\n           \"deleted_at\": null,\n           \"bar_id\": 1\n   }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": \"L'horaire n'existe pas\"\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": \"Erreur lors de la récupération de l'horaire\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/openingHour.js",
+    "groupTitle": "OpeningHours",
+    "name": "GetOpeninghoursOpeninghour_id"
+  },
+  {
     "type": "post",
     "url": "openingHours/create",
     "title": "add a new opening hour",
@@ -3430,13 +3506,20 @@
             "optional": false,
             "field": "lateHappyHour",
             "description": ""
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "bar_id",
+            "description": ""
           }
         ]
       },
       "examples": [
         {
           "title": "Input",
-          "content": "{\n  \"day\": \"lundi\",\n  \"opening\": \"14:00\",\n  \"closing\": \"23:00\",\n  \"earlyHappyHour\": \"17:00\",\n  \"lateHappyHour\": \"20:00\"\n}",
+          "content": "{\n  \"day\": \"lundi\",\n  \"opening\": \"14:00\",\n  \"closing\": \"23:00\",\n  \"earlyHappyHour\": \"17:00\",\n  \"lateHappyHour\": \"20:00\",\n  \"bar_id\": \"1\"\n}",
           "type": "json"
         }
       ]
@@ -3463,6 +3546,116 @@
     "filename": "configs/Routes/openingHour.js",
     "groupTitle": "OpeningHours",
     "name": "PostOpeninghoursCreate"
+  },
+  {
+    "type": "put",
+    "url": "openingHours/update/:openingHour_id",
+    "title": "update openingHour",
+    "group": "OpeningHours",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-access-token",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "name",
+            "description": "<p>unique et entre 2 à 200 caractères</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Double",
+            "optional": false,
+            "field": "gpsLatitude",
+            "description": ""
+          },
+          {
+            "group": "Parameter",
+            "type": "Double",
+            "optional": false,
+            "field": "gpsLongitude",
+            "description": ""
+          },
+          {
+            "group": "Parameter",
+            "type": "Text",
+            "optional": false,
+            "field": "description",
+            "description": ""
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "webSiteLink",
+            "description": "<p>format url</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "facebokLink",
+            "description": "<p>format url</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "twitterLink",
+            "description": "<p>format url</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "instagramLink",
+            "description": "<p>format url</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Input",
+          "content": "{\n  \"day\": \"lundi\",\n  \"opening\": \"14:00\",\n  \"closing\": \"23:00\",\n  \"earlyHappyHour\": \"17:00\",\n  \"lateHappyHour\": \"20:00\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 200 Success\n{\n    \"error\": false\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 401 Unauthorized\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": message\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/openingHour.js",
+    "groupTitle": "OpeningHours",
+    "name": "PutOpeninghoursUpdateOpeninghour_id"
   },
   {
     "type": "delete",
@@ -5685,5 +5878,46 @@
     "filename": "configs/Routes/menusBeer.js",
     "groupTitle": "menusBeers",
     "name": "PutMenusbeersUpdateMenusbeer_id"
+  },
+  {
+    "type": "delete",
+    "url": "openingHours/delete/:openingHour_id",
+    "title": "delete openingHour",
+    "group": "openingHours",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-access-token",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 200 Success\n{\n    \"error\": false\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": \"L'horaire n'existe pas\"\n}\n\nHTTP/1.1 401 Unauthorized\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": \"Erreur lors de la récupération de l'horaire\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/openingHour.js",
+    "groupTitle": "openingHours",
+    "name": "DeleteOpeninghoursDeleteOpeninghour_id"
   }
 ]
