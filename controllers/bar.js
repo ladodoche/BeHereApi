@@ -6,14 +6,12 @@ const BarController = function(){};
 
 
 ////////////////////////////////////////////////////
-BarController.add = function(name, gpsLatitude, gpsLongitude, description, earlyHappyHours, lateHappyHours, webSiteLink, facebokLink, twitterLink, instagramLink, user_id){
+BarController.add = function(name, gpsLatitude, gpsLongitude, description, webSiteLink, facebokLink, twitterLink, instagramLink, user_id){
   return Bar.create({
     name: name,
     gpsLatitude: gpsLatitude,
     gpsLongitude: gpsLongitude,
     description: description,
-    earlyHappyHours: earlyHappyHours,
-    lateHappyHours: lateHappyHours,
     webSiteLink: webSiteLink,
     facebokLink: facebokLink,
     twitterLink: twitterLink,
@@ -58,7 +56,7 @@ BarController.research = function(data){
 
 
 //////////////////////////////////////////////////////
-BarController.update = function(bar, name, gpsLatitude, gpsLongitude, description, earlyHappyHours, lateHappyHours, webSiteLink, facebokLink, twitterLink, instagramLink, pathPicture){
+BarController.update = function(bar, name, gpsLatitude, gpsLongitude, description, webSiteLink, facebokLink, twitterLink, instagramLink, pathPicture){
   const options = {};
   const where = {};
   const json = {};
@@ -67,8 +65,6 @@ BarController.update = function(bar, name, gpsLatitude, gpsLongitude, descriptio
   if(gpsLatitude !== undefined){json.gpsLatitude = gpsLatitude}
   if(gpsLongitude !== undefined){json.gpsLongitude = gpsLongitude}
   if(description !== undefined){json.description = description}
-  if(earlyHappyHours !== undefined){json.earlyHappyHours = earlyHappyHours}
-  if(lateHappyHours !== undefined){json.lateHappyHours = lateHappyHours}
   if(webSiteLink !== undefined){json.webSiteLink = webSiteLink}
   if(facebokLink !== undefined){json.facebokLink = facebokLink}
   if(twitterLink !== undefined){json.twitterLink = twitterLink}

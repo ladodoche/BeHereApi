@@ -300,20 +300,6 @@ define({ "api": [
             "group": "Parameter",
             "type": "String",
             "optional": false,
-            "field": "earlyHappyHours",
-            "description": "<p>format heure obligatoire</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "lateHappyHours",
-            "description": "<p>format heure obligatoire</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
             "field": "facebokLink",
             "description": "<p>format url</p>"
           },
@@ -336,7 +322,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Input",
-          "content": "{\n  \"name\": \"Le dernier bar avant la fin du monde\",\n  \"gpsLatitude\": \"48.\",\n  \"gpsLongitude\": \"2.3461672\",\n  \"description\": \"Coucou\",\n  \"earlyHappyHours\": \"19:00\",\n  \"lateHappyHours\": \"21:00\",\n  \"webSiteLink\": \"https://www.facebook.com/?ref=tn_tnmn\",\n  \"facebokLink\": \"https://www.facebook.com/?ref=tn_tnmn\",\n  \"twitterLink\": \"https://www.facebook.com/?ref=tn_tnmn\",\n  \"instagramLink\": \"https://www.facebook.com/?ref=tn_tnmn\"\n}",
+          "content": "{\n  \"name\": \"Le dernier bar avant la fin du monde\",\n  \"gpsLatitude\": \"48.\",\n  \"gpsLongitude\": \"2.3461672\",\n  \"description\": \"Coucou\",\n  \"webSiteLink\": \"https://www.facebook.com/?ref=tn_tnmn\",\n  \"facebokLink\": \"https://www.facebook.com/?ref=tn_tnmn\",\n  \"twitterLink\": \"https://www.facebook.com/?ref=tn_tnmn\",\n  \"instagramLink\": \"https://www.facebook.com/?ref=tn_tnmn\"\n}",
           "type": "json"
         }
       ]
@@ -417,20 +403,6 @@ define({ "api": [
             "group": "Parameter",
             "type": "String",
             "optional": false,
-            "field": "earlyHappyHours",
-            "description": "<p>format url</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "lateHappyHours",
-            "description": "<p>format url</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
             "field": "webSiteLink",
             "description": "<p>format url</p>"
           },
@@ -460,7 +432,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Input",
-          "content": "{\n  \"name\": \"Le dernier bar avant la fin du monde\",\n  \"gpsLatitude\": \"48.\",\n  \"gpsLongitude\": \"2.3461672\",\n  \"description\": \"Coucou\",\n  \"webSiteLink\": \"https://www.facebook.com/?ref=tn_tnmn\",\n  \"facebokLink\": \"https://www.facebook.com/?ref=tn_tnmn\",\n  \"twitterLink\": \"https://www.facebook.com/?ref=tn_tnmn\",\n  \"instagramLink\": \"https://www.facebook.com/?ref=tn_tnmn\",\n  \"earlyHappyHours\": \"19:00\",\n  \"lateHappyHours\": \"21:00\"\n}",
+          "content": "{\n  \"name\": \"Le dernier bar avant la fin du monde\",\n  \"gpsLatitude\": \"48.\",\n  \"gpsLongitude\": \"2.3461672\",\n  \"description\": \"Coucou\",\n  \"webSiteLink\": \"https://www.facebook.com/?ref=tn_tnmn\",\n  \"facebokLink\": \"https://www.facebook.com/?ref=tn_tnmn\",\n  \"twitterLink\": \"https://www.facebook.com/?ref=tn_tnmn\",\n  \"instagramLink\": \"https://www.facebook.com/?ref=tn_tnmn\"\n}",
           "type": "json"
         }
       ]
@@ -3402,6 +3374,95 @@ define({ "api": [
     "filename": "configs/Routes/notesBrewery.js",
     "groupTitle": "NotesBrewerys",
     "name": "PutNotesbrewerysUpdateNotesbrewery_id"
+  },
+  {
+    "type": "post",
+    "url": "openingHours/create",
+    "title": "add a new opening hour",
+    "group": "OpeningHours",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-access-token",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "day",
+            "description": "<p>obligatoire</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "opening",
+            "description": "<p>obligatoire</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "closing",
+            "description": "<p>obligatoire</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "earlyHappyHour",
+            "description": ""
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "lateHappyHour",
+            "description": ""
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Input",
+          "content": "{\n  \"day\": \"lundi\",\n  \"opening\": \"14:00\",\n  \"closing\": \"23:00\",\n  \"earlyHappyHour\": \"17:00\",\n  \"lateHappyHour\": \"20:00\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 201 Created\n{\n    \"error\": false\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 401 Unauthorized\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": \"Erreur lors de la création de vos horaires\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/openingHour.js",
+    "groupTitle": "OpeningHours",
+    "name": "PostOpeninghoursCreate"
   },
   {
     "type": "delete",
