@@ -2290,7 +2290,7 @@
       "examples": [
         {
           "title": "Success",
-          "content": "HTTP/1.1 200 Success\n{\n   \"error\": false,\n   \"message\": [\n       {\n           \"title\": \"soirée Jazz\",\n           \"date\": \"2019-12-12\",\n           \"description\": \"\",\n           \"bar_id\": \"1\",\n           \"brewery_id\": null\n           \"created_at\": \"2019-04-14T13:42:47.000Z\",\n           \"updated_at\": \"2019-04-14T13:42:47.000Z\",\n           \"deleted_at\": null\n       }\n   ]\n}",
+          "content": "HTTP/1.1 200 Success\n{\n   \"error\": false,\n   \"message\": [\n       {\n           \"title\": \"soirée Jazz\",\n           \"StartDate\": \"2019-12-12 20:00\",\n           \"endDate\": \"2019-12-12 24:00\",\n           \"description\": \"\",\n           \"bar_id\": \"1\",\n           \"brewery_id\": null\n           \"created_at\": \"2019-04-14T13:42:47.000Z\",\n           \"updated_at\": \"2019-04-14T13:42:47.000Z\",\n           \"deleted_at\": null\n       }\n   ]\n}",
           "type": "json"
         }
       ]
@@ -2331,7 +2331,7 @@
       "examples": [
         {
           "title": "Success",
-          "content": "   HTTP/1.1 200 Success\n{\n   \"error\": false,\n   \"message\": [\n       {\n           \"title\": \"soirée Jazz\",\n           \"date\": \"2019-12-12\",\n           \"description\": \"\",\n           \"bar_id\": \"1\",\n           \"brewery_id\": null\n           \"created_at\": \"2019-04-14T13:42:47.000Z\",\n           \"updated_at\": \"2019-04-14T13:42:47.000Z\",\n           \"deleted_at\": null\n       }\n   ]\n}",
+          "content": "   HTTP/1.1 200 Success\n{\n   \"error\": false,\n   \"message\": [\n       {\n           \"title\": \"soirée Jazz\",\n           \"startDate\": \"2019-12-12 20;00\",\n           \"endDate\": \"2019-12-12 23:00\",\n           \"description\": \"\",\n           \"bar_id\": \"1\",\n           \"brewery_id\": null\n           \"created_at\": \"2019-04-14T13:42:47.000Z\",\n           \"updated_at\": \"2019-04-14T13:42:47.000Z\",\n           \"deleted_at\": null\n       }\n   ]\n}",
           "type": "json"
         }
       ]
@@ -2382,7 +2382,14 @@
             "group": "Parameter",
             "type": "Date",
             "optional": false,
-            "field": "date",
+            "field": "startDate",
+            "description": "<p>obligatoire</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Date",
+            "optional": false,
+            "field": "endDate",
             "description": "<p>obligatoire</p>"
           },
           {
@@ -2397,7 +2404,7 @@
       "examples": [
         {
           "title": "Input",
-          "content": "{\n  \"title\": \"soirée Jazz\",\n  \"date\": \"2019-12-12\",\n  \"description\": \"\"\n}",
+          "content": "{\n  \"title\": \"soirée Jazz\",\n  \"startDate\": \"2019-12-12 20:00\",\n  \"endDate\": \"2019-12-12 23:00\",\n  \"description\": \"\"\n}",
           "type": "json"
         }
       ]
@@ -2424,6 +2431,47 @@
     "filename": "configs/Routes/event.js",
     "groupTitle": "Events",
     "name": "PutEventsUpdateEvent_id"
+  },
+  {
+    "type": "get",
+    "url": "commentsUser/:user_id",
+    "title": "get all user comments",
+    "group": "Generals",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "user_id",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": " HTTP/1.1 200 Success\n{\n   \"error\": false,\n   \"commentsBars\": [\n       {\n           \"id\": 1,\n           \"text\": \"J'adore ce bar\",\n           \"bar_id\": 1,\n           \"user_id\": 1,\n           \"created_at\": \"2019-04-14T13:42:47.000Z\",\n           \"updated_at\": \"2019-04-14T13:42:47.000Z\",\n           \"deleted_at\": null\n       }\n   ],\n   \"commentsBeers\": [\n       {\n           \"id\": 1,\n           \"text\": \"J'adore cette bière\",\n           \"beer_id\": 1,\n           \"user_id\": 1,\n           \"created_at\": \"2019-04-14T13:42:47.000Z\",\n           \"updated_at\": \"2019-04-14T13:42:47.000Z\",\n           \"deleted_at\": null\n       }\n   ],\n   \"commentsBrewery\": [\n       {\n           \"id\": 1,\n           \"text\": \"J'adore cette brasserie\",\n           \"brewery_id\": 1,\n           \"user_id\": 1,\n           \"created_at\": \"2019-04-14T13:42:47.000Z\",\n           \"updated_at\": \"2019-04-14T13:42:47.000Z\",\n           \"deleted_at\": null\n       }\n   ]\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": \"Erreur lors de la récupération des commentaires\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/general.js",
+    "groupTitle": "Generals",
+    "name": "GetCommentsuserUser_id"
   },
   {
     "type": "delete",
@@ -5401,7 +5449,7 @@
       "examples": [
         {
           "title": "Success",
-          "content": " HTTP/1.1 200 Success\n{\n   \"error\": false,\n   \"message\": [\n       {\n           \"title\": \"soirée Jazz\",\n           \"date\": \"2019-12-12\",\n           \"description\": \"\",\n           \"bar_id\": \"1\",\n           \"brewery_id\": null\n           \"created_at\": \"2019-04-14T13:42:47.000Z\",\n           \"updated_at\": \"2019-04-14T13:42:47.000Z\",\n           \"deleted_at\": null\n       }\n   ]\n}",
+          "content": " HTTP/1.1 200 Success\n{\n   \"error\": false,\n   \"message\": [\n       {\n           \"title\": \"soirée Jazz\",\n           \"startDate\": \"2019-12-12: 20:00\",\n           \"endDate\": \"2019-12-12 23:00\",\n           \"description\": \"\",\n           \"bar_id\": \"1\",\n           \"brewery_id\": null\n           \"created_at\": \"2019-04-14T13:42:47.000Z\",\n           \"updated_at\": \"2019-04-14T13:42:47.000Z\",\n           \"deleted_at\": null\n       }\n   ]\n}",
           "type": "json"
         }
       ]
@@ -5452,7 +5500,14 @@
             "group": "Parameter",
             "type": "Date",
             "optional": false,
-            "field": "date",
+            "field": "startDate",
+            "description": "<p>obligatoire</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Date",
+            "optional": false,
+            "field": "endDate",
             "description": "<p>obligatoire</p>"
           },
           {
@@ -5481,7 +5536,7 @@
       "examples": [
         {
           "title": "Input",
-          "content": "{\n  \"title\": \"soirée Jazz\",\n  \"date\": \"2019-12-12\",\n  \"description\": \"\",\n  \"bar_id\": \"1\",\n  \"brewery_id\": null\n}",
+          "content": "{\n  \"title\": \"soirée Jazz\",\n  \"startDate\": \"2019-12-12 20:00\",\n  \"endDate\": \"2019-12-12 23:00\",\n  \"description\": \"\",\n  \"bar_id\": \"1\",\n  \"brewery_id\": null\n}",
           "type": "json"
         }
       ]
