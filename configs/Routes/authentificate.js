@@ -115,4 +115,17 @@ authentificateRouter.post('/', function(req, res, next) {
   ]);
 });
 
+authentificateRouter.get('/', function(req, res, next) {
+  const token = req.headers['x-access-token'];
+
+  if (!token)
+    return res.status(401).json({ "error": true, "message": "Problème lors de l'authentification: il manque la clé d'authentification"});
+
+  jwt.verify(token, auth.secret, function(err, decoded) {
+    if (err)
+      return res.status(500).json({ "error": true, "message": "Problème lors de l'authentification"});
+    return res.status(200).json({ "error": false});
+  });
+});
+
 module.exports = authentificateRouter;
