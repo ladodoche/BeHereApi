@@ -93,11 +93,9 @@ beerRouter.post('/create', isAuthenticatedBeerAccountToCreate, function(req, res
 
   BeerController.add(name, color, origin, description)
   .then((beer) => {
-    console.log("1");
     return res.status(201).json({"error": false});
   })
   .catch((err) => {
-    console.log(err);
     if(err.errors)
       return res.status(400).json({"error": true, "message": err.errors[0].message});
     return res.status(500).json({"error": true, "message": "Erreur lors de la création de de la bière"});
@@ -399,30 +397,23 @@ beerRouter.put('/update/:beer_id', isAuthenticatedBeerAccount, function(req, res
     function(done){
       BeerController.getOne(beer_id)
       .then((beer) => {
-        console.log("1");
         if(beer === null || beer === undefined)
           return res.status(400).json({"error": true, "message": "La bière n'existe pas"});
         done(null, beer);
       })
       .catch((err) => {
-        console.log("2");
           return res.status(500).json({"error": true, "message": "Erreur lors de la récupération de la bière"});
       });
     },
     function(beer, done){
-      console.log("3");
       BeerController.update(beer, name, color, origin, description)
       .then((beer) => {
-        console.log("4");
         return res.status(201).json({"error": false, "beer": beer});
       })
       .catch((err) => {
-        console.log("5");
         if(err.errors)
           return res.status(400).json({"error": true, "message": err.errors[0].message});
         return res.status(500).json({"error": true, "message": "Erreur lors de la mise à jour de la bière"});
-
-          console.log("6");
       });
     }
   ]);
@@ -533,10 +524,8 @@ beerRouter.put('/:beer_id/addTypeOfBeer', isAuthenticatedBeerAccount, function(r
       });
     },
     function(typeOfBeer, done){
-      console.log(beer_id);
       BeerController.getOne(beer_id)
       .then((beer) => {
-        console.log(beer);
         if(beer === null || beer === undefined)
           return res.status(400).json({"error": true, "message": "La bière n'existe pas"}).end();
         done(null, typeOfBeer, beer);
@@ -585,7 +574,7 @@ beerRouter.put('/:beer_id/addTypeOfBeer', isAuthenticatedBeerAccount, function(r
 *        "message": message
 *    }
 */
-  beerRouter.delete('/:beer_id/deleteTypeOfBeer/:typeOfBeer_id', isAuthenticatedBeerAccount, function(req, res) {
+beerRouter.delete('/:beer_id/deleteTypeOfBeer/:typeOfBeer_id', isAuthenticatedBeerAccount, function(req, res) {
   const typeOfBeer_id = req.params.typeOfBeer_id;
   const beer_id = req.params.beer_id;
 

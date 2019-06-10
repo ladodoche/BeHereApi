@@ -16,5 +16,8 @@ module.exports = {
   ReservationController: require('./reservation'),
   OrderMenuBeerController: require('./orderMenuBeer'),
   EventController: require('./event'),
-  OpeningHourController: require('./openingHour')
+  OpeningHourController: require('./openingHour'),
+  FriendController: require('./friend'),
+  GroupController: require('./group'),
+  MessageController: require('./message')
 }

@@ -23,6 +23,9 @@ RouteManager.attach = function(app) {
   app.use('/Events', require('./event'));
   app.use('/Generals', require('./general'));
   app.use('/OpeningHours', require('./openingHour'));
+  app.use('/Friends', require('./friend'));
+  app.use('/Groups', require('./group'));
+  app.use('/Messages', require('./message'));
 };
 
 module.exports = RouteManager;
