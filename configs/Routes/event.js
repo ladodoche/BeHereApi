@@ -7,6 +7,8 @@ const auth = require('../auth.js');
 const BreweryController = controllers.BreweryController;
 const BarController = controllers.BarController;
 const EventController = controllers.EventController;
+const UserController = controllers.UserController;
+const NotificationController = require('../../notifications').NotificationController;
 const dateFormat = require('dateformat');
 
 const eventRouter = express.Router();
@@ -129,9 +131,6 @@ eventRouter.post('/create', isAuthenticatedBreweryOrBarCreate, function(req, res
   const bar_id = req.body.bar_id;
   const brewery_id = req.body.brewery_id;
 
-  console.log("--------------");
-  console.log(bar_id);
-  console.log(brewery_id);
   if(bar_id !== null && bar_id !== undefined){
     asyncLib.waterfall([
       function(done){
@@ -148,12 +147,24 @@ eventRouter.post('/create', isAuthenticatedBreweryOrBarCreate, function(req, res
       function(bar, done){
         EventController.add(title, startDate, endDate, description, bar.id, undefined)
         .then((event) => {
-          return res.status(201).json({"error": false});
+          done(null, bar, event);
         })
         .catch((err) => {
           if(err.errors)
             return res.status(400).json({"error": true, "message": err.errors[0].message});
           return res.status(500).json({"error": true, "message": "Erreur lors de la création de votre évènement"});
+        });
+      },
+      function(bar, event, done){
+        const data = bar.id;
+        UserController.researchSubscriptionBar(data)
+        .then((users) => {
+          for(var i = 0; i < users.length; i++)
+            NotificationController.sendMessageEvent(bar, event, users[i]);
+          return res.status(201).json({"error": false});
+        })
+        .catch((err) => {
+          return res.status(500).json({"error": true, "message": "Erreur lors de la récupération des utilisateurs"});
         });
       }
     ]);
@@ -173,12 +184,24 @@ eventRouter.post('/create', isAuthenticatedBreweryOrBarCreate, function(req, res
       function(brewery, done){
         EventController.add(title, startDate, endDate, description, undefined, brewery.id)
         .then((brewery) => {
-          return res.status(201).json({"error": false});
+          done(null, brewery, event)
         })
         .catch((err) => {
           if(err.errors)
             return res.status(400).json({"error": true, "message": err.errors[0].message});
           return res.status(500).json({"error": true, "message": "Erreur lors de la création de votre évènement"});
+        });
+      },
+      function(brewery, event, done){
+        const data = brewery.id;
+        UserController.researchSubscriptionBrewery(data)
+        .then((users) => {
+          for(var i = 0; i < users.length; i++)
+            NotificationController.sendMessageEvent(brewery, event, users[i]);
+          return res.status(201).json({"error": false});
+        })
+        .catch((err) => {
+          return res.status(500).json({"error": true, "message": "Erreur lors de la récupération des utilisateurs"});
         });
       }
     ]);

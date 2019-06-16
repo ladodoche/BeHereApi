@@ -78,6 +78,15 @@ module.exports = function(sequelize, Datatypes){
         }
       }
     },
+    id_phone : {
+      type : Datatypes.STRING,
+      allowNull : false,
+      validate: {
+        notEmpty: {
+          msg: 'Erreur lors de la récupération de l\'identifiant du téléphone'
+        }
+      }
+    },
     pathPicture: {
       type: Datatypes.STRING,
       allowNull: true,

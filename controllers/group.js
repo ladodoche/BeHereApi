@@ -20,13 +20,26 @@ GroupController.addUser = function(group, user){
 
 
 ////////////////////////////////////////////////////
-GroupController.getAll = function(name, admin_id){
-  const options = {
-    include: [{
-      model: ModelIndex.User,
-      as: 'user'
-    }]
-  };
+GroupController.getAll = function(name, admin_id, user_id){
+  var options;
+  if(user_id !== undefined){
+    console.log("1");
+    options = {
+      include: [{
+        model: ModelIndex.User,
+        as: 'user',
+        where: { id: user_id }
+      }]
+    };
+  }else{
+    console.log("2");
+    options = {
+      include: [{
+        model: ModelIndex.User,
+        as: 'user'
+      }]
+    };
+  }
   const where = {};
 
   if(name !== undefined){where.name = name};
@@ -76,7 +89,6 @@ GroupController.delete = function(group){
 
 //////////////////////////////////////////////////////
 GroupController.deleteUser = function(group, user){
-  console.log("bb");
   group.removeUser(user);
 };
 

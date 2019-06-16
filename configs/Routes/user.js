@@ -100,6 +100,7 @@ userRouter.post('/create', function(req, res) {
   const surname = req.body.surname;
   const password = req.body.password;
   const checkPassword = req.body.checkPassword;
+  const id_phone = req.body.id_phone;
   var birthDate = undefined
   if(req.body.birthDate != undefined)
     birthDate = new Date(req.body.birthDate);
@@ -112,7 +113,7 @@ userRouter.post('/create', function(req, res) {
   if(password !== checkPassword)
     return res.status(400).json({"error": true, "message": "Vous avez fait une erreur lors de la vérification de votre mot de passe"});
 
-  UserController.add(email, sha256(password), name, surname, birthDate)
+  UserController.add(email, sha256(password), name, surname, birthDate, id_phone)
   .then((user) => {
     delete user['dataValues']["password"];
     return res.status(201).json({"error": false, "user": user});
@@ -201,6 +202,7 @@ userRouter.get('/', function(req, res) {
     return res.status(200).json({"error": false, "user": users});
   })
   .catch((err) => {
+    console.log(err);
     return res.status(500).json({"error": true, "message": "Erreur lors de la récupération des utilisateurs"});
   });
 });
@@ -277,6 +279,58 @@ userRouter.get('/:user_id', function(req, res) {
   })
   .catch((err) => {
     return res.status(500).json({"error": true, "message": "Erreur lors de la récupération de l'utilisateurs"});
+  });
+});
+
+/**
+@api {get} users/research/:data research users
+* @apiGroup Users
+* @apiParam {String} data
+* @apiSuccessExample {json} Success
+*    HTTP/1.1 200 Success
+* {
+*    "error": false,
+*    "message": [
+*        {
+*            "id": 1,
+*            "name": "Le dernier user avant la fin du monde",
+*            "gpsLatitude": 48,
+*            "gpsLongitude": 2.3461672,
+*            "description": "Coucou",
+*            "webSiteLink": "https://www.facebook.com/?ref=tn_tnmn",
+*            "created_at": "2019-04-14T13:42:47.000Z",
+*            "updated_at": "2019-04-14T13:42:47.000Z",
+*            "deleted_at": null,
+*            "user_id": 1
+*        }
+*    ]
+* }
+* @apiErrorExample {json} Error
+*    HTTP/1.1 400 Bad Request
+*    {
+*        "error": true,
+*        "message": "Aucun utilisateur trouvé"
+*    }
+*
+*    HTTP/1.1 500 Internal Server Error
+*    {
+*        "error": true,
+*        "message": "Erreur lors de la recherche des utilisateurs"
+*    }
+*/
+////////////////////////////////////////////////////
+userRouter.get('/research/:data', function(req, res) {
+  const data = req.params.data;
+
+  UserController.research(data)
+  .then((users) => {
+    if(users === undefined || users === null)
+      return res.status(400).json({"error": true, "message": "Aucun utilisateur trouvé"});
+    return res.status(200).json({"error": false, "user": users});
+  })
+  .catch((err) => {
+    console.log(err);
+    return res.status(500).json({"error": true, "message": "Erreur lors de la recherche des utilisateurs"});
   });
 });
 

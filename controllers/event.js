@@ -7,6 +7,7 @@ const dateFormat = require('dateformat');
 
 ////////////////////////////////////////////////////
 EventController.add = function(title, startDate, endDate, description, bar_id, brewery_id){
+  console.log("0");
   return Event.create({
     title: title,
     startDate: startDate,

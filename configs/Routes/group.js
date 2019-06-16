@@ -159,6 +159,7 @@ groupRouter.post('/create', isAuthenticatedGroupCreateAccount, function(req, res
 * @apiGroup Groups
 * @apiParam {String} name
 * @apiParam {String} admin_id
+* @apiParam {String} user_id
 * @apiSuccessExample {json} Success
 *    HTTP/1.1 200 Success
 * {
@@ -191,8 +192,9 @@ groupRouter.get('/', function(req, res) {
 
   const name = req.query.name;
   const admin_id = req.query.admin_id;
+  const user_id = req.query.user_id;
 
-  GroupController.getAll(name, admin_id)
+  GroupController.getAll(name, admin_id, user_id)
   .then((groups) => {
     if(groups.length == 0)
       return res.status(400).json({"error": true, "message": "Aucun groupe trouvé"});

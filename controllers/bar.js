@@ -22,7 +22,12 @@ BarController.add = function(name, gpsLatitude, gpsLongitude, description, webSi
 
 ////////////////////////////////////////////////////
 BarController.getAll = function(name, user_id){
-  const options = {};
+  const options = {
+    include: [{
+      model: ModelIndex.User,
+      as: 'user'
+    }]
+  };
   const where = {};
 
   if(name !== undefined){where.name = name};

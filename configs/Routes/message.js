@@ -7,6 +7,7 @@ const auth = require('../auth.js');
 const MessageController = controllers.MessageController;
 const UserController = controllers.UserController;
 const GroupController = controllers.GroupController;
+const NotificationController = require('../../notifications').NotificationController;
 
 const messageRouter = express.Router();
 messageRouter.use(bodyParser.json({limit: '10mb'}));
@@ -76,10 +77,6 @@ messageRouter.post('/create', isAuthenticatedUserCreate, function(req, res) {
   const user_receiver_id = req.body.user_receiver_id;
   const group_id = req.body.group_id;
 
-  console.log(text);
-  console.log(user_receiver_id);
-  console.log(group_id);
-
   if((user_receiver_id != null || user_receiver_id != undefined) && (group_id != null || group_id != undefined)){
     return res.status(400).json({"error": true, "message": "erreur"});
   }else if(user_receiver_id != null || user_receiver_id != undefined) {
@@ -98,6 +95,7 @@ messageRouter.post('/create', isAuthenticatedUserCreate, function(req, res) {
       function(user, done){
         MessageController.add(getUserIdHeader(req), text, user_receiver_id, undefined)
         .then((message) => {
+          NotificationController.sendMessageUser(message, user);
           return res.status(201).json({"error": false});
         })
         .catch((err) => {
@@ -120,9 +118,11 @@ messageRouter.post('/create', isAuthenticatedUserCreate, function(req, res) {
             return res.status(500).json({"error": true, "message": "Erreur lors de la récupération du groupe"});
         });
       },
-      function(user, done){
+      function(group, done){
         MessageController.add(getUserIdHeader(req), text, undefined, group_id)
         .then((message) => {
+          for (var i = 0 ; i < group.user ; i++)
+            NotificationController.sendMessageGroup(message, group.user[i], group);
           return res.status(201).json({"error": false});
         })
         .catch((err) => {

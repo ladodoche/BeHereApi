@@ -6,13 +6,14 @@ const UserController = function(){};
 
 
 ////////////////////////////////////////////////////
-UserController.add = function(email, password, name, surname, birthDate){
+UserController.add = function(email, password, name, surname, birthDate, id_phone){
   return User.create({
     email: email,
     password: password,
     name: name,
     surname: surname,
-    birthDate: birthDate
+    birthDate: birthDate,
+    id_phone: id_phone
   });
 };
 
@@ -92,6 +93,59 @@ UserController.getOne = function(user_id){
 
   return User.find(options);
 }
+
+
+////////////////////////////////////////////////////
+UserController.researchSubscriptionBar = function(data){
+  const options = {
+    include: [{
+      model: ModelIndex.Bar,
+      as: 'bar',
+      where: {
+        id: data
+     }
+    }]
+  };
+  const where = {};
+  options.where = where;
+
+  return User.findAll(options);
+};
+
+
+////////////////////////////////////////////////////
+UserController.researchSubscriptionBrewery = function(data){
+  const options = {
+    include: [{
+      model: ModelIndex.Brewery,
+      as: 'bar',
+      where: {
+        id: data
+     }
+    }]
+  };
+  const where = {};
+  options.where = where;
+
+  return User.findAll(options);
+};
+
+
+////////////////////////////////////////////////////
+UserController.research = function(data){
+  const datas = data.split(' ');
+  const options = {};
+  const where = {};
+  var or = {};
+  for (var i = 0; i < datas.length; i++){
+    or.name = { like: ["%" + datas[i] + "%"] } ;
+    or.surname = { like: ["%" + datas[i] + "%"] } ;
+  }
+  where.or = or;
+  options.where = where;
+
+  return User.findAll(options);
+};
 
 
 //////////////////////////////////////////////////////
