@@ -17,6 +17,16 @@ module.exports = function(sequelize, Datatypes){
           msg: 'Le nom de votre groupe doit faire entre 2 et 200 caractères'
         }
       }
+    },
+    pathPicture: {
+      type: Datatypes.STRING,
+      allowNull: true,
+      validate: {
+        len: {
+          args: [2,250],
+          msg: 'Chemin non conforme'
+        }
+      }
     }
   }, {
     paranoid: true,

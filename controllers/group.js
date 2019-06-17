@@ -68,12 +68,13 @@ GroupController.getOne = function(group_id){
 
 
 //////////////////////////////////////////////////////
-GroupController.update = function(group, name){
+GroupController.update = function(group, name, pathPicture){
   const options = {};
   const where = {};
   const json = {};
 
   if(name !== undefined){json.name = name}
+  if(pathPicture !== undefined){json.pathPicture = pathPicture}
   options.where = where;
   options.timezone = '+02:00';
 

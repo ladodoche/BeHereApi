@@ -123,6 +123,7 @@ groupRouter.post('/create', isAuthenticatedGroupCreateAccount, function(req, res
     function(done){
       GroupController.add(name, getUserIdHeader(req))
       .then((group) => {
+        console.log(group);
         done(null, group);
       })
       .catch((err) => {
@@ -145,7 +146,7 @@ groupRouter.post('/create', isAuthenticatedGroupCreateAccount, function(req, res
     function(group, user, done){
       GroupController.addUser(group, user)
       .then((user_Group) => {
-        return res.status(200).json({"error": false}).end();
+        return res.status(200).json({"error": false, "group": group}).end();
       })
       .catch((err) => {
         return res.status(500).json({"error": true, "message": "Erreur lors de l'ajout du lien entre le groupe et l'utilisateur'"}).end();
@@ -512,6 +513,134 @@ groupRouter.delete('/:group_id/deleteUser/:user_id', isAuthenticatedUserGroupAcc
     }
   ]);
 });
+
+groupRouter.use(fileUpload());
+/**
+@api {put} groups/upload/:group_id upload picture group
+* @apiGroup Groups
+* @apiHeader {String} x-access-token
+* @apiParam {File} file Obligatoire, format png ou jpg
+* @apiSuccessExample {json} Success
+*    HTTP/1.1 201 Created
+*    {
+*        "error": false
+*    }
+* @apiErrorExample {json} Error
+*    HTTP/1.1 400 Bad Request
+*    {
+*        "error": true,
+*        "message": message
+*    }
+*
+*    HTTP/1.1 401 Unauthorized
+*    {
+*        "error": true,
+*        "message": message
+*    }
+*
+*    HTTP/1.1 500 Internal Server Error
+*    {
+*        "error": true,
+*        "message": message
+*    }
+*/
+groupRouter.put('/upload/:group_id', isAuthenticatedGroupAccount, function(req, res) {
+  const group_id = req.params.group_id;
+  const fileToUpload = req.files.file;
+  asyncLib.waterfall([
+    function(done){
+      GroupController.getOne(group_id)
+      .then((group) => {
+        if(group === null || group === undefined)
+          return res.status(400).json({"error": true, "message": "Le groupe n'existe pas"});
+        done(null, group);
+      })
+      .catch((err) => {
+          return res.status(500).json({"error": true, "message": "Erreur lors de la récupération du groupe"});
+      });
+    },
+    function(group, done){
+      const ext = fileToUpload.name.substr(fileToUpload.name.lastIndexOf('.') + 1).toLowerCase();
+      const regex = new RegExp(' ','g');
+      var src_tracks = group.id+"."+ext;
+      src_tracks = src_tracks.replace(regex, '_');
+
+      if(fileToUpload === undefined)
+        return res.status(400).json({"error": true, "message": "Aucune image à upload"}).end();
+      if(ext != "png" && ext != "jpg")
+        return res.status(400).json({"error": true, "message": "Format de l'image non géré (png et jpg)"}).end();
+
+      fileToUpload.mv("medias/groups/"+src_tracks, function(err) {
+        if (err)
+          return res.status(400).json({"error": true, "message": "Erreur lors de l'upload"});
+        else
+          done(null, group, src_tracks);
+      });
+    },
+    function(group, src_tracks, done){
+      GroupController.update(group, undefined, src_tracks)
+      .then((track) => {
+        return res.status(201).json({"error": false});
+      })
+      .catch((err) => {
+        return res.status(500).json({"error": true, "message": "Erreur lors de la sauvegarde du chemin"});
+      });
+    }
+  ])
+});
+
+/**
+  @api {get} groups/download/:group_id download picture group
+* @apiGroup Groups
+* @apiSuccessExample {json} Success
+*    HTTP/1.1 200 Success
+*    {
+*        "error": false,
+*        "buffer": buffer
+*    }
+* @apiErrorExample {json} Error
+*    HTTP/1.1 400 Bad Request
+*    {
+*        "error": true,
+*        "message": message
+*    }
+*
+*    HTTP/1.1 500 Internal Server Error
+*    {
+*        "error": true,
+*        "message": message
+*    }
+*/
+groupRouter.get('/download/:group_id', function(req, res){
+  const group_id = req.params.group_id;
+  var pathGroupsDefault = path.resolve( __dirname+"/../../medias/groups/");
+
+  GroupController.getOne(group_id)
+  .then((group) => {
+    if(group === null || group === undefined)
+      return res.status(401).json({"error": true, "message": "Le groupe n'existe pas"});
+    pathGroups = pathGroupsDefault + "\\" + group.pathPicture;
+
+    if (fs.existsSync(pathGroups)){
+      const buffer = new Buffer(fs.readFileSync(pathGroups), 'base64');
+      res.writeHead(200, {
+       'Content-Type': 'image/jpeg',
+       'Content-Length': buffer.length
+     });
+     res.end(buffer);
+    }else{
+      const buffer = new Buffer(fs.readFileSync(pathGroupsDefault + "\\" + 'defaultprofile.png'), 'base64');
+      res.writeHead(200, {
+       'Content-Type': 'image/png',
+       'Content-Length': buffer.length
+     });
+     res.end(buffer);
+
+  }})
+  .catch((err) => {
+    return res.status(500).json({"error": true, "message": "Image non trouvé sur notre serveur"});
+  });
+})
 
 
 module.exports = groupRouter;

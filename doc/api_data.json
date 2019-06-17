@@ -2734,6 +2734,34 @@
   },
   {
     "type": "get",
+    "url": "groups/download/:group_id",
+    "title": "download picture group",
+    "group": "Groups",
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 200 Success\n{\n    \"error\": false,\n    \"buffer\": buffer\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": message\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/group.js",
+    "groupTitle": "Groups",
+    "name": "GetGroupsDownloadGroup_id"
+  },
+  {
+    "type": "get",
     "url": "groups/:group_id",
     "title": "get group",
     "group": "Groups",
@@ -3038,6 +3066,60 @@
     "filename": "configs/Routes/group.js",
     "groupTitle": "Groups",
     "name": "PutGroupsUpdateGroup_id"
+  },
+  {
+    "type": "put",
+    "url": "groups/upload/:group_id",
+    "title": "upload picture group",
+    "group": "Groups",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-access-token",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "File",
+            "optional": false,
+            "field": "file",
+            "description": "<p>Obligatoire, format png ou jpg</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 201 Created\n{\n    \"error\": false\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 401 Unauthorized\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": message\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/group.js",
+    "groupTitle": "Groups",
+    "name": "PutGroupsUploadGroup_id"
   },
   {
     "type": "delete",
