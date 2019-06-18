@@ -329,7 +329,6 @@ userRouter.get('/research/:data', function(req, res) {
     return res.status(200).json({"error": false, "user": users});
   })
   .catch((err) => {
-    console.log(err);
     return res.status(500).json({"error": true, "message": "Erreur lors de la recherche des utilisateurs"});
   });
 });

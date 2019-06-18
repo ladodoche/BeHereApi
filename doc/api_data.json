@@ -2692,6 +2692,47 @@
     "name": "GetCommentsuserUser_id"
   },
   {
+    "type": "get",
+    "url": "research/:data",
+    "title": "research user, group, bar or brewery",
+    "group": "Generals",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "data",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": " HTTP/1.1 200 Success\n{\n   \"error\": false,\n   \"users\": [\n       {\n           \"admin\": false,\n           \"id\": 1,\n           \"email\": \"d.alayrangues@gmail.com\",\n           \"name\": \"dorian\",\n           \"surname\": \"alayrangues\",\n           \"birthDate\": \"1997-05-22T00:00:00.000Z\",\n           \"updated_at\": \"2019-04-14T09:20:46.668Z\",\n           \"created_at\": \"2019-04-14T09:20:46.668Z\"\n       }\n   ],\n   \"groups\": [\n       {\n           \"id\": 1,\n           \"name\": \"group paris\",\n           \"created_at\": \"2019-04-14T13:42:47.000Z\",\n           \"updated_at\": \"2019-04-14T13:42:47.000Z\",\n           \"deleted_at\": null,\n           \"admin_id\": 1\n       }\n   ],\n   \"bars\": [\n       {\n           \"id\": 1,\n           \"name\": \"Le dernier bar avant la fin du monde\",\n           \"gpsLatitude\": 48,\n           \"gpsLongitude\": 2.3461672,\n           \"description\": \"Coucou\",\n           \"webSiteLink\": \"https://www.facebook.com/?ref=tn_tnmn\",\n           \"created_at\": \"2019-04-14T13:42:47.000Z\",\n           \"updated_at\": \"2019-04-14T13:42:47.000Z\",\n           \"deleted_at\": null,\n           \"user_id\": 1\n       }\n   ],\n   \"brewerys\": [\n       {\n           \"id\": 1,\n           \"name\": \"La dernière brasserie avant la fin du monde\",\n           \"gpsLatitude\": 48,\n           \"gpsLongitude\": 2.3461672,\n           \"description\": \"Coucou\",\n           \"webSiteLink\": \"https://www.facebook.com/?ref=tn_tnmn\",\n           \"created_at\": \"2019-04-14T13:42:47.000Z\",\n           \"updated_at\": \"2019-04-14T13:42:47.000Z\",\n           \"deleted_at\": null,\n           \"user_id\": 1\n       }\n   ]\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": message\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/general.js",
+    "groupTitle": "Generals",
+    "name": "GetResearchData"
+  },
+  {
     "type": "delete",
     "url": "groups/delete/:group_id",
     "title": "delete group",

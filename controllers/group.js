@@ -50,6 +50,17 @@ GroupController.getAll = function(name, admin_id, user_id){
 };
 
 
+////////////////////////////////////////////////////
+GroupController.research = function(data){
+  const options = {};
+  const where = {};
+  where.name = { like: '%' + data + '%' }
+  options.where = where;
+
+  return Group.findAll(options);
+};
+
+
 //////////////////////////////////////////////////////
 GroupController.getOne = function(group_id){
   const options = {
