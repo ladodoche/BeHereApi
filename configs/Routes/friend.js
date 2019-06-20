@@ -265,6 +265,7 @@ friendRouter.put('/accepted/:friend_id', isAuthenticatedFriend, function(req, re
 * @apiParam {Int} user_id
 * @apiParam {Int} user_friend_id
 * @apiParam {bool} status
+* @apiParam {Int} id
 * @apiSuccessExample {json} Success
 *  HTTP/1.1 200 Success
 * {
@@ -299,8 +300,9 @@ friendRouter.get('/', function(req, res) {
   const user_id = req.query.user_id;
   const user_friend_id = req.query.user_friend_id;
   const status = req.query.status;
+  const id = req.query.id;
 
-  FriendController.getAll(user_id, user_friend_id, status)
+  FriendController.getAll(user_id, user_friend_id, status, id)
   .then((friends) => {
     if(friends.length == 0)
       return res.status(400).json({"error": true, "message": "Aucun lien d'amitié trouvé"});

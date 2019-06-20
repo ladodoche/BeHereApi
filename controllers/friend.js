@@ -14,10 +14,16 @@ FriendController.add = function(user_id, user_friend_id){
 
 
 ////////////////////////////////////////////////////
-FriendController.getAll = function(user_id, user_friend_id, status){
+FriendController.getAll = function(user_id, user_friend_id, status, id){
   const options = {};
   const where = {};
 
+  if(id !== undefined){
+    var or = {};
+    or.user_id = id;
+    or.user_friend_id = id;
+    where.or = or;
+  };
   if(user_id !== undefined){where.user_id = user_id};
   if(user_friend_id !== undefined){where.user_friend_id = user_friend_id};
   if(status !== undefined){where.status = status};
