@@ -74,7 +74,7 @@ function isAuthenticatedUserOrFriend(req, res, next) {
 
   asyncLib.waterfall([
     function(done){
-      FriendController.getAll(getUserIdHeader(req), friend_id)
+      FriendController.getAll(getUserIdHeader(req), undefined)
       .then((friend) => {
         if(friend === null || friend === undefined)
           done(null, null)
@@ -86,7 +86,7 @@ function isAuthenticatedUserOrFriend(req, res, next) {
       });
     },
     function(friend, done){
-      FriendController.getAll(friend_id, getUserIdHeader(req))
+      FriendController.getAll(undefined, getUserIdHeader(req))
       .then((friend2) => {
         if(friend2 === null || friend2 === undefined){}
           if(friend == null)
@@ -103,7 +103,7 @@ function isAuthenticatedUserOrFriend(req, res, next) {
       jwt.verify(token, auth.secret, function(err, decoded) {
         if (err)
           return res.status(500).json({ "error": true, "message": "Problème lors de l'authentification"});
-        if ((decoded.id != friend.user_friend_id) && (friend.user_id != getUserIdHeader(req)) && decoded.admin != 1)
+        if ((decoded.id != friend[0].user_friend_id) && (friend[0].user_id != decoded.id) && decoded.admin != 1)
           return res.status(401).json({ "error": true, "message": "Vous ne disposez pas des droits nécessairent"});
         next();
       });
