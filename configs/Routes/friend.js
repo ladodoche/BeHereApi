@@ -74,10 +74,25 @@ function isAuthenticatedUserOrFriend(req, res, next) {
 
   asyncLib.waterfall([
     function(done){
-      FriendController.getOne(friend_id)
+      FriendController.getAll(getUserIdHeader(req), friend_id)
       .then((friend) => {
         if(friend === null || friend === undefined)
-          return res.status(400).json({"error": true, "message": "Le lien d'amitié n'existe pas"});
+          done(null, null)
+          //return res.status(400).json({"error": true, "message": "Le lien d'amitié n'existe pas"});
+        done(null, friend);
+      })
+      .catch((err) => {
+          return res.status(500).json({"error": true, "message": "Erreur lors de la récupération de l'ami"});
+      });
+    },
+    function(friend, done){
+      FriendController.getAll(friend_id, getUserIdHeader(req))
+      .then((friend2) => {
+        if(friend2 === null || friend2 === undefined){}
+          if(friend == null)
+            return res.status(400).json({"error": true, "message": "Le lien d'amitié n'existe pas"});
+        if(friend == null)
+          done(null, friend2);
         done(null, friend);
       })
       .catch((err) => {
