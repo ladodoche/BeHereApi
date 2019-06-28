@@ -19,5 +19,6 @@ module.exports = {
   OpeningHourController: require('./openingHour'),
   FriendController: require('./friend'),
   GroupController: require('./group'),
-  MessageController: require('./message')
+  MessageController: require('./message'),
+  CommentsUserController: require('./commentsUser')
 }

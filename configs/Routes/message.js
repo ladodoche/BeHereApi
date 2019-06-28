@@ -39,11 +39,12 @@ function getUserIdHeader(req, next){
 @api {post} messages/create add a new message
 * @apiGroup messages
 * @apiHeader {String} x-access-token
-* @apiParam {Int} user_message_id obligatoire
+* @apiBody {Int} text obligatoire
+* @apiBody {Int} user_receiver_id
+* @apiBody {Int} group_id
 * @apiParamExample {json} Input
 *  {
 *    "text": "2"
-*    "user_sender_id": "2"
 *    "user_receiver_id": "2"
 *    "group_id": "2"
 *  }

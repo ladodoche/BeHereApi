@@ -29,8 +29,6 @@ FriendController.getAll = function(user_id, user_friend_id, status, id){
   if(status !== undefined){where.status = status};
   options.where = where;
 
-  console.log(options);
-
   return Friend.findAll(options);
 };
 

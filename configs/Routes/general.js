@@ -7,6 +7,7 @@ const auth = require('../auth.js');
 const CommentsBarController = controllers.CommentsBarController;
 const CommentsBeerController = controllers.CommentsBeerController;
 const CommentsBreweryController = controllers.CommentsBreweryController;
+const CommentsUserController = controllers.CommentsUserController;
 const UserController = controllers.UserController;
 const BarController = controllers.BarController;
 const BreweryController = controllers.BreweryController;
@@ -75,7 +76,7 @@ generalRouter.get('/commentsUser/:user_id', function(req, res) {
         done(null, commentsBars)
       })
       .catch((err) => {
-        return res.status(500).json({"error": true, "message": "Erreur lors de la récupération des commentaires"});
+        return res.status(500).json({"error": true, "message": "Erreur lors de la récupération des commentaires bars"});
       });
     },
     function(commentsBars, done){
@@ -84,16 +85,26 @@ generalRouter.get('/commentsUser/:user_id', function(req, res) {
         done(null, commentsBars, commentsBeers)
       })
       .catch((err) => {
-        return res.status(500).json({"error": true, "message": "Erreur lors de la récupération des commentaires"});
+        return res.status(500).json({"error": true, "message": "Erreur lors de la récupération des commentaires bières"});
       });
     },
     function(commentsBars, commentsBeers, done){
       CommentsBreweryController.getAll(user_id)
       .then((commentsBrewery) => {
-        return res.status(200).json({"error": false, "commentsBars": commentsBars, "commentsBeers": commentsBeers, "commentsBrewery": commentsBrewery});
+        done(null, commentsBars, commentsBeers, commentsBrewery)
+        //return res.status(200).json({"error": false, "commentsBars": commentsBars, "commentsBeers": commentsBeers, "commentsBrewery": commentsBrewery});
       })
       .catch((err) => {
-        return res.status(500).json({"error": true, "message": "Erreur lors de la récupération des commentaires"});
+        return res.status(500).json({"error": true, "message": "Erreur lors de la récupération des commentaires brasseries"});
+      });
+    },
+    function(commentsBars, commentsBeers, commentsBrewery, done){
+      CommentsUserController.getAll(user_id)
+      .then((commentsUsers) => {
+        return res.status(200).json({"error": false, "commentsBars": commentsBars, "commentsBeers": commentsBeers, "commentsBrewery": commentsBrewery, "commentsUsers" : commentsUsers});
+      })
+      .catch((err) => {
+        return res.status(500).json({"error": true, "message": "Erreur lors de la récupération des commentaires utilisateurs"});
       });
     }
   ]);

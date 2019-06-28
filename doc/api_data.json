@@ -2214,6 +2214,234 @@
   },
   {
     "type": "delete",
+    "url": "commentsUsers/delete/:commentsUser_id",
+    "title": "delete commentsUser",
+    "group": "CommentsUsers",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-access-token",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 200 Success\n{\n    \"error\": false\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": \"Le commentaire n'existe pas\"\n}\n\nHTTP/1.1 401 Unauthorized\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": \"Erreur lors de la récupération du commentaire\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/commentsUser.js",
+    "groupTitle": "CommentsUsers",
+    "name": "DeleteCommentsusersDeleteCommentsuser_id"
+  },
+  {
+    "type": "get",
+    "url": "commentsUsers/:commentsUser_id",
+    "title": "get commentsUser",
+    "group": "CommentsUsers",
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 200 Success\n{\n   \"error\": false,\n   \"message\": {\n           \"id\": 1,\n           \"text\": \"J'adore cette utlisateur\",\n           \"user_id\": 1,\n           \"user_id\": 1,\n           \"created_at\": \"2019-04-14T13:42:47.000Z\",\n           \"updated_at\": \"2019-04-14T13:42:47.000Z\",\n           \"deleted_at\": null\n   }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": \"Le commentaire n'existe pas\"\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": \"Erreur lors de la récupération du commentaire\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/commentsUser.js",
+    "groupTitle": "CommentsUsers",
+    "name": "GetCommentsusersCommentsuser_id"
+  },
+  {
+    "type": "get",
+    "url": "commentsUsers/?user_id=user_id&user_comment_id=user_comment_id",
+    "title": "get all commentsUsers",
+    "group": "CommentsUsers",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "user_id",
+            "description": ""
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "user_comment_id",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": " HTTP/1.1 200 Success\n{\n   \"error\": false,\n   \"message\": [\n       {\n           \"id\": 1,\n           \"text\": \"J'adore ce user\",\n           \"user_id\": 1,\n           \"user_comment_id\": 2,\n           \"created_at\": \"2019-04-14T13:42:47.000Z\",\n           \"updated_at\": \"2019-04-14T13:42:47.000Z\",\n           \"deleted_at\": null\n       }\n   ]\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": \"Aucun commentaire trouvé\"\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": \"Erreur lors de la récupération des commentaires\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/commentsUser.js",
+    "groupTitle": "CommentsUsers",
+    "name": "GetCommentsusersUser_idUser_idUser_comment_idUser_comment_id"
+  },
+  {
+    "type": "post",
+    "url": "commentsUsers/create",
+    "title": "add a new commentsUser",
+    "group": "CommentsUsers",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-access-token",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "examples": [
+        {
+          "title": "Input",
+          "content": "{\n  \"text\": \"J'adore cette utilisateur\",\n  \"user_comment_id\": \"1\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 201 Created\n{\n    \"error\": false\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 401 Unauthorized\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": \"Erreur lors de la création de votre commentaire\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/commentsUser.js",
+    "groupTitle": "CommentsUsers",
+    "name": "PostCommentsusersCreate"
+  },
+  {
+    "type": "put",
+    "url": "commentsUsers/update/:commentsUser_id",
+    "title": "update commentsUser",
+    "group": "CommentsUsers",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-access-token",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "text",
+            "description": "<p>obligatoire</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Input",
+          "content": "{\n   \"text\": \"J'adore cette utilisateur\",\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 200 Success\n   {\n       \"error\": false\n   }",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 401 Unauthorized\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": message\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/commentsUser.js",
+    "groupTitle": "CommentsUsers",
+    "name": "PutCommentsusersUpdateCommentsuser_id"
+  },
+  {
+    "type": "delete",
     "url": "events/delete/:event_id",
     "title": "delete event",
     "group": "Events",
@@ -2473,6 +2701,13 @@
             "optional": false,
             "field": "status",
             "description": ""
+          },
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "id",
+            "description": ""
           }
         ]
       }
@@ -2690,6 +2925,47 @@
     "filename": "configs/Routes/general.js",
     "groupTitle": "Generals",
     "name": "GetCommentsuserUser_id"
+  },
+  {
+    "type": "get",
+    "url": "getallusergroupbarbrewery",
+    "title": "getall user, group, bar or brewery",
+    "group": "Generals",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "data",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": " HTTP/1.1 200 Success\n{\n   \"error\": false,\n   \"users\": [\n       {\n           \"admin\": false,\n           \"id\": 1,\n           \"email\": \"d.alayrangues@gmail.com\",\n           \"name\": \"dorian\",\n           \"surname\": \"alayrangues\",\n           \"birthDate\": \"1997-05-22T00:00:00.000Z\",\n           \"updated_at\": \"2019-04-14T09:20:46.668Z\",\n           \"created_at\": \"2019-04-14T09:20:46.668Z\"\n       }\n   ],\n   \"groups\": [\n       {\n           \"id\": 1,\n           \"name\": \"group paris\",\n           \"created_at\": \"2019-04-14T13:42:47.000Z\",\n           \"updated_at\": \"2019-04-14T13:42:47.000Z\",\n           \"deleted_at\": null,\n           \"admin_id\": 1\n       }\n   ],\n   \"bars\": [\n       {\n           \"id\": 1,\n           \"name\": \"Le dernier bar avant la fin du monde\",\n           \"gpsLatitude\": 48,\n           \"gpsLongitude\": 2.3461672,\n           \"description\": \"Coucou\",\n           \"webSiteLink\": \"https://www.facebook.com/?ref=tn_tnmn\",\n           \"created_at\": \"2019-04-14T13:42:47.000Z\",\n           \"updated_at\": \"2019-04-14T13:42:47.000Z\",\n           \"deleted_at\": null,\n           \"user_id\": 1\n       }\n   ],\n   \"brewerys\": [\n       {\n           \"id\": 1,\n           \"name\": \"La dernière brasserie avant la fin du monde\",\n           \"gpsLatitude\": 48,\n           \"gpsLongitude\": 2.3461672,\n           \"description\": \"Coucou\",\n           \"webSiteLink\": \"https://www.facebook.com/?ref=tn_tnmn\",\n           \"created_at\": \"2019-04-14T13:42:47.000Z\",\n           \"updated_at\": \"2019-04-14T13:42:47.000Z\",\n           \"deleted_at\": null,\n           \"user_id\": 1\n       }\n   ]\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": message\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/general.js",
+    "groupTitle": "Generals",
+    "name": "GetGetallusergroupbarbrewery"
   },
   {
     "type": "get",
@@ -6718,21 +6994,10 @@
       }
     },
     "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "Int",
-            "optional": false,
-            "field": "user_message_id",
-            "description": "<p>obligatoire</p>"
-          }
-        ]
-      },
       "examples": [
         {
           "title": "Input",
-          "content": "{\n  \"text\": \"2\"\n  \"user_sender_id\": \"2\"\n  \"user_receiver_id\": \"2\"\n  \"group_id\": \"2\"\n}",
+          "content": "{\n  \"text\": \"2\"\n  \"user_receiver_id\": \"2\"\n  \"group_id\": \"2\"\n}",
           "type": "json"
         }
       ]
