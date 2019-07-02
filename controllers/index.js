@@ -20,5 +20,6 @@ module.exports = {
   FriendController: require('./friend'),
   GroupController: require('./group'),
   MessageController: require('./message'),
-  CommentsUserController: require('./commentsUser')
+  CommentsUserController: require('./commentsUser'),
+  NotificationController: require('./notification')
 }

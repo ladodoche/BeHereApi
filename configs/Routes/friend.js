@@ -217,7 +217,7 @@ friendRouter.post('/create', isAuthenticatedUserCreate, function(req, res) {
 @api {put} friends/accepted/:friend_id update friend
 * @apiGroup Friends
 * @apiHeader {String} x-access-token
-* @apiParam {String} user_friend_id user_friend_id
+* @apiParam {String} friend_id obligatoire
 * @apiParamExample {json} Input
 *  {
 *     "user_friend_id": "2",
