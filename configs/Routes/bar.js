@@ -26,6 +26,7 @@ function isAuthenticatedBarCreateAccount(req, res, next) {
 }
 
 function isAuthenticatedBarAccount(req, res, next) {
+  console.log("2");
   const token = req.headers['x-access-token'];
 
   if (!token)
@@ -326,6 +327,7 @@ barRouter.get('/research/:data', function(req, res) {
 *    }
 */
 barRouter.put('/update/:bar_id', isAuthenticatedBarAccount, function(req, res){
+  console.log("1");
   const bar_id = req.params.bar_id;
   const name = req.body.name;
   const gpsLatitude = req.body.gpsLatitude;

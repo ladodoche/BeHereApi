@@ -66,6 +66,7 @@ notificationRouter.post('/create', function(req, res) {
 
   const texte = req.body.texte;
   const type = req.body.type;
+  const user_id = req.body.user_id;
   const other_user_id = req.body.other_user_id;
   const group_id = req.body.group_id;
 
@@ -87,7 +88,7 @@ notificationRouter.post('/create', function(req, res) {
       },
       function(user, done){
         console.log("0");
-        NotificationController.add(texte, type, getUserIdHeader(req), other_user_id, undefined)
+        NotificationController.add(texte, type, user_id, other_user_id, undefined)
         .then((notification) => {
           console.log("1");
           return res.status(201).json({"error": false});
@@ -115,7 +116,7 @@ notificationRouter.post('/create', function(req, res) {
         });
       },
       function(group, done){
-        NotificationController.add(texte, type, getUserIdHeader(req), undefined, group_id)
+        NotificationController.add(texte, type, user_id, undefined, group_id)
         .then((notification) => {
           return res.status(201).json({"error": false});
         })
