@@ -80,10 +80,9 @@ module.exports = function(sequelize, Datatypes){
 };
 
 
+
 function _associate(models) {
-  models.Beer.belongsToMany(models.TypeOfBeer, {
-    as: 'typeOfBeer',
-    through: 'beer_typeOfBeer',
-    foreignKey: 'beer_id'
+  models.Beer.belongsTo(models.TypeOfBeer, {
+    as : 'typeOfBeer'
   });
 }

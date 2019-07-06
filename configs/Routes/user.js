@@ -908,7 +908,7 @@ userRouter.delete('/:user_id/deleteTypeOfBeer/:typeOfBeer_id', isAuthenticatedUs
 
 //////////////////////////////////////////////////////
 /**
-@api {put} users/:user_id/addBar add link between type of beer and user
+@api {put} users/:user_id/addSubscribeBar add link between type of beer and user
 * @apiGroup Users
 * @apiHeader {String} x-access-token
 * @apiParam {String} bar_id
@@ -940,7 +940,7 @@ userRouter.delete('/:user_id/deleteTypeOfBeer/:typeOfBeer_id', isAuthenticatedUs
 *        "message": message
 *    }
 */
-userRouter.put('/:user_id/addBar', isAuthenticatedUser, function(req, res) {
+userRouter.put('/:user_id/addSubscribeBar', isAuthenticatedUser, function(req, res) {
   const user_id = req.params.user_id;
   const bar_id = req.body.bar_id;
 
@@ -960,6 +960,7 @@ userRouter.put('/:user_id/addBar', isAuthenticatedUser, function(req, res) {
       });
     },
     function(bar, done){
+      console.log("1");
       UserController.getOne(user_id)
       .then((user) => {
         if(user === null || user === undefined)
@@ -971,7 +972,8 @@ userRouter.put('/:user_id/addBar', isAuthenticatedUser, function(req, res) {
       });
     },
     function(bar, user, done){
-      UserController.addBar(user, bar)
+      console.log("2");
+      UserController.addSubscribeBar(user, bar)
       .then((bar_User) => {
         return res.status(200).json({"error": false}).end();
       })
@@ -983,7 +985,7 @@ userRouter.put('/:user_id/addBar', isAuthenticatedUser, function(req, res) {
 });
 
 /**
-@api {put} users/:user_id/deleteBar/:bar_id delete link between type of beer and user
+@api {put} users/:user_id/deleteSubscribeBar/:bar_id delete link between type of beer and user
 * @apiGroup Users
 * @apiHeader {String} x-access-token
 * @apiSuccessExample {json} Success
@@ -1010,7 +1012,7 @@ userRouter.put('/:user_id/addBar', isAuthenticatedUser, function(req, res) {
 *        "message": message
 *    }
 */
-userRouter.delete('/:user_id/deleteBar/:bar_id', isAuthenticatedUser, function(req, res) {
+userRouter.delete('/:user_id/deleteSubscribeBar/:bar_id', isAuthenticatedUser, function(req, res) {
   const bar_id = req.params.bar_id;
   const user_id = req.params.user_id;
 
@@ -1042,7 +1044,7 @@ userRouter.delete('/:user_id/deleteBar/:bar_id', isAuthenticatedUser, function(r
       });
     },
     function(bar, user, done){
-      UserController.deleteBar(user, bar);
+      UserController.deleteSubscribeBar(user, bar);
       return res.status(200).json({"error": false}).end();
     }
   ]);
@@ -1050,7 +1052,7 @@ userRouter.delete('/:user_id/deleteBar/:bar_id', isAuthenticatedUser, function(r
 
 //////////////////////////////////////////////////////
 /**
-@api {put} users/:user_id/addBrewery add link between type of beer and user
+@api {put} users/:user_id/addSubscribeBrewery add link between type of beer and user
 * @apiGroup Users
 * @apiHeader {String} x-access-token
 * @apiParam {String} brewery_id
@@ -1082,7 +1084,7 @@ userRouter.delete('/:user_id/deleteBar/:bar_id', isAuthenticatedUser, function(r
 *        "message": message
 *    }
 */
-userRouter.put('/:user_id/addBrewery', isAuthenticatedUser, function(req, res) {
+userRouter.put('/:user_id/addSubscribeBrewery', isAuthenticatedUser, function(req, res) {
   const user_id = req.params.user_id;
   const brewery_id = req.body.brewery_id;
 
@@ -1113,7 +1115,7 @@ userRouter.put('/:user_id/addBrewery', isAuthenticatedUser, function(req, res) {
       });
     },
     function(brewery, user, done){
-      UserController.addBrewery(user, brewery)
+      UserController.addSubscribeBrewery(user, brewery)
       .then((brewery_User) => {
         return res.status(200).json({"error": false}).end();
       })
@@ -1125,7 +1127,7 @@ userRouter.put('/:user_id/addBrewery', isAuthenticatedUser, function(req, res) {
 });
 
 /**
-@api {put} users/:user_id/deleteBrewery/:brewery_id delete link between type of beer and user
+@api {put} users/:user_id/deleteSubscribeBrewery/:brewery_id delete link between type of beer and user
 * @apiGroup Users
 * @apiHeader {String} x-access-token
 * @apiSuccessExample {json} Success
@@ -1152,7 +1154,7 @@ userRouter.put('/:user_id/addBrewery', isAuthenticatedUser, function(req, res) {
 *        "message": message
 *    }
 */
-userRouter.delete('/:user_id/deleteBrewery/:brewery_id', isAuthenticatedUser, function(req, res) {
+userRouter.delete('/:user_id/deleteSubscribeBrewery/:brewery_id', isAuthenticatedUser, function(req, res) {
   const brewery_id = req.params.brewery_id;
   const user_id = req.params.user_id;
 
@@ -1184,7 +1186,7 @@ userRouter.delete('/:user_id/deleteBrewery/:brewery_id', isAuthenticatedUser, fu
       });
     },
     function(brewery, user, done){
-      UserController.deleteBrewery(user, brewery);
+      UserController.deleteSubscribeBrewery(user, brewery);
       return res.status(200).json({"error": false}).end();
     }
   ]);

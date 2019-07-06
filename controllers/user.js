@@ -25,13 +25,13 @@ UserController.addTypeOfBeer = function(user, typeOfBeer){
 
 
 //////////////////////////////////////////////////////
-UserController.addBar = function(user, bar){
+UserController.addSubscribeBar = function(user, bar){
   return user.addBar(bar);
 };
 
 
 //////////////////////////////////////////////////////
-UserController.addBrewery = function(user, brewery){
+UserController.addSubscribeBrewery = function(user, brewery){
   return user.addBrewery(brewery);
 };
 
@@ -180,13 +180,13 @@ UserController.deleteTypeOfBeer = function(user, typeOfBeer){
 
 
 //////////////////////////////////////////////////////
-UserController.deleteBar = function(user, bar){
+UserController.deleteSubscribeBar = function(user, bar){
   user.removeBar(bar);
 };
 
 
 //////////////////////////////////////////////////////
-UserController.deleteBrewery = function(user, brewery){
+UserController.deleteSubscribeBrewery = function(user, brewery){
   user.removeBrewery(brewery);
 };
 

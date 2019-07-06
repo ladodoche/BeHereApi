@@ -6,34 +6,26 @@ const BeerController = function(){};
 
 
 ////////////////////////////////////////////////////
-BeerController.add = function(name, color, origin, description){
+BeerController.add = function(name, color, origin, description, type_of_beer_id){
   return Beer.create({
     name: name,
     color: color,
     origin: origin,
-    description: description
+    description: description,
+    type_of_beer_id: type_of_beer_id
   });
 };
 
 
-//////////////////////////////////////////////////////
-BeerController.addTypeOfBeer = function(Beer, typeOfBeer){
-  return Beer.addTypeOfBeer(typeOfBeer);
-};
-
-
 ////////////////////////////////////////////////////
-BeerController.getAll = function(email = undefined, user_id = undefined){
-  const options = {
-    include: [{
-      model: ModelIndex.TypeOfBeer,
-      as: 'typeOfBeer'
-    }]
-  };
+BeerController.getAll = function(name, color, origin, type_of_beer_id = undefined){
+  const options = {};
   const where = {};
 
-  if(email !== undefined){where.email = email};
-  if(user_id !== undefined){where.user_id = user_id};
+  if(name !== undefined){where.name = name};
+  if(color !== undefined){where.color = color};
+  if(origin !== undefined){where.origin = origin};
+  if(type_of_beer_id !== undefined){where.type_of_beer_id = type_of_beer_id};
   options.where = where;
 
   return Beer.findAll(options);
@@ -42,12 +34,7 @@ BeerController.getAll = function(email = undefined, user_id = undefined){
 
 //////////////////////////////////////////////////////
 BeerController.getOne = function(beer_id){
-  const options = {
-    include: [{
-      model: ModelIndex.TypeOfBeer,
-      as: 'typeOfBeer'
-    }]
-  };
+  const options = {};
   const where = {};
 
   if(beer_id !== undefined){where.id = beer_id};
@@ -73,7 +60,7 @@ BeerController.research = function(data){
 
 
 //////////////////////////////////////////////////////
-BeerController.update = function(beer, name, color, origin, description, pathPicture){
+BeerController.update = function(beer, name, color, origin, description, pathPicture, type_of_beer_id){
   const options = {};
   const where = {};
   const json = {};
@@ -83,8 +70,11 @@ BeerController.update = function(beer, name, color, origin, description, pathPic
   if(origin !== undefined){json.origin = origin}
   if(description !== undefined){json.description = description}
   if(pathPicture !== undefined){json.pathPicture = pathPicture}
-  options.where = where;
+  if(type_of_beer_id !== undefined){json.type_of_beer_id = type_of_beer_id}
+  options.where = json;
   options.timezone = '+02:00';
+
+  console.log(json);
 
   return beer.updateAttributes(json);
 };
@@ -92,12 +82,6 @@ BeerController.update = function(beer, name, color, origin, description, pathPic
 //////////////////////////////////////////////////////
 BeerController.delete = function(beer){
   beer.destroy();
-};
-
-
-//////////////////////////////////////////////////////
-BeerController.deleteBeer = function(beer, typeOfBeer){
-  beer.removeTypeOfBeer(typeOfBeer);
 };
 
 

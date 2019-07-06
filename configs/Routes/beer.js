@@ -51,12 +51,14 @@ function isAuthenticatedBeerAccount(req, res, next) {
 * @apiParam {String} color obligatoire et entre 2 à 100 caractères
 * @apiParam {String} origin obligatoire, entre 2 et 150 caractères, avec au moins une lettre majuscule, majuscule et un chiffre
 * @apiParam {Text} description
+* @apiParam {Int} type_of_beer_id
 * @apiParamExample {json} Input
 *  {
 *    "name": "Leffe",
 *    "color": "blonde",
 *    "origin": "Belgique",
-*    "description": "La Leffe ou Abbaye de Leffe est une bière belge d'Abbaye reconnue, créée en 1240 par les chanoines de l'ordre de Prémontré de l'abbaye Notre-Dame de Leffe et produite par la brasserie Artois à Louvain."
+*    "description": "La Leffe ou Abbaye de Leffe est une bière belge d'Abbaye reconnue, créée en 1240 par les chanoines de l'ordre de Prémontré de l'abbaye Notre-Dame de Leffe et produite par la brasserie Artois à Louvain.",
+*    "type_of_beer_id": 2
 *  }
 * @apiSuccessExample {json} Success
 *    HTTP/1.1 201 Created
@@ -90,8 +92,9 @@ beerRouter.post('/create', isAuthenticatedBeerAccountToCreate, function(req, res
   const color = req.body.color;
   const origin = req.body.origin;
   const description = req.body.description;
+  const type_of_beer_id = req.body.type_of_beer_id;
 
-  BeerController.add(name, color, origin, description)
+  BeerController.add(name, color, origin, description, type_of_beer_id)
   .then((beer) => {
     return res.status(201).json({"error": false});
   })
@@ -103,11 +106,12 @@ beerRouter.post('/create', isAuthenticatedBeerAccountToCreate, function(req, res
 });
 
 /**
-@api {get} beers/?email=email&color=color&origin=origin get all beers
+@api {get} beers/?name=name&color=color&origin=origin&type_of_beer_id=type_of_beer_id get all beers
 * @apiGroup Beers
 * @apiParam {String} name
 * @apiParam {String} color
 * @apiParam {String} origin
+* @apiParam {Int} type_of_beer_id
 * @apiSuccessExample {json} Success
 *    HTTP/1.1 200 Success
 *    {
@@ -123,34 +127,7 @@ beerRouter.post('/create', isAuthenticatedBeerAccountToCreate, function(req, res
 *                  "created_at": "2019-04-14T09:20:46.000Z",
 *                  "updated_at": "2019-04-14T09:20:46.000Z",
 *                  "deleted_at": null,
-*                  "typeOfBeer": [
-*                        {
-*                            "id": 2,
-*                            "name": "Brune",
-*                            "created_at": "2019-04-20T09:42:06.000Z",
-*                            "updated_at": "2019-04-20T09:42:06.000Z",
-*                            "deleted_at": null,
-*                            "beer_typeOfBeer": {
-*                                "created_at": "2019-04-20T09:44:59.000Z",
-*                                "updated_at": "2019-04-20T09:44:59.000Z",
-*                                "beer_id": 1,
-*                                "type_of_beer_id": 2
-*                            }
-*                        },
-*                        {
-*                            "id": 3,
-*                            "name": "Blanche",
-*                            "created_at": "2019-04-20T09:42:12.000Z",
-*                            "updated_at": "2019-04-20T09:42:12.000Z",
-*                            "deleted_at": null,
-*                            "beer_typeOfBeer": {
-*                                "created_at": "2019-04-20T09:45:01.000Z",
-*                                "updated_at": "2019-04-20T09:45:01.000Z",
-*                                "beer_id": 1,
-*                                "type_of_beer_id": 3
-*                            }
-*                        }
-*                    ]
+*                  "typeOfBeer": 1
 *              }
 *        ]
 *    }
@@ -168,9 +145,12 @@ beerRouter.post('/create', isAuthenticatedBeerAccountToCreate, function(req, res
 *    }
 */
 beerRouter.get('/', function(req, res) {
-  const email = req.query.email;
+  const name = req.query.name;
+  const color = req.query.color;
+  const origin = req.query.origin;
+  const type_of_beer_id = req.query.type_of_beer_id;
 
-  BeerController.getAll(email)
+  BeerController.getAll(name, color, origin, type_of_beer_id)
   .then((beers) => {
     if(beers.length == 0)
       return res.status(400).json({"error": true, "message": "Aucune bière trouvé"});
@@ -347,9 +327,10 @@ beerRouter.get('/research/:data', function(req, res) {
 * @apiParam {String} color obligatoire et entre 2 à 100 caractères
 * @apiParam {String} origin obligatoire, entre 2 et 150 caractères, avec au moins une lettre majuscule, majuscule et un chiffre
 * @apiParam {Text} description
+* @apiParam {Int} type_of_beer_id
 * @apiParamExample {json} Input
 *  {
-*    "color": "Brune",
+*    "color": "Brune"
 *  }
 * @apiSuccessExample {json} Success
 *    HTTP/1.1 201 Created
@@ -361,6 +342,7 @@ beerRouter.get('/research/:data', function(req, res) {
 *            "color": "blanche",
 *            "origin": "Belgique",
 *            "description": "La Leffe ou Abbaye de Leffe est une bière belge d'Abbaye reconnue, créée en 1240 par les chanoines de l'ordre de Prémontré de l'abbaye Notre-Dame de Leffe et produite par la brasserie Artois à Louvain.",
+*            "type_of_beer_id": 1,
 *            "pathPicture": null,
 *            "updated_at": "2019-04-14T09:21:46.668Z",
 *            "created_at": "2019-04-14T09:20:46.668Z"
@@ -392,6 +374,7 @@ beerRouter.put('/update/:beer_id', isAuthenticatedBeerAccount, function(req, res
   const color = req.body.color;
   const origin = req.body.origin;
   const description = req.body.description;
+  const type_of_beer_id = req.body.type_of_beer_id;
 
   asyncLib.waterfall([
     function(done){
@@ -406,7 +389,7 @@ beerRouter.put('/update/:beer_id', isAuthenticatedBeerAccount, function(req, res
       });
     },
     function(beer, done){
-      BeerController.update(beer, name, color, origin, description)
+      BeerController.update(beer, name, color, origin, description, undefined, type_of_beer_id)
       .then((beer) => {
         return res.status(201).json({"error": false, "beer": beer});
       })
@@ -465,148 +448,6 @@ beerRouter.delete('/delete/:beer_id', isAuthenticatedBeerAccount, function(req, 
     },
     function(beer, done){
       BeerController.delete(beer);
-      return res.status(200).json({"error": false}).end();
-    }
-  ]);
-});
-
-//////////////////////////////////////////////////////
-/**
-@api {put} beers/:beer_id/addTypeOfBeer add link between type of beer and beer
-* @apiGroup Beers
-* @apiHeader {String} x-access-token
-* @apiParam {String} typeOfBeer_id
-* @apiParamExample {json} Input
-*  {
-*    "typeOfBeer_id": 1
-*  }
-* @apiSuccessExample {json} Success
-*    HTTP/1.1 200 Success
-*    {
-*        "error": false
-*    }
-* @apiErrorExample {json} Error
-*    HTTP/1.1 400 Bad Request
-*    {
-*        "error": true,
-*        "message": message
-*    }
-*
-*    HTTP/1.1 401 Unauthorized
-*    {
-*        "error": true,
-*        "message": message
-*    }
-*
-*    HTTP/1.1 500 Internal Server Error
-*    {
-*        "error": true,
-*        "message": message
-*    }
-*/
-beerRouter.put('/:beer_id/addTypeOfBeer', isAuthenticatedBeerAccount, function(req, res) {
-  const beer_id = req.params.beer_id;
-  const typeOfBeer_id = req.body.typeOfBeer_id;
-
-  if(typeOfBeer_id === undefined || beer_id === undefined)
-    return res.status(400).json({"error": true, "message": "Certains paramètres sont manquant"}).end();
-
-  asyncLib.waterfall([
-    function(done){
-      TypeOfBeerController.getOne(typeOfBeer_id)
-      .then((typeOfBeer) => {
-        if(typeOfBeer === null || typeOfBeer === undefined)
-          return res.status(400).json({"error": true, "message": "Le type de bière n'existe pas"}).end();
-        done(null, typeOfBeer);
-      })
-      .catch((err) => {
-          return res.status(500).json({"error": true, "message": "Erreur lors de la récupération du type de bière"}).end();
-      });
-    },
-    function(typeOfBeer, done){
-      BeerController.getOne(beer_id)
-      .then((beer) => {
-        if(beer === null || beer === undefined)
-          return res.status(400).json({"error": true, "message": "La bière n'existe pas"}).end();
-        done(null, typeOfBeer, beer);
-      })
-      .catch((err) => {
-          return res.status(500).json({"error": true, "message": "Erreur lors de la récupération de la bière"}).end();
-      });
-    },
-    function(typeOfBeer, beer, done){
-      BeerController.addTypeOfBeer(beer, typeOfBeer)
-      .then((TypeOfBeer_Beer) => {
-        return res.status(200).json({"error": false}).end();
-      })
-      .catch((err) => {
-        return res.status(500).json({"error": true, "message": "Erreur lors de l'ajout du lien entre la bière et le type de bière"}).end();
-      });
-    }
-  ]);
-});
-
-/**
-@api {put} beers/:beer_id/deleteTypeOfBeer/:typeOfBeer_id delete link between type of beer and beer
-* @apiGroup Beers
-* @apiHeader {String} x-access-token
-* @apiSuccessExample {json} Success
-*    HTTP/1.1 200 Success
-*    {
-*        "error": false
-*    }
-* @apiErrorExample {json} Error
-*    HTTP/1.1 400 Bad Request
-*    {
-*        "error": true,
-*        "message": message
-*    }
-*
-*    HTTP/1.1 401 Unauthorized
-*    {
-*        "error": true,
-*        "message": message
-*    }
-*
-*    HTTP/1.1 500 Internal Server Error
-*    {
-*        "error": true,
-*        "message": message
-*    }
-*/
-beerRouter.delete('/:beer_id/deleteTypeOfBeer/:typeOfBeer_id', isAuthenticatedBeerAccount, function(req, res) {
-  const typeOfBeer_id = req.params.typeOfBeer_id;
-  const beer_id = req.params.beer_id;
-
-  if(typeOfBeer_id === undefined || beer_id === undefined)
-    return res.status(400).json({"error": true, "message": "Certains paramètres sont manquant"}).end();
-
-  asyncLib.waterfall([
-    function(done){
-      TypeOfBeerController.getOne(typeOfBeer_id)
-      .then((typeOfBeer) => {
-        if(typeOfBeer === null || typeOfBeer === undefined){
-          return res.status(400).json({"error": true, "message": "Le type de bière n'existe pas"}).end();
-        }
-        done(null, typeOfBeer);
-      })
-      .catch((err) => {
-          return res.status(500).json({"error": true, "message": "Erreur lors de la récupération du type de bière"}).end();
-      });
-    },
-    function(typeOfBeer, done){
-      BeerController.getOne(beer_id)
-      .then((beer) => {
-        if(beer === null || beer === undefined)
-          return res.status(400).json({"error": true, "message": "La bière n'existe pas"}).end();
-        done(null, typeOfBeer, beer);
-      })
-      .catch((err) => {
-        return res.status(500).json({"error": true, "message": "Erreur lors de la récupération de la bière"}).end();
-      });
-    },
-    function(typeOfBeer, beer, done){
-      BeerController.deleteBeer(beer, typeOfBeer);
       return res.status(200).json({"error": false}).end();
     }
   ]);
