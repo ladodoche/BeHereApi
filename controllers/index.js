@@ -21,5 +21,6 @@ module.exports = {
   GroupController: require('./group'),
   MessageController: require('./message'),
   CommentsUserController: require('./commentsUser'),
-  NotificationController: require('./notification')
+  NotificationController: require('./notification'),
+  NotesCommentController: require('./notesComment')
 }

@@ -28,6 +28,7 @@ RouteManager.attach = function(app) {
   app.use('/Messages', require('./message'));
   app.use('/commentsUsers', require('./commentsUser'));
   app.use('/notifications', require('./notification'));
+  app.use('/notesComments', require('./notesComment'));
 };
 
 module.exports = RouteManager;
