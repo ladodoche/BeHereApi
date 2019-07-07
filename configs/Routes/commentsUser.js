@@ -58,8 +58,8 @@ function getUserIdHeader(req, next){
 @api {post} commentsUsers/create add a new commentsUser
 * @apiGroup CommentsUsers
 * @apiHeader {String} x-access-token
-* @apiBody {String} text obligatoire
-* @apiBody {Int} user_comment_id obligatoire
+* @apiParam {String} text obligatoire
+* @apiParam {Int} user_comment_id obligatoire
 * @apiParamExample {json} Input
 *  {
 *    "text": "J'adore cette utilisateur",

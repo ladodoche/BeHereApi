@@ -25,11 +25,11 @@ function getUserIdHeader(req, next){
 @api {post} notifications/create add a new notification
 * @apiGroup Notifications
 * @apiHeader {String} x-access-token
-* @apiBody {Int} texte obligatoire
-* @apiBody {Int} type obligatoire
-* @apiBody {Int} user_id
-* @apiBody {Int} other_user_id
-* @apiBody {Int} group_id
+* @apiParam {Int} texte obligatoire
+* @apiParam {Int} type obligatoire
+* @apiParam {Int} user_id
+* @apiParam {Int} other_user_id
+* @apiParam {Int} group_id
 * @apiParamExample {json} Input
 *  {
 *    "texte": "coucou"

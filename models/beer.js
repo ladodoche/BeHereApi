@@ -32,7 +32,7 @@ module.exports = function(sequelize, Datatypes){
     },
     color: {
       type: Datatypes.STRING,
-      allowNull: false,
+      allowNull: true,
       validate: {
         notEmpty: {
           msg: 'Veuillez saisir la couleur de votre bière'

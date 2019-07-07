@@ -613,7 +613,7 @@
   },
   {
     "type": "get",
-    "url": "beers/?email=email&color=color&origin=origin",
+    "url": "beers/?name=name&color=color&origin=origin&type_of_beer_id=type_of_beer_id",
     "title": "get all beers",
     "group": "Beers",
     "parameter": {
@@ -639,6 +639,13 @@
             "optional": false,
             "field": "origin",
             "description": ""
+          },
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "type_of_beer_id",
+            "description": ""
           }
         ]
       }
@@ -647,7 +654,7 @@
       "examples": [
         {
           "title": "Success",
-          "content": "HTTP/1.1 200 Success\n{\n    \"error\": false,\n    \"message\": [\n          {\n              \"id\": 1,\n              \"name\": \"Leffe\",\n              \"color\": \"blonde\",\n              \"origin\": \"Belgique\",\n              \"description\": \"La Leffe ou Abbaye de Leffe est une bière belge d'Abbaye reconnue, créée en 1240 par les chanoines de l'ordre de Prémontré de l'abbaye Notre-Dame de Leffe et produite par la brasserie Artois à Louvain.\",\n              \"pathPicture\": null,\n              \"created_at\": \"2019-04-14T09:20:46.000Z\",\n              \"updated_at\": \"2019-04-14T09:20:46.000Z\",\n              \"deleted_at\": null,\n              \"typeOfBeer\": [\n                    {\n                        \"id\": 2,\n                        \"name\": \"Brune\",\n                        \"created_at\": \"2019-04-20T09:42:06.000Z\",\n                        \"updated_at\": \"2019-04-20T09:42:06.000Z\",\n                        \"deleted_at\": null,\n                        \"beer_typeOfBeer\": {\n                            \"created_at\": \"2019-04-20T09:44:59.000Z\",\n                            \"updated_at\": \"2019-04-20T09:44:59.000Z\",\n                            \"beer_id\": 1,\n                            \"type_of_beer_id\": 2\n                        }\n                    },\n                    {\n                        \"id\": 3,\n                        \"name\": \"Blanche\",\n                        \"created_at\": \"2019-04-20T09:42:12.000Z\",\n                        \"updated_at\": \"2019-04-20T09:42:12.000Z\",\n                        \"deleted_at\": null,\n                        \"beer_typeOfBeer\": {\n                            \"created_at\": \"2019-04-20T09:45:01.000Z\",\n                            \"updated_at\": \"2019-04-20T09:45:01.000Z\",\n                            \"beer_id\": 1,\n                            \"type_of_beer_id\": 3\n                        }\n                    }\n                ]\n          }\n    ]\n}",
+          "content": "HTTP/1.1 200 Success\n{\n    \"error\": false,\n    \"message\": [\n          {\n              \"id\": 1,\n              \"name\": \"Leffe\",\n              \"color\": \"blonde\",\n              \"origin\": \"Belgique\",\n              \"description\": \"La Leffe ou Abbaye de Leffe est une bière belge d'Abbaye reconnue, créée en 1240 par les chanoines de l'ordre de Prémontré de l'abbaye Notre-Dame de Leffe et produite par la brasserie Artois à Louvain.\",\n              \"pathPicture\": null,\n              \"created_at\": \"2019-04-14T09:20:46.000Z\",\n              \"updated_at\": \"2019-04-14T09:20:46.000Z\",\n              \"deleted_at\": null,\n              \"typeOfBeer\": 1\n          }\n    ]\n}",
           "type": "json"
         }
       ]
@@ -664,7 +671,7 @@
     "version": "0.0.0",
     "filename": "configs/Routes/beer.js",
     "groupTitle": "Beers",
-    "name": "GetBeersEmailEmailColorColorOriginOrigin"
+    "name": "GetBeersNameNameColorColorOriginOriginType_of_beer_idType_of_beer_id"
   },
   {
     "type": "get",
@@ -742,13 +749,27 @@
             "optional": false,
             "field": "description",
             "description": ""
+          },
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "type_of_beer_id",
+            "description": ""
+          },
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "brewery_id",
+            "description": "<p>obligatoire</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "Input",
-          "content": "{\n  \"name\": \"Leffe\",\n  \"color\": \"blonde\",\n  \"origin\": \"Belgique\",\n  \"description\": \"La Leffe ou Abbaye de Leffe est une bière belge d'Abbaye reconnue, créée en 1240 par les chanoines de l'ordre de Prémontré de l'abbaye Notre-Dame de Leffe et produite par la brasserie Artois à Louvain.\"\n}",
+          "content": "{\n  \"name\": \"Leffe\",\n  \"color\": \"blonde\",\n  \"origin\": \"Belgique\",\n  \"description\": \"La Leffe ou Abbaye de Leffe est une bière belge d'Abbaye reconnue, créée en 1240 par les chanoines de l'ordre de Prémontré de l'abbaye Notre-Dame de Leffe et produite par la brasserie Artois à Louvain.\",\n  \"type_of_beer_id\": 2,\n  \"brewery_id\" : 1\n}",
           "type": "json"
         }
       ]
@@ -757,7 +778,7 @@
       "examples": [
         {
           "title": "Success",
-          "content": "HTTP/1.1 201 Created\n{\n    \"error\": false,\n    \"beer\": {\n        \"name\": \"Leffe\",\n        \"color\": \"blonde\",\n        \"origin\": \"Belgique\",\n        \"description\": \"La Leffe ou Abbaye de Leffe est une bière belge d'Abbaye reconnue, créée en 1240 par les chanoines de l'ordre de Prémontré de l'abbaye Notre-Dame de Leffe et produite par la brasserie Artois à Louvain.\",\n        \"birthDate\": \"1997-05-22T00:00:00.000Z\",\n        \"updated_at\": \"2019-04-14T09:20:46.668Z\",\n        \"created_at\": \"2019-04-14T09:20:46.668Z\"\n    }\n}",
+          "content": "HTTP/1.1 201 Created\n{\n    \"error\": false,\n    \"beer\": {\n        \"name\": \"Leffe\",\n        \"color\": \"blonde\",\n        \"origin\": \"Belgique\",\n        \"brewery_id\": 1,\n        \"description\": \"La Leffe ou Abbaye de Leffe est une bière belge d'Abbaye reconnue, créée en 1240 par les chanoines de l'ordre de Prémontré de l'abbaye Notre-Dame de Leffe et produite par la brasserie Artois à Louvain.\",\n        \"birthDate\": \"1997-05-22T00:00:00.000Z\",\n        \"updated_at\": \"2019-04-14T09:20:46.668Z\",\n        \"created_at\": \"2019-04-14T09:20:46.668Z\"\n    }\n}",
           "type": "json"
         }
       ]
@@ -775,108 +796,6 @@
     "filename": "configs/Routes/beer.js",
     "groupTitle": "Beers",
     "name": "PostBeersCreate"
-  },
-  {
-    "type": "put",
-    "url": "beers/:beer_id/addTypeOfBeer",
-    "title": "add link between type of beer and beer",
-    "group": "Beers",
-    "header": {
-      "fields": {
-        "Header": [
-          {
-            "group": "Header",
-            "type": "String",
-            "optional": false,
-            "field": "x-access-token",
-            "description": ""
-          }
-        ]
-      }
-    },
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "typeOfBeer_id",
-            "description": ""
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Input",
-          "content": "{\n  \"typeOfBeer_id\": 1\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "success": {
-      "examples": [
-        {
-          "title": "Success",
-          "content": "HTTP/1.1 200 Success\n{\n    \"error\": false\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "error": {
-      "examples": [
-        {
-          "title": "Error",
-          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 401 Unauthorized\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": message\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "version": "0.0.0",
-    "filename": "configs/Routes/beer.js",
-    "groupTitle": "Beers",
-    "name": "PutBeersBeer_idAddtypeofbeer"
-  },
-  {
-    "type": "put",
-    "url": "beers/:beer_id/deleteTypeOfBeer/:typeOfBeer_id",
-    "title": "delete link between type of beer and beer",
-    "group": "Beers",
-    "header": {
-      "fields": {
-        "Header": [
-          {
-            "group": "Header",
-            "type": "String",
-            "optional": false,
-            "field": "x-access-token",
-            "description": ""
-          }
-        ]
-      }
-    },
-    "success": {
-      "examples": [
-        {
-          "title": "Success",
-          "content": "HTTP/1.1 200 Success\n{\n    \"error\": false\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "error": {
-      "examples": [
-        {
-          "title": "Error",
-          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 401 Unauthorized\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": message\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "version": "0.0.0",
-    "filename": "configs/Routes/beer.js",
-    "groupTitle": "Beers",
-    "name": "PutBeersBeer_idDeletetypeofbeerTypeofbeer_id"
   },
   {
     "type": "put",
@@ -926,13 +845,20 @@
             "optional": false,
             "field": "description",
             "description": ""
+          },
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "type_of_beer_id",
+            "description": ""
           }
         ]
       },
       "examples": [
         {
           "title": "Input",
-          "content": "{\n  \"color\": \"Brune\",\n}",
+          "content": "{\n  \"color\": \"Brune\"\n}",
           "type": "json"
         }
       ]
@@ -941,7 +867,7 @@
       "examples": [
         {
           "title": "Success",
-          "content": "HTTP/1.1 201 Created\n{\n    \"error\": false,\n    \"beer\": {\n        \"id\": 1,\n        \"name\": \"Leffe\",\n        \"color\": \"blanche\",\n        \"origin\": \"Belgique\",\n        \"description\": \"La Leffe ou Abbaye de Leffe est une bière belge d'Abbaye reconnue, créée en 1240 par les chanoines de l'ordre de Prémontré de l'abbaye Notre-Dame de Leffe et produite par la brasserie Artois à Louvain.\",\n        \"pathPicture\": null,\n        \"updated_at\": \"2019-04-14T09:21:46.668Z\",\n        \"created_at\": \"2019-04-14T09:20:46.668Z\"\n        \"deleted_at\": null\n    }\n}",
+          "content": "HTTP/1.1 201 Created\n{\n    \"error\": false,\n    \"beer\": {\n        \"id\": 1,\n        \"name\": \"Leffe\",\n        \"color\": \"blanche\",\n        \"origin\": \"Belgique\",\n        \"description\": \"La Leffe ou Abbaye de Leffe est une bière belge d'Abbaye reconnue, créée en 1240 par les chanoines de l'ordre de Prémontré de l'abbaye Notre-Dame de Leffe et produite par la brasserie Artois à Louvain.\",\n        \"type_of_beer_id\": 1,\n        \"pathPicture\": null,\n        \"updated_at\": \"2019-04-14T09:21:46.668Z\",\n        \"created_at\": \"2019-04-14T09:20:46.668Z\"\n        \"deleted_at\": null\n    }\n}",
           "type": "json"
         }
       ]
@@ -2214,6 +2140,252 @@
   },
   {
     "type": "delete",
+    "url": "commentsGroups/delete/:commentsGroup_id",
+    "title": "delete commentsGroup",
+    "group": "CommentsGroups",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-access-token",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 200 Success\n{\n    \"error\": false\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": \"Le commentaire n'existe pas\"\n}\n\nHTTP/1.1 401 Unauthorized\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": \"Erreur lors de la récupération du commentaire\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/commentsGroup.js",
+    "groupTitle": "CommentsGroups",
+    "name": "DeleteCommentsgroupsDeleteCommentsgroup_id"
+  },
+  {
+    "type": "get",
+    "url": "commentsGroups/:commentsgroup_id",
+    "title": "get commentsGroup",
+    "group": "CommentsGroups",
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 200 Success\n{\n   \"error\": false,\n   \"message\": {\n           \"id\": 1,\n           \"text\": \"J'adore ce groupe\",\n           \"group_id\": 1,\n           \"user_id\": 1,\n           \"created_at\": \"2019-04-14T13:42:47.000Z\",\n           \"updated_at\": \"2019-04-14T13:42:47.000Z\",\n           \"deleted_at\": null\n   }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": \"Le commentaire n'existe pas\"\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": \"Erreur lors de la récupération du commentaire\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/commentsGroup.js",
+    "groupTitle": "CommentsGroups",
+    "name": "GetCommentsgroupsCommentsgroup_id"
+  },
+  {
+    "type": "get",
+    "url": "commentsGroups/?group_id=group_id&user_id=user_id",
+    "title": "get all commentsGroups",
+    "group": "CommentsGroups",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "group_id",
+            "description": ""
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "user_id",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": " HTTP/1.1 200 Success\n{\n   \"error\": false,\n   \"message\": [\n       {\n           \"id\": 1,\n           \"text\": \"J'adore ce groupe\",\n           \"group_id\": 1,\n           \"user_id\": 1,\n           \"created_at\": \"2019-04-14T13:42:47.000Z\",\n           \"updated_at\": \"2019-04-14T13:42:47.000Z\",\n           \"deleted_at\": null\n       }\n   ]\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": \"Aucun commentaire trouvé\"\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": \"Erreur lors de la récupération des commentaires\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/commentsGroup.js",
+    "groupTitle": "CommentsGroups",
+    "name": "GetCommentsgroupsGroup_idGroup_idUser_idUser_id"
+  },
+  {
+    "type": "post",
+    "url": "commentsGroups/create",
+    "title": "add a new commentsGroup",
+    "group": "CommentsGroups",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-access-token",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "text",
+            "description": "<p>obligatoire</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "group_id",
+            "description": "<p>obligatoire</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Input",
+          "content": "{\n  \"text\": \"J'adore ce groupe\",\n  \"group_id\": \"1\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 201 Created\n{\n    \"error\": false\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 401 Unauthorized\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": \"Erreur lors de la création de votre commentaire\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/commentsGroup.js",
+    "groupTitle": "CommentsGroups",
+    "name": "PostCommentsgroupsCreate"
+  },
+  {
+    "type": "put",
+    "url": "commentsGroups/update/:commentsGroup_id",
+    "title": "update commentsGroup",
+    "group": "CommentsGroups",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-access-token",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "text",
+            "description": "<p>obligatoire</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Input",
+          "content": "{\n   \"text\": \"J'adore ce groupe\",\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 200 Success\n   {\n       \"error\": false\n   }",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 401 Unauthorized\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": message\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/commentsGroup.js",
+    "groupTitle": "CommentsGroups",
+    "name": "PutCommentsgroupsUpdateCommentsgroup_id"
+  },
+  {
+    "type": "delete",
     "url": "commentsUsers/delete/:commentsUser_id",
     "title": "delete commentsUser",
     "group": "CommentsUsers",
@@ -2348,6 +2520,24 @@
       }
     },
     "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "text",
+            "description": "<p>obligatoire</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "user_comment_id",
+            "description": "<p>obligatoire</p>"
+          }
+        ]
+      },
       "examples": [
         {
           "title": "Input",
@@ -4432,6 +4622,308 @@
   },
   {
     "type": "delete",
+    "url": "notesComments/delete/:notesComment_id",
+    "title": "delete notesComment",
+    "group": "NotesComments",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-access-token",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 200 Success\n{\n    \"error\": false\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": \"La note n'existe pas\"\n}\n\nHTTP/1.1 401 Unauthorized\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": \"Erreur lors de la note\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/notesComment.js",
+    "groupTitle": "NotesComments",
+    "name": "DeleteNotescommentsDeleteNotescomment_id"
+  },
+  {
+    "type": "get",
+    "url": "notesComments/:notesComment_id",
+    "title": "get notesComment",
+    "group": "NotesComments",
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 200 Success\n{\n   \"error\": false,\n   \"message\": {\n           \"id\": 1,\n           \"note\": 5,\n           \"user_id\": 1,\n           \"commentsBar_id\": 1,\n           \"commentsBeer_id\": null,\n           \"commentsBrewery_id\": null,\n           \"commentsUser_id\": null,\n           \"commentsGroup_id\": null,\n           \"created_at\": \"2019-04-14T13:42:47.000Z\",\n           \"updated_at\": \"2019-04-14T13:42:47.000Z\",\n           \"deleted_at\": null\n   }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": \"La note n'existe pas\"\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": \"Erreur lors de la récupération de la note\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/notesComment.js",
+    "groupTitle": "NotesComments",
+    "name": "GetNotescommentsNotescomment_id"
+  },
+  {
+    "type": "get",
+    "url": "notesComments/?user_id=user_id&commentsBar_id=commentsBar_id&commentsBeer_id=commentsBeer_id&commentsBrewery_id=commentsBrewery_id&commentsUser_id=commentsUser_id&commentsGroup_id=commentsGroup_id",
+    "title": "get all notesComments",
+    "group": "NotesComments",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "user_id",
+            "description": ""
+          },
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "commentsBar_id",
+            "description": ""
+          },
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "commentsBeer_id",
+            "description": ""
+          },
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "commentsBrewery_id",
+            "description": ""
+          },
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "commentsUser_id",
+            "description": ""
+          },
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "commentsGroup_id",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": " HTTP/1.1 200 Success\n{\n   \"error\": false,\n   \"message\": [\n       {\n           \"id\": 1,\n           \"note\": 5,\n           \"user_id\": 1,\n           \"commentsBar_id\": 1,\n           \"commentsBeer_id\": null,\n           \"commentsBrewery_id\": null,\n           \"commentsUser_id\": null,\n           \"commentsGroup_id\": null,\n           \"created_at\": \"2019-04-14T13:42:47.000Z\",\n           \"updated_at\": \"2019-04-14T13:42:47.000Z\",\n           \"deleted_at\": null\n       }\n   ]\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": \"Aucune note trouvé\"\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": \"Erreur lors de la récupération des notes\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/notesComment.js",
+    "groupTitle": "NotesComments",
+    "name": "GetNotescommentsUser_idUser_idCommentsbar_idCommentsbar_idCommentsbeer_idCommentsbeer_idCommentsbrewery_idCommentsbrewery_idCommentsuser_idCommentsuser_idCommentsgroup_idCommentsgroup_id"
+  },
+  {
+    "type": "post",
+    "url": "notesComments/create",
+    "title": "add a new notesComment",
+    "group": "NotesComments",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-access-token",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "note",
+            "description": "<p>obligatoire</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "commentsBar_id",
+            "description": ""
+          },
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "commentsBeer_id",
+            "description": ""
+          },
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "commentsBrewery_id",
+            "description": ""
+          },
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "commentsUser_id",
+            "description": ""
+          },
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "commentsGroup_id",
+            "description": ""
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Input",
+          "content": "{\n  \"note\": 5,\n  \"commentsBar_id\": 1\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 201 Created\n{\n    \"error\": false\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 401 Unauthorized\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": \"Erreur lors de la création de votre commentaire\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/notesComment.js",
+    "groupTitle": "NotesComments",
+    "name": "PostNotescommentsCreate"
+  },
+  {
+    "type": "put",
+    "url": "notesComments/update/:notesComment_id",
+    "title": "update notesComment",
+    "group": "NotesComments",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "x-access-token",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "note",
+            "description": ""
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Input",
+          "content": "{\n   \"note\": 5,\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 200 Success\n   {\n       \"error\": false\n   }",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error",
+          "content": "HTTP/1.1 400 Bad Request\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 401 Unauthorized\n{\n    \"error\": true,\n    \"message\": message\n}\n\nHTTP/1.1 500 Internal Server Error\n{\n    \"error\": true,\n    \"message\": message\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "configs/Routes/notesComment.js",
+    "groupTitle": "NotesComments",
+    "name": "PutNotescommentsUpdateNotescomment_id"
+  },
+  {
+    "type": "delete",
     "url": "notifications/delete/:notification_id",
     "title": "delete notification",
     "group": "Notifications",
@@ -4626,6 +5118,45 @@
       }
     },
     "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "texte",
+            "description": "<p>obligatoire</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "type",
+            "description": "<p>obligatoire</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "user_id",
+            "description": ""
+          },
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "other_user_id",
+            "description": ""
+          },
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "group_id",
+            "description": ""
+          }
+        ]
+      },
       "examples": [
         {
           "title": "Input",
@@ -6775,7 +7306,7 @@
   },
   {
     "type": "put",
-    "url": "users/:user_id/addBar",
+    "url": "users/:user_id/addSubscribeBar",
     "title": "add link between type of beer and user",
     "group": "Users",
     "header": {
@@ -6832,11 +7363,11 @@
     "version": "0.0.0",
     "filename": "configs/Routes/user.js",
     "groupTitle": "Users",
-    "name": "PutUsersUser_idAddbar"
+    "name": "PutUsersUser_idAddsubscribebar"
   },
   {
     "type": "put",
-    "url": "users/:user_id/addBrewery",
+    "url": "users/:user_id/addSubscribeBrewery",
     "title": "add link between type of beer and user",
     "group": "Users",
     "header": {
@@ -6893,7 +7424,7 @@
     "version": "0.0.0",
     "filename": "configs/Routes/user.js",
     "groupTitle": "Users",
-    "name": "PutUsersUser_idAddbrewery"
+    "name": "PutUsersUser_idAddsubscribebrewery"
   },
   {
     "type": "put",
@@ -6958,7 +7489,7 @@
   },
   {
     "type": "put",
-    "url": "users/:user_id/deleteBar/:bar_id",
+    "url": "users/:user_id/deleteSubscribeBar/:bar_id",
     "title": "delete link between type of beer and user",
     "group": "Users",
     "header": {
@@ -6995,11 +7526,11 @@
     "version": "0.0.0",
     "filename": "configs/Routes/user.js",
     "groupTitle": "Users",
-    "name": "PutUsersUser_idDeletebarBar_id"
+    "name": "PutUsersUser_idDeletesubscribebarBar_id"
   },
   {
     "type": "put",
-    "url": "users/:user_id/deleteBrewery/:brewery_id",
+    "url": "users/:user_id/deleteSubscribeBrewery/:brewery_id",
     "title": "delete link between type of beer and user",
     "group": "Users",
     "header": {
@@ -7036,7 +7567,7 @@
     "version": "0.0.0",
     "filename": "configs/Routes/user.js",
     "groupTitle": "Users",
-    "name": "PutUsersUser_idDeletebreweryBrewery_id"
+    "name": "PutUsersUser_idDeletesubscribebreweryBrewery_id"
   },
   {
     "type": "put",
@@ -7303,6 +7834,31 @@
       }
     },
     "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "text",
+            "description": "<p>obligatoire</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "user_receiver_id",
+            "description": ""
+          },
+          {
+            "group": "Parameter",
+            "type": "Int",
+            "optional": false,
+            "field": "group_id",
+            "description": ""
+          }
+        ]
+      },
       "examples": [
         {
           "title": "Input",
