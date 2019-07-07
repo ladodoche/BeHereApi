@@ -12,6 +12,8 @@ const UserController = controllers.UserController;
 const BarController = controllers.BarController;
 const BreweryController = controllers.BreweryController;
 const GroupController = controllers.GroupController;
+const BeerController = controllers.BeerController;
+const MenusBeerController = controllers.MenusBeerController;
 
 const generalRouter = express.Router();
 generalRouter.use(bodyParser.json({limit: '10mb'}));
@@ -328,6 +330,47 @@ generalRouter.get('/getallusergroupbarbrewery', function(req, res) {
       });
     }
   ]);
+});
+
+
+generalRouter.get('/getallbeertypeofbeer', function(req, res) {
+
+    const data = req.params.data;
+
+    asyncLib.waterfall([
+      function(done){
+        BeerController.getAll(undefined, undefined, undefined, data, undefined)
+        .then((beersBrewery) => {
+          if(beersBrewery.length == 0)
+            return res.status(400).json({"error": true, "message": "Aucune bière trouvé"});
+          done(null, beersBrewery);
+        })
+        .catch((err) => {
+          return res.status(500).json({"error": true, "message": "Erreur lors de la récupération des bières"});
+        });
+      },
+      function(beersBrewery, done){
+        MenusBeerController.getAll(beersBrewery.id)
+        .then((menusBeers) => {
+          done(null, beersBrewery, menusBeers)
+        })
+        .catch((err) => {
+          return res.status(500).json({"error": true, "message": "Erreur lors de la recherche des bars"});
+        });
+      },
+      function(beersBrewery, menusBeers, done){
+        var bars = [];
+        var brewerys = [];
+
+        for(var i = 0; i < menusBeers.length; i++)
+          bars.push(menusBeers[i].bar_id);
+
+        for(var i = 0; i < beersBrewery.length; i++)
+          brewerys.push(beersBrewery[i].brewery_id);
+
+        return res.status(200).json({"error": false, "bars": bars, "brewerys": brewerys}).end();
+      }
+    ]);
 });
 
 module.exports = generalRouter;
