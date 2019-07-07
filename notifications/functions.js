@@ -3,7 +3,10 @@ const FCM = require('fcm-push');
 const serviceAccount = require("./fir-storage-sdk");
 
 NotificationController.sendMessageUser = function (message, user) {
+  console.log("sendMessageUser start");
   var serverkey = serviceAccount.serveur_key;
+  console.log("serverkey");
+  console.log(serverkey);
   var fcm = new FCM(serverkey);
   message = {
     "to" : user.id_phone,
@@ -14,11 +17,22 @@ NotificationController.sendMessageUser = function (message, user) {
       "click_action" : "messageUser"
     }
   };
+  console.log("message");
+  console.log(message);
   fcm.send(message, function(err,response){
-    if(err)
+    console.log("fcm.send start");
+    console.log("response");
+    console.log(response);
+    if(err){
+      console.log("error");
+      console.log(err);
       return 0;
-    else
+    }
+    else{
+      console.log("Success");
       return 1;
+    }
+    console.log("aaaa");
     return 0;
   });
 };
