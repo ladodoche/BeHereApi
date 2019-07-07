@@ -478,7 +478,7 @@ breweryRouter.put('/upload/:brewery_id', isAuthenticatedBreweryAccount, function
       });
     },
     function(brewery, src_tracks, done){
-      BreweryController.update(brewery, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, src_tracks)
+      BreweryController.update(brewery, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, src_tracks)
       .then((track) => {
         return res.status(201).json({"error": false});
       })

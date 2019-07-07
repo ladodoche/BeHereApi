@@ -67,6 +67,7 @@ function getUserIdHeader(req, next){
 * @apiParam {Int} commentsBeer_id
 * @apiParam {Int} commentsBrewery_id
 * @apiParam {Int} commentsUser_id
+* @apiParam {Int} commentsGroup_id
 * @apiParamExample {json} Input
 *  {
 *    "note": 5,
@@ -103,11 +104,13 @@ notesCommentRouter.post('/create', isAuthenticatedNotesCommentCreate, function(r
   const commentsBeer_id = req.body.commentsBeer_id;
   const commentsBrewery_id = req.body.commentsBrewery_id;
   const commentsUser_id = req.body.commentsUser_id;
+  const commentsGroup_id = req.body.commentsGroup_id;
 
   if((commentsBar_id != null || commentsBar_id != undefined)
       && (commentsBeer_id != null || commentsBeer_id != undefined)
       && (commentsBrewery_id != null || commentsBrewery_id != undefined)
-      && (commentsUser_id != null || commentsUser_id != undefined)){
+      && (commentsUser_id != null || commentsUser_id != undefined)
+      && (commentsGroup_id != null || commentsGroup_id != undefined)){
     return res.status(400).json({"error": true, "message": "erreur"});
   }else if(commentsBar_id != null || commentsBar_id != undefined){
     asyncLib.waterfall([
@@ -254,17 +257,54 @@ notesCommentRouter.post('/create', isAuthenticatedNotesCommentCreate, function(r
         });
       }
     ]);
+  }else if(commentsGroup_id != null || commentsGroup_id != undefined){
+    asyncLib.waterfall([
+      function(done){
+        UserController.getOne(getUserIdHeader(req))
+        .then((user) => {
+          if(user === null || user === undefined)
+            return res.status(400).json({"error": true, "message": "L'utilisateur n'existe pas"});
+          done(null, user);
+        })
+        .catch((err) => {
+            return res.status(500).json({"error": true, "message": "Erreur lors de la récupération de l'utilisateur"});
+        });
+      },
+      function(user, done){
+        NotesCommentController.getAll(getUserIdHeader(req), undefined, undefined, undefined, undefined, commentsGroup_id)
+        .then((note) => {
+          if(note.length != 0)
+            return res.status(400).json({"error": true, "message": "Vous avez deja noté ce commentaire"});
+          done(null, note);
+        })
+        .catch((err) => {
+            return res.status(500).json({"error": true, "message": "Erreur lors de la récupération de la note"});
+        });
+      },
+      function(user, done){
+        NotesCommentController.add(note, getUserIdHeader(req), undefined, undefined, undefined, undefined, commentsGroup_id)
+        .then((notesComment) => {
+          return res.status(201).json({"error": false});
+        })
+        .catch((err) => {
+          if(err.errors)
+            return res.status(400).json({"error": true, "message": err.errors[0].message});
+          return res.status(500).json({"error": true, "message": "Erreur lors de la création de la note"});
+        });
+      }
+    ]);
   }
 });
 
 /**
-@api {get} notesComments/?user_id=user_id&commentsBar_id=commentsBar_id&commentsBeer_id=commentsBeer_id&commentsBrewery_id=commentsBrewery_id&commentsUser_id=commentsUser_id get all notesComments
+@api {get} notesComments/?user_id=user_id&commentsBar_id=commentsBar_id&commentsBeer_id=commentsBeer_id&commentsBrewery_id=commentsBrewery_id&commentsUser_id=commentsUser_id&commentsGroup_id=commentsGroup_id get all notesComments
 * @apiGroup NotesComments
 * @apiParam {Int} user_id
 * @apiParam {Int} commentsBar_id
 * @apiParam {Int} commentsBeer_id
 * @apiParam {Int} commentsBrewery_id
 * @apiParam {Int} commentsUser_id
+* @apiParam {Int} commentsGroup_id
 * @apiSuccessExample {json} Success
 *  HTTP/1.1 200 Success
 * {
@@ -278,6 +318,7 @@ notesCommentRouter.post('/create', isAuthenticatedNotesCommentCreate, function(r
 *            "commentsBeer_id": null,
 *            "commentsBrewery_id": null,
 *            "commentsUser_id": null,
+*            "commentsGroup_id": null,
 *            "created_at": "2019-04-14T13:42:47.000Z",
 *            "updated_at": "2019-04-14T13:42:47.000Z",
 *            "deleted_at": null
@@ -304,8 +345,9 @@ notesCommentRouter.get('/', function(req, res) {
   const commentsBeer_id = req.query.commentsBeer_id;
   const commentsBrewery_id = req.query.commentsBrewery_id;
   const commentsUser_id = req.query.commentsUser_id;
+  const commentsGroup_id = req.query.commentsGroup_id;
 
-  NotesCommentController.getAll(user_id, commentsBar_id, commentsBrewery_id, commentsBrewery_id, commentsUser_id)
+  NotesCommentController.getAll(user_id, commentsBar_id, commentsBrewery_id, commentsBrewery_id, commentsUser_id, commentsGroup_id)
   .then((notesComments) => {
     if(notesComments.length == 0)
       return res.status(400).json({"error": true, "message": "Aucune note trouvé"});
@@ -331,6 +373,7 @@ notesCommentRouter.get('/', function(req, res) {
 *            "commentsBeer_id": null,
 *            "commentsBrewery_id": null,
 *            "commentsUser_id": null,
+*            "commentsGroup_id": null,
 *            "created_at": "2019-04-14T13:42:47.000Z",
 *            "updated_at": "2019-04-14T13:42:47.000Z",
 *            "deleted_at": null

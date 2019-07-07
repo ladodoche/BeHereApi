@@ -5,20 +5,21 @@ const NotesCommentController = function(){};
 
 
 ////////////////////////////////////////////////////
-NotesCommentController.add = function(note, user_id, commentsBar_id, commentsBeer_id, commentsBrewery_id, commentsUser_id){
+NotesCommentController.add = function(note, user_id, commentsBar_id, commentsBeer_id, commentsBrewery_id, commentsUser_id, commentsGroup_id){
   return NotesComment.create({
     note: note,
     user_id: user_id,
     comments_bar_id: commentsBar_id,
     comments_beer_id: commentsBeer_id,
     comments_brewery_id: commentsBrewery_id,
-    comments_user_id: commentsUser_id
+    comments_user_id: commentsUser_id,
+    commentsGroup_id : commentsGroup_id
   });
 };
 
 
 ////////////////////////////////////////////////////
-NotesCommentController.getAll = function(user_id = undefined, commentsBar_id = undefined, commentsBeer_id = undefined, commentsBrewery_id = undefined, commentsUser_id = undefined){
+NotesCommentController.getAll = function(user_id, commentsBar_id, commentsBeer_id, commentsBrewery_id, commentsUser_id, commentsGroup_id){
   const options = {};
   const where = {};
 
@@ -27,6 +28,7 @@ NotesCommentController.getAll = function(user_id = undefined, commentsBar_id = u
   if(commentsBeer_id !== undefined){where.comments_beer_id = commentsBeer_id};
   if(commentsBrewery_id !== undefined){where.comments_brewery_id = commentsBrewery_id};
   if(commentsUser_id !== undefined){where.comments_user_id = commentsUser_id};
+  if(commentsGroup_id !== undefined){where.comments_group_id = commentsGroup_id};
   options.where = where;
 
   return NotesComment.findAll(options);

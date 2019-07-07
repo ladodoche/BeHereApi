@@ -51,5 +51,8 @@ function _associate(models) {
   }),
   models.NotesComment.belongsTo(models.CommentsUser, {
     as : 'commentsUser'
+  }),
+  models.NotesComment.belongsTo(models.CommentsGroup, {
+    as : 'commentsGroup'
   });
 }

@@ -479,7 +479,7 @@ barRouter.put('/upload/:bar_id', isAuthenticatedBarAccount, function(req, res) {
       });
     },
     function(bar, src_tracks, done){
-      BarController.update(bar, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, src_tracks)
+      BarController.update(bar, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, src_tracks)
       .then((track) => {
         return res.status(201).json({"error": false});
       })

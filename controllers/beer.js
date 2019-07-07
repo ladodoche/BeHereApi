@@ -12,13 +12,14 @@ BeerController.add = function(name, color, origin, description, type_of_beer_id)
     color: color,
     origin: origin,
     description: description,
-    type_of_beer_id: type_of_beer_id
+    type_of_beer_id: type_of_beer_id,
+    brewery_id: brewery_id
   });
 };
 
 
 ////////////////////////////////////////////////////
-BeerController.getAll = function(name, color, origin, type_of_beer_id = undefined){
+BeerController.getAll = function(name, color, origin, type_of_beer_id, brewery_id){
   const options = {};
   const where = {};
 
@@ -26,6 +27,7 @@ BeerController.getAll = function(name, color, origin, type_of_beer_id = undefine
   if(color !== undefined){where.color = color};
   if(origin !== undefined){where.origin = origin};
   if(type_of_beer_id !== undefined){where.type_of_beer_id = type_of_beer_id};
+  if(brewery_id !== undefined){where.brewery_id = brewery_id};
   options.where = where;
 
   return Beer.findAll(options);

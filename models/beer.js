@@ -85,4 +85,7 @@ function _associate(models) {
   models.Beer.belongsTo(models.TypeOfBeer, {
     as : 'typeOfBeer'
   });
+  models.Beer.belongsTo(models.Brewery, {
+    as : 'brewery'
+  });
 }

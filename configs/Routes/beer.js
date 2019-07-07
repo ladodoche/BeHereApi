@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const asyncLib = require('async');
 const auth = require('../auth.js');
 const BeerController = controllers.BeerController;
+const BreweryController = controllers.BreweryController;
 const TypeOfBeerController = controllers.TypeOfBeerController;
 const fileUpload = require('express-fileupload');
 const fs = require('fs');
@@ -52,13 +53,15 @@ function isAuthenticatedBeerAccount(req, res, next) {
 * @apiParam {String} origin obligatoire, entre 2 et 150 caractères, avec au moins une lettre majuscule, majuscule et un chiffre
 * @apiParam {Text} description
 * @apiParam {Int} type_of_beer_id
+* @apiParam {Int} brewery_id obligatoire
 * @apiParamExample {json} Input
 *  {
 *    "name": "Leffe",
 *    "color": "blonde",
 *    "origin": "Belgique",
 *    "description": "La Leffe ou Abbaye de Leffe est une bière belge d'Abbaye reconnue, créée en 1240 par les chanoines de l'ordre de Prémontré de l'abbaye Notre-Dame de Leffe et produite par la brasserie Artois à Louvain.",
-*    "type_of_beer_id": 2
+*    "type_of_beer_id": 2,
+*    "brewery_id" : 1
 *  }
 * @apiSuccessExample {json} Success
 *    HTTP/1.1 201 Created
@@ -68,6 +71,7 @@ function isAuthenticatedBeerAccount(req, res, next) {
 *            "name": "Leffe",
 *            "color": "blonde",
 *            "origin": "Belgique",
+*            "brewery_id": 1,
 *            "description": "La Leffe ou Abbaye de Leffe est une bière belge d'Abbaye reconnue, créée en 1240 par les chanoines de l'ordre de Prémontré de l'abbaye Notre-Dame de Leffe et produite par la brasserie Artois à Louvain.",
 *            "birthDate": "1997-05-22T00:00:00.000Z",
 *            "updated_at": "2019-04-14T09:20:46.668Z",
@@ -93,8 +97,9 @@ beerRouter.post('/create', isAuthenticatedBeerAccountToCreate, function(req, res
   const origin = req.body.origin;
   const description = req.body.description;
   const type_of_beer_id = req.body.type_of_beer_id;
+  const brewery_id = req.body.brewery_id;
 
-  BeerController.add(name, color, origin, description, type_of_beer_id)
+  BeerController.add(name, color, origin, description, type_of_beer_id, brewery_id)
   .then((beer) => {
     return res.status(201).json({"error": false});
   })
@@ -149,8 +154,9 @@ beerRouter.get('/', function(req, res) {
   const color = req.query.color;
   const origin = req.query.origin;
   const type_of_beer_id = req.query.type_of_beer_id;
+  const brewery_id = req.query.brewery_id;
 
-  BeerController.getAll(name, color, origin, type_of_beer_id)
+  BeerController.getAll(name, color, origin, type_of_beer_id, brewery_id)
   .then((beers) => {
     if(beers.length == 0)
       return res.status(400).json({"error": true, "message": "Aucune bière trouvé"});
