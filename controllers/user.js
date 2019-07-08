@@ -6,14 +6,15 @@ const UserController = function(){};
 
 
 ////////////////////////////////////////////////////
-UserController.add = function(email, password, name, surname, birthDate, id_phone){
+UserController.add = function(email, password, name, surname, birthDate, id_phone, description){
   return User.create({
     email: email,
     password: password,
     name: name,
     surname: surname,
     birthDate: birthDate,
-    id_phone: id_phone
+    id_phone: id_phone,
+    description: description
   });
 };
 
@@ -149,7 +150,7 @@ UserController.research = function(data){
 
 
 //////////////////////////////////////////////////////
-UserController.update = function(user, email, name, surname, birthDate, pathPicture, password = undefined){
+UserController.update = function(user, email, name, surname, birthDate, pathPicture, password, description){
   const options = {};
   const where = {};
   const json = {};
@@ -160,6 +161,7 @@ UserController.update = function(user, email, name, surname, birthDate, pathPict
   if(birthDate !== undefined){json.birthDate = birthDate}
   if(pathPicture !== undefined){json.pathPicture = pathPicture}
   if(password !== undefined){json.password = password}
+  if(description !== undefined){json.description = description}
   options.where = where;
   options.timezone = '+02:00';
 

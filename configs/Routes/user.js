@@ -101,6 +101,7 @@ userRouter.post('/create', function(req, res) {
   const password = req.body.password;
   const checkPassword = req.body.checkPassword;
   const id_phone = req.body.id_phone;
+  const description = req.body.description;
   var birthDate = undefined
   if(req.body.birthDate != undefined)
     birthDate = new Date(req.body.birthDate);
@@ -113,7 +114,7 @@ userRouter.post('/create', function(req, res) {
   if(password !== checkPassword)
     return res.status(400).json({"error": true, "message": "Vous avez fait une erreur lors de la vérification de votre mot de passe"});
 
-  UserController.add(email, sha256(password), name, surname, birthDate, id_phone)
+  UserController.add(email, sha256(password), name, surname, birthDate, id_phone, description)
   .then((user) => {
     delete user['dataValues']["password"];
     return res.status(201).json({"error": false, "user": user});
@@ -476,6 +477,7 @@ userRouter.put('/update/:user_id', isAuthenticatedUserAccount, function(req, res
   const name = req.body.name;
   const surname = req.body.surname;
   const birthDate = req.body.birthDate;
+  const description = req.body.description;
   var result = new Object();
 
   asyncLib.waterfall([
@@ -491,7 +493,7 @@ userRouter.put('/update/:user_id', isAuthenticatedUserAccount, function(req, res
       });
     },
     function(user, done){
-      UserController.update(user, email, name, surname, birthDate)
+      UserController.update(user, email, name, surname, birthDate, undefined, undefined, description)
       .then((user) => {
         delete user["dataValues"]["password"];
         return res.status(201).json({"error": false, "user": user});

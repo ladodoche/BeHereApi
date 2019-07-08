@@ -100,6 +100,10 @@ module.exports = function(sequelize, Datatypes){
     admin: {
       type: Datatypes.BOOLEAN,
       defaultValue: false
+    },
+    description: {
+      type: Datatypes.TEXT,
+      allowNull: true
     }
   }, {
     paranoid: true,
