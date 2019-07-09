@@ -121,7 +121,7 @@ groupRouter.post('/create', isAuthenticatedGroupCreateAccount, function(req, res
 
   asyncLib.waterfall([
     function(done){
-      GroupController.add(name, getUserIdHeader(req))
+      GroupController.add(name, getUserIdHeader(req), description)
       .then((group) => {
         console.log(group);
         done(null, group);
@@ -305,7 +305,7 @@ groupRouter.put('/update/:group_id', isAuthenticatedGroupAccount, function(req, 
       });
     },
     function(group, done){
-      GroupController.update(group, name)
+      GroupController.update(group, name, undefined, description)
       .then((group) => {
         return res.status(200).json({"error": false});
       })

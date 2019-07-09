@@ -12,12 +12,12 @@ ModelIndex.getModel = function(modelName) {
   return this[modelName];
 }
 
-const sequelize = new Sequelize('behere', 'root', '', {
+const sequelize = new Sequelize('behere', 'root', 'root', {
   host: 'localhost',
   dialect: 'mysql',
   operatorsAliases: Op,
   timezone : "+02:00",
-  port: '3308'
+  port: '8889'
 });
 
 // LOAD MODELS

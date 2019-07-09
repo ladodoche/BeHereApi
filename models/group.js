@@ -27,6 +27,10 @@ module.exports = function(sequelize, Datatypes){
           msg: 'Chemin non conforme'
         }
       }
+    },
+    description: {
+      type: Datatypes.TEXT,
+      allowNull: true
     }
   }, {
     paranoid: true,

@@ -5,10 +5,11 @@ const GroupController = function(){};
 
 
 ////////////////////////////////////////////////////
-GroupController.add = function(name, admin_id){
+GroupController.add = function(name, admin_id, description){
   return Group.create({
     name: name,
-    admin_id: admin_id
+    admin_id: admin_id,
+    description: description
   });
 };
 
@@ -23,7 +24,6 @@ GroupController.addUser = function(group, user){
 GroupController.getAll = function(name, admin_id, user_id){
   var options;
   if(user_id !== undefined){
-    console.log("1");
     options = {
       include: [{
         model: ModelIndex.User,
@@ -32,7 +32,6 @@ GroupController.getAll = function(name, admin_id, user_id){
       }]
     };
   }else{
-    console.log("2");
     options = {
       include: [{
         model: ModelIndex.User,
@@ -79,13 +78,14 @@ GroupController.getOne = function(group_id){
 
 
 //////////////////////////////////////////////////////
-GroupController.update = function(group, name, pathPicture){
+GroupController.update = function(group, name, pathPicture, description){
   const options = {};
   const where = {};
   const json = {};
 
   if(name !== undefined){json.name = name}
   if(pathPicture !== undefined){json.pathPicture = pathPicture}
+  if(description !== undefined){json.description = description}
   options.where = where;
   options.timezone = '+02:00';
 
