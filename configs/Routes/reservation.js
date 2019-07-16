@@ -25,11 +25,12 @@ function isAuthenticatedUserCreateReservation(req, res, next) {
     jwt.verify(token, auth.secret, function(err, decoded) {
       if (err)
         return res.status(500).json({ "error": true, "message": "Problème lors de l'authentification"});
-      if ((decoded.id != bar.user_id) && decoded.admin != 1)
+      if (decoded.admin != 1)
         return res.status(401).json({ "error": true, "message": "Vous ne disposez pas des droits nécessairent"});
       next();
     });
   }).catch((err) => {
+    console.log(err);
       return res.status(500).json({"error": true, "message": "Erreur lors de la récupération de l'utilisateur"});
   });
 }
@@ -151,6 +152,7 @@ function isAuthenticatedUserBarReservation(req, res, next) {
 */
 reservationRouter.post('/create', isAuthenticatedUserCreateReservation, function(req, res) {
 
+    console.log("-1");
   const numberOfPeople = req.body.numberOfPeople;
   const arrivalTime = req.body.arrivalTime;
   const user_id = req.body.user_id;
@@ -158,6 +160,7 @@ reservationRouter.post('/create', isAuthenticatedUserCreateReservation, function
 
   asyncLib.waterfall([
     function(done){
+      console.log("0");
       UserController.getOne(user_id)
       .then((user) => {
         if(user === null || user === undefined)
@@ -165,10 +168,13 @@ reservationRouter.post('/create', isAuthenticatedUserCreateReservation, function
         done(null, user);
       })
       .catch((err) => {
-          return res.status(500).json({"error": true, "message": "Erreur lors de la récupération de l'utilisateur"});
+        console.log("err");
+        console.log(err);
+        return res.status(500).json({"error": true, "message": "Erreur lors de la récupération de l'utilisateur"});
       });
     },
     function(user, done){
+      console.log("1");
       BarController.getOne(bar_id)
       .then((bar) => {
         if(bar === null || bar === undefined)
@@ -180,6 +186,7 @@ reservationRouter.post('/create', isAuthenticatedUserCreateReservation, function
       });
     },
     function(user, bar, done){
+      console.log("2");
       ReservationController.add(numberOfPeople, arrivalTime, user_id, bar_id)
       .then((reservation) => {
         return res.status(201).json({"error": false});

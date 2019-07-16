@@ -20,7 +20,7 @@ NotesBeerController.getAll = function(user_id = undefined, beer_id = undefined){
   const where = {};
 
   if(user_id !== undefined){where.user_id = user_id};
-  if(beer_id !== undefined){where.beer_id = user_id};
+  if(beer_id !== undefined){where.beer_id = beer_id};
   options.where = where;
 
   return NotesBeer.findAll(options);

@@ -49,7 +49,6 @@ function isAuthenticatedBeerAccount(req, res, next) {
 @api {post} beers/create add a new beer
 * @apiGroup Beers
 * @apiParam {String} name obligatoire et entre 2 à 200 caractères
-* @apiParam {String} color obligatoire et entre 2 à 100 caractères
 * @apiParam {String} origin obligatoire, entre 2 et 150 caractères, avec au moins une lettre majuscule, majuscule et un chiffre
 * @apiParam {Text} description
 * @apiParam {Int} type_of_beer_id
@@ -57,7 +56,6 @@ function isAuthenticatedBeerAccount(req, res, next) {
 * @apiParamExample {json} Input
 *  {
 *    "name": "Leffe",
-*    "color": "blonde",
 *    "origin": "Belgique",
 *    "description": "La Leffe ou Abbaye de Leffe est une bière belge d'Abbaye reconnue, créée en 1240 par les chanoines de l'ordre de Prémontré de l'abbaye Notre-Dame de Leffe et produite par la brasserie Artois à Louvain.",
 *    "type_of_beer_id": 2,
@@ -69,7 +67,6 @@ function isAuthenticatedBeerAccount(req, res, next) {
 *        "error": false,
 *        "beer": {
 *            "name": "Leffe",
-*            "color": "blonde",
 *            "origin": "Belgique",
 *            "brewery_id": 1,
 *            "description": "La Leffe ou Abbaye de Leffe est une bière belge d'Abbaye reconnue, créée en 1240 par les chanoines de l'ordre de Prémontré de l'abbaye Notre-Dame de Leffe et produite par la brasserie Artois à Louvain.",
@@ -93,28 +90,57 @@ function isAuthenticatedBeerAccount(req, res, next) {
 */
 beerRouter.post('/create', isAuthenticatedBeerAccountToCreate, function(req, res) {
   const name = req.body.name;
-  const color = req.body.color;
   const origin = req.body.origin;
   const description = req.body.description;
   const type_of_beer_id = req.body.type_of_beer_id;
   const brewery_id = req.body.brewery_id;
 
-  BeerController.add(name, color, origin, description, type_of_beer_id, brewery_id)
-  .then((beer) => {
-    return res.status(201).json({"error": false});
-  })
-  .catch((err) => {
-    if(err.errors)
-      return res.status(400).json({"error": true, "message": err.errors[0].message});
-    return res.status(500).json({"error": true, "message": "Erreur lors de la création de de la bière"});
-  });
+  asyncLib.waterfall([
+    function(done){
+      if(type_of_beer_id != undefined){
+        TypeOfBeerController.getOne(type_of_beer_id)
+        .then((type_of_beer) => {
+          if(type_of_beer === null || type_of_beer === undefined)
+            return res.status(400).json({"error": true, "message": "Le type de bière n'existe pas"});
+          else
+            done(null);
+        })
+        .catch((err) => {
+          return res.status(500).json({"error": true, "message": "Erreur lors de la récupération du type de bière"});
+        });
+      }
+      else
+        done(null);
+    },
+    function(done){
+      BreweryController.getOne(brewery_id)
+      .then((brewery) => {
+        if(brewery === null || brewery === undefined)
+          return res.status(400).json({"error": true, "message": "La brasserie n'existe pas"});
+        done(null);
+      })
+      .catch((err) => {
+        return res.status(500).json({"error": true, "message": "Erreur lors de la récupération de la brasserie"});
+      });
+    },
+    function(beer, done){
+      BeerController.add(name, origin, description, type_of_beer_id, brewery_id)
+      .then((beer) => {
+        return res.status(201).json({"error": false});
+      })
+      .catch((err) => {
+        if(err.errors)
+          return res.status(400).json({"error": true, "message": err.errors[0].message});
+        return res.status(500).json({"error": true, "message": "Erreur lors de la création de de la bière"});
+      });
+    }
+  ]);
 });
 
 /**
-@api {get} beers/?name=name&color=color&origin=origin&type_of_beer_id=type_of_beer_id get all beers
+@api {get} beers/?name=name&origin=origin&type_of_beer_id=type_of_beer_id get all beers
 * @apiGroup Beers
 * @apiParam {String} name
-* @apiParam {String} color
 * @apiParam {String} origin
 * @apiParam {Int} type_of_beer_id
 * @apiSuccessExample {json} Success
@@ -125,7 +151,6 @@ beerRouter.post('/create', isAuthenticatedBeerAccountToCreate, function(req, res
 *              {
 *                  "id": 1,
 *                  "name": "Leffe",
-*                  "color": "blonde",
 *                  "origin": "Belgique",
 *                  "description": "La Leffe ou Abbaye de Leffe est une bière belge d'Abbaye reconnue, créée en 1240 par les chanoines de l'ordre de Prémontré de l'abbaye Notre-Dame de Leffe et produite par la brasserie Artois à Louvain.",
 *                  "pathPicture": null,
@@ -151,12 +176,11 @@ beerRouter.post('/create', isAuthenticatedBeerAccountToCreate, function(req, res
 */
 beerRouter.get('/', function(req, res) {
   const name = req.query.name;
-  const color = req.query.color;
   const origin = req.query.origin;
   const type_of_beer_id = req.query.type_of_beer_id;
   const brewery_id = req.query.brewery_id;
 
-  BeerController.getAll(name, color, origin, type_of_beer_id, brewery_id)
+  BeerController.getAll(name, origin, type_of_beer_id, brewery_id)
   .then((beers) => {
     if(beers.length == 0)
       return res.status(400).json({"error": true, "message": "Aucune bière trouvé"});
@@ -180,7 +204,6 @@ beerRouter.get('/', function(req, res) {
 *        "beer": {
 *            "id": 1,
 *            "name": "Leffe",
-*            "color": "blanche",
 *            "origin": "Belgique",
 *            "description": "La Leffe ou Abbaye de Leffe est une bière belge d'Abbaye reconnue, créée en 1240 par les chanoines de l'ordre de Prémontré de l'abbaye Notre-Dame de Leffe et produite par la brasserie Artois à Louvain.",
 *            "pathPicture": null,
@@ -258,7 +281,6 @@ beerRouter.get('/:beer_id', function(req, res) {
 *              {
 *                  "id": 1,
 *                  "name": "Leffe",
-*                  "color": "blonde",
 *                  "origin": "Belgique",
 *                  "description": "La Leffe ou Abbaye de Leffe est une bière belge d'Abbaye reconnue, créée en 1240 par les chanoines de l'ordre de Prémontré de l'abbaye Notre-Dame de Leffe et produite par la brasserie Artois à Louvain.",
 *                  "pathPicture": null,
@@ -330,13 +352,12 @@ beerRouter.get('/research/:data', function(req, res) {
 * @apiGroup Beers
 * @apiHeader {String} x-access-token
 * @apiParam {String} name obligatoire et entre 2 à 200 caractères
-* @apiParam {String} color obligatoire et entre 2 à 100 caractères
 * @apiParam {String} origin obligatoire, entre 2 et 150 caractères, avec au moins une lettre majuscule, majuscule et un chiffre
 * @apiParam {Text} description
 * @apiParam {Int} type_of_beer_id
 * @apiParamExample {json} Input
 *  {
-*    "color": "Brune"
+*    "name": "aaa"
 *  }
 * @apiSuccessExample {json} Success
 *    HTTP/1.1 201 Created
@@ -345,7 +366,6 @@ beerRouter.get('/research/:data', function(req, res) {
 *        "beer": {
 *            "id": 1,
 *            "name": "Leffe",
-*            "color": "blanche",
 *            "origin": "Belgique",
 *            "description": "La Leffe ou Abbaye de Leffe est une bière belge d'Abbaye reconnue, créée en 1240 par les chanoines de l'ordre de Prémontré de l'abbaye Notre-Dame de Leffe et produite par la brasserie Artois à Louvain.",
 *            "type_of_beer_id": 1,
@@ -377,7 +397,6 @@ beerRouter.get('/research/:data', function(req, res) {
 beerRouter.put('/update/:beer_id', isAuthenticatedBeerAccount, function(req, res){
   const beer_id = req.params.beer_id;
   const name = req.body.name;
-  const color = req.body.color;
   const origin = req.body.origin;
   const description = req.body.description;
   const type_of_beer_id = req.body.type_of_beer_id;
@@ -395,7 +414,7 @@ beerRouter.put('/update/:beer_id', isAuthenticatedBeerAccount, function(req, res
       });
     },
     function(beer, done){
-      BeerController.update(beer, name, color, origin, description, undefined, type_of_beer_id)
+      BeerController.update(beer, name, origin, description, undefined, type_of_beer_id)
       .then((beer) => {
         return res.status(201).json({"error": false, "beer": beer});
       })

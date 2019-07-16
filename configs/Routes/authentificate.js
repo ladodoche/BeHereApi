@@ -69,10 +69,12 @@ authentificateRouter.post('/', function(req, res, next) {
           done(null, user)
       })
       .catch((err) => {
+        console.log(err);
         return res.status(500).json({"error": true, "message": "Erreur lors de la récupération de l'utilisateur"});
       });
     },
     function(user, done){
+      console.log('1');
       BarController.getAll(undefined, user.id)
       .then((bar) => {
         if(bar.length == 0)
@@ -85,6 +87,7 @@ authentificateRouter.post('/', function(req, res, next) {
       });
     },
     function(user, bar_status, done){
+      console.log('2');
       BreweryController.getAll(undefined, user.id)
       .then((brewery) => {
         if(brewery.length == 0)

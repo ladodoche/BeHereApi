@@ -167,14 +167,16 @@ barRouter.get('/', function(req, res) {
 
   const name = req.query.name;
   const user_id = req.query.user_id;
+  const type_of_beer_id = req.query.type_of_beer_id;
 
-  BarController.getAll(name, user_id)
+  BarController.getAll(name, user_id, type_of_beer_id)
   .then((bars) => {
     if(bars.length == 0)
       return res.status(400).json({"error": true, "message": "Aucun bar trouvé"});
     return res.status(200).json({"error": false, "bar": bars});
   })
   .catch((err) => {
+    console.log(err);
     return res.status(500).json({"error": true, "message": "Erreur lors de la récupération des bars"});
   });
 });

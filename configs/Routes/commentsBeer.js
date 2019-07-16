@@ -161,6 +161,7 @@ commentsBeerRouter.get('/', function(req, res) {
 
   CommentsBeerController.getAll(user_id, beer_id)
   .then((commentsBeers) => {
+    console.log(commentsBeers);
     if(commentsBeers.length == 0)
       return res.status(400).json({"error": true, "message": "Aucun commentaire trouvé"});
     return res.status(200).json({"error": false, "commentsBeer": commentsBeers});

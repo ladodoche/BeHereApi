@@ -1,6 +1,8 @@
 const ModelIndex  = require('../models');
 const Op = ModelIndex.Op;
 const Bar = ModelIndex.Bar;
+const Beer = ModelIndex.Beer;
+const MenusBeer = ModelIndex.MenusBeer;
 
 const BarController = function(){};
 
@@ -21,14 +23,60 @@ BarController.add = function(name, gpsLatitude, gpsLongitude, description, webSi
 };
 
 ////////////////////////////////////////////////////
-BarController.getAll = function(name, user_id){
-  const options = {
-    include: [{
-      model: ModelIndex.User,
-      as: 'user'
-    }]
-  };
-  const where = {};
+BarController.getAll = function(name, user_id, type_of_beer_id){
+  var options = {};
+  var where = {};
+  if(type_of_beer_id !== undefined){
+    options = {
+      include: [{
+        model: ModelIndex.User,
+        as: 'user'
+      }]
+    };
+
+    var orBeer = [];
+    optionsBeer = {
+      include: [{
+        model: ModelIndex.TypeOfBeer,
+        as: 'typeOfBeer',
+        where: { id: type_of_beer_id }
+      }]
+    };
+
+    return Beer.findAll(optionsBeer).then((beers) => {
+
+      for(var i = 0; i < beers.length; i++)
+        orBeer.push(beers[i].id);
+
+      var optionsMenusBeer = {
+        include: [{
+          model: ModelIndex.Beer,
+          as: 'beer',
+          where: { id: orBeer }
+        }]
+      };
+
+      return MenusBeer.findAll(optionsMenusBeer).then((menusBeer) => {
+
+        var orMenusBeer = [];
+        var optionsBar = {};
+
+        for(var i = 0; i < menusBeer.length; i++)
+          orMenusBeer.push(menusBeer[i].bar_id);
+
+        where.id = orMenusBeer;
+        optionsBar.where = where;
+        return Bar.findAll(optionsBar);
+      });
+    });
+  }else{
+    options = {
+      include: [{
+        model: ModelIndex.User,
+        as: 'user'
+      }]
+    };
+  }
 
   if(name !== undefined){where.name = name};
   if(user_id !== undefined){where.user_id = user_id};

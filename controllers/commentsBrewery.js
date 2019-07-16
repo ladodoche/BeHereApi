@@ -20,7 +20,7 @@ CommentsBreweryController.getAll = function(user_id = undefined, brewery_id = un
   const where = {};
 
   if(user_id !== undefined){where.user_id = user_id};
-  if(brewery_id !== undefined){where.brewery_id = user_id};
+  if(brewery_id !== undefined){where.brewery_id = brewery_id};
   options.where = where;
 
   return CommentsBrewery.findAll(options);

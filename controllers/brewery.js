@@ -1,6 +1,7 @@
 const ModelIndex  = require('../models');
 const Op = ModelIndex.Op;
 const Brewery = ModelIndex.Brewery;
+const Beer = ModelIndex.Beer;
 
 const BreweryController = function(){};
 
@@ -21,15 +22,39 @@ BreweryController.add = function(name, gpsLatitude, gpsLongitude, description, w
 };
 
 ////////////////////////////////////////////////////
-BreweryController.getAll = function(name, user_id){
-  const options = {};
+BreweryController.getAll = function(name, user_id, type_of_beer_id){
+  var optionsBrewery = {};
+  var optionsBeer = {};
+  var result = {};
   const where = {};
 
-  if(name !== undefined){where.name = name};
-  if(user_id !== undefined){where.user_id = user_id};
-  options.where = where;
+  if(type_of_beer_id !== undefined){
 
-  return Brewery.findAll(options);
+    var or = [];
+    optionsBeer = {
+      include: [{
+        model: ModelIndex.TypeOfBeer,
+        as: 'typeOfBeer',
+        where: { id: type_of_beer_id }
+      }]
+    };
+
+    return Beer.findAll(optionsBeer).then((beers) => {
+
+      for(var i = 0; i < beers.length; i++)
+        or.push(beers[i].brewery_id);
+
+      where.id = or;
+      optionsBrewery.where = where;
+      return Brewery.findAll(optionsBrewery);
+    });
+  }else{
+
+    if(name !== undefined){where.name = name};
+    if(user_id !== undefined){where.user_id = user_id};
+    optionsBrewery.where = where;
+    return Brewery.findAll(optionsBrewery);
+  }
 };
 
 

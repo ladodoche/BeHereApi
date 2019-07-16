@@ -15,12 +15,12 @@ CommentsBeerController.add = function(text, user_id, beer_id){
 
 
 ////////////////////////////////////////////////////
-CommentsBeerController.getAll = function(user_id = undefined, beer_id = undefined){
+CommentsBeerController.getAll = function(user_id, beer_id){
   const options = {};
   const where = {};
 
   if(user_id !== undefined){where.user_id = user_id};
-  if(beer_id !== undefined){where.beer_id = user_id};
+  if(beer_id !== undefined){where.beer_id = beer_id};
   options.where = where;
 
   return CommentsBeer.findAll(options);

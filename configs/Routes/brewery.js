@@ -8,6 +8,7 @@ const fileUpload = require('express-fileupload');
 const fs = require('fs');
 const path = require('path');
 const BreweryController = controllers.BreweryController;
+const BeerController = controllers.BeerController;
 
 const breweryRouter = express.Router();
 breweryRouter.use(bodyParser.json({limit: '10mb'}));
@@ -167,16 +168,35 @@ breweryRouter.get('/', function(req, res) {
 
   const name = req.query.name;
   const user_id = req.query.user_id;
+  const type_of_beer_id = req.query.type_of_beer_id;
 
-  BreweryController.getAll(name, user_id)
-  .then((brewerys) => {
-    if(brewerys.length == 0)
-      return res.status(400).json({"error": true, "message": "Aucune brasserie trouvé"});
-    return res.status(200).json({"error": false, "brewery": brewerys});
-  })
-  .catch((err) => {
-    return res.status(500).json({"error": true, "message": "Erreur lors de la récupération des brasseries"});
-  });
+  asyncLib.waterfall([
+    function(done){
+      BeerController.getAll(undefined, undefined, type_of_beer_id)
+      .then((beer) => {
+        console.log(beer);
+        if(beer === null || beer === undefined)
+          return res.status(400).json({"error": true, "message": "Aucune bière enregistré de ce type"});
+        done(null, beer);
+      })
+      .catch((err) => {
+        return res.status(500).json({"error": true, "message": "Erreur lors de la récupération de la bière"});
+      });
+    },
+    function(beer, done){
+      BreweryController.getAll(name, user_id, type_of_beer_id)
+      .then((brewerys) => {
+        console.log(brewerys);
+        if(brewerys.length == 0)
+          return res.status(400).json({"error": true, "message": "Aucune brasserie trouvé"});
+        return res.status(200).json({"error": false, "brewery": brewerys});
+      })
+      .catch((err) => {
+        console.log(err);
+        return res.status(500).json({"error": true, "message": "Erreur lors de la récupération des brasseries"});
+      });
+    }
+  ]);
 });
 
 /**

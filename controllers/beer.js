@@ -6,10 +6,9 @@ const BeerController = function(){};
 
 
 ////////////////////////////////////////////////////
-BeerController.add = function(name, color, origin, description, type_of_beer_id){
+BeerController.add = function(name, origin, description, type_of_beer_id, brewery_id){
   return Beer.create({
     name: name,
-    color: color,
     origin: origin,
     description: description,
     type_of_beer_id: type_of_beer_id,
@@ -19,12 +18,11 @@ BeerController.add = function(name, color, origin, description, type_of_beer_id)
 
 
 ////////////////////////////////////////////////////
-BeerController.getAll = function(name, color, origin, type_of_beer_id, brewery_id){
+BeerController.getAll = function(name, origin, type_of_beer_id, brewery_id){
   const options = {};
   const where = {};
 
   if(name !== undefined){where.name = name};
-  if(color !== undefined){where.color = color};
   if(origin !== undefined){where.origin = origin};
   if(type_of_beer_id !== undefined){where.type_of_beer_id = type_of_beer_id};
   if(brewery_id !== undefined){where.brewery_id = brewery_id};
@@ -52,7 +50,6 @@ BeerController.research = function(data){
   const where = {};
   const or = {};
   or.name = { like: '%' + data + '%' }
-  or.color = { like: '%' + data + '%' }
   or.origin = { like: '%' + data + '%' }
   where.or = or;
   options.where = where;
@@ -62,13 +59,12 @@ BeerController.research = function(data){
 
 
 //////////////////////////////////////////////////////
-BeerController.update = function(beer, name, color, origin, description, pathPicture, type_of_beer_id){
+BeerController.update = function(beer, name, origin, description, pathPicture, type_of_beer_id){
   const options = {};
   const where = {};
   const json = {};
 
   if(name !== undefined){json.name = name}
-  if(color !== undefined){json.color = color}
   if(origin !== undefined){json.origin = origin}
   if(description !== undefined){json.description = description}
   if(pathPicture !== undefined){json.pathPicture = pathPicture}

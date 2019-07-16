@@ -30,19 +30,6 @@ module.exports = function(sequelize, Datatypes){
         }
       }
     },
-    color: {
-      type: Datatypes.STRING,
-      allowNull: true,
-      validate: {
-        notEmpty: {
-          msg: 'Veuillez saisir la couleur de votre bière'
-        },
-        len: {
-          args: [2,100],
-          msg: 'La couleur de votre bière doit faire entre 2 et 100 caractères'
-        }
-      }
-    },
     origin: {
       type: Datatypes.STRING,
       allowNull: false,
