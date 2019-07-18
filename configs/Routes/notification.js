@@ -73,7 +73,8 @@ notificationRouter.post('/create', function(req, res) {
   if((other_user_id != null || other_user_id != undefined)
     && (group_id != null || group_id != undefined)){
     return res.status(400).json({"error": true, "notification": "erreur"});
-  }else if(other_user_id != null || other_user_id != undefined) {
+  }
+  if(other_user_id != null || other_user_id != undefined) {
     asyncLib.waterfall([
       function(done){
         UserController.getOne(other_user_id)
@@ -102,7 +103,8 @@ notificationRouter.post('/create', function(req, res) {
         });
       }
     ]);
-  }else if(group_id != null || group_id != undefined) {
+  }
+  if(group_id != null || group_id != undefined) {
     asyncLib.waterfall([
       function(done){
         GroupController.getOne(group_id)
