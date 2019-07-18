@@ -70,17 +70,10 @@ notificationRouter.post('/create', function(req, res) {
   const other_user_id = req.body.other_user_id;
   const group_id = req.body.group_id;
 
-  if((other_user_id != null || other_user_id != undefined)
-    && (group_id != null || group_id != undefined)){
-    return res.status(400).json({"error": true, "notification": "erreur"});
-  }
-  if(other_user_id != null || other_user_id != undefined) {
     asyncLib.waterfall([
       function(done){
         UserController.getOne(other_user_id)
         .then((user) => {
-          if(user === null || user === undefined)
-            return res.status(400).json({"error": true, "notification": "L'utilisateur n'existe pas"});
           done(null, user);
         })
         .catch((err) => {
@@ -88,8 +81,17 @@ notificationRouter.post('/create', function(req, res) {
         });
       },
       function(user, done){
+        GroupController.getOne(group_id)
+        .then((group) => {
+          done(null, user, group);
+        })
+        .catch((err) => {
+            return res.status(500).json({"error": true, "notification": "Erreur lors de la récupération du groupe"});
+        });
+      },
+      function(user, group, done){
         console.log("0");
-        NotificationController.add(texte, type, user_id, other_user_id, undefined)
+        NotificationController.add(texte, type, user_id, other_user_id, group_id)
         .then((notification) => {
           console.log("1");
           return res.status(201).json({"error": false});
@@ -103,33 +105,6 @@ notificationRouter.post('/create', function(req, res) {
         });
       }
     ]);
-  }
-  if(group_id != null || group_id != undefined) {
-    asyncLib.waterfall([
-      function(done){
-        GroupController.getOne(group_id)
-        .then((group) => {
-          if(group === null || group === undefined)
-            return res.status(400).json({"error": true, "notification": "Le groupe n'existe pas"});
-          done(null, group);
-        })
-        .catch((err) => {
-            return res.status(500).json({"error": true, "notification": "Erreur lors de la récupération du groupe"});
-        });
-      },
-      function(group, done){
-        NotificationController.add(texte, type, user_id, undefined, group_id)
-        .then((notification) => {
-          return res.status(201).json({"error": false});
-        })
-        .catch((err) => {
-          if(err.errors)
-            return res.status(400).json({"error": true, "notification": err.errors[0].message});
-          return res.status(500).json({"error": true, "notification": "Erreur lors de l'envoie de notification"});
-        });
-      }
-    ]);
-  }
 });
 
 
