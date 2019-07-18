@@ -92,6 +92,7 @@ function getUserIdHeader(req, next){
 commentsUserRouter.post('/create', isAuthenticatedCommentsUserCreate, function(req, res) {
 
   const text = req.body.text;
+  const user_id = req.body.user_id;
   const user_comment_id = req.body.user_comment_id;
 
   asyncLib.waterfall([
@@ -107,7 +108,7 @@ commentsUserRouter.post('/create', isAuthenticatedCommentsUserCreate, function(r
       });
     },
     function(user, done){
-      CommentsUserController.add(text, getUserIdHeader(req), user.id)
+      CommentsUserController.add(text, user_id, user.id)
       .then((commentsUser) => {
         return res.status(201).json({"error": false});
       })
