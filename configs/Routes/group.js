@@ -118,6 +118,7 @@ function getUserIdHeader(req, next){
 */
 groupRouter.post('/create', isAuthenticatedGroupCreateAccount, function(req, res) {
   const name = req.body.name;
+  const description = req.body.description;
 
   asyncLib.waterfall([
     function(done){
