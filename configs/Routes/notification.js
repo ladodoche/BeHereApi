@@ -300,6 +300,9 @@ notificationRouter.put('/update/:notification_id', function(req, res){
   const texte = req.body.texte;
   const type = req.body.type;
   const statut = req.body.statut;
+  const user_id = req.body.user_id;
+  const other_user_id = req.body.other_user_id;
+  const group_id = req.body.group_id;
 
   asyncLib.waterfall([
     function(done){
@@ -315,7 +318,7 @@ notificationRouter.put('/update/:notification_id', function(req, res){
     },
     function(notification, done){
       console.log("1");
-      NotificationController.update(notification, texte, type, statut)
+      NotificationController.update(notification, texte, type, statut, user_id, other_user_id, group_id)
       .then((notification) => {
         return res.status(200).json({"error": false});
       })

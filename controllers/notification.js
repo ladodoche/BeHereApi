@@ -77,7 +77,7 @@ NotificationController.getOne = function(notification_id){
 
 
 //////////////////////////////////////////////////////
-NotificationController.update = function(notification, texte, type, statut){
+NotificationController.update = function(notification, texte, type, statut, user_id, other_user_id, group_id){
   const options = {};
   const where = {};
   const json = {};
@@ -85,6 +85,9 @@ NotificationController.update = function(notification, texte, type, statut){
   if(texte !== undefined){json.texte = texte};
   if(type !== undefined){json.type = type};
   if(statut !== undefined){json.statut = statut};
+  if(user_id !== undefined){json.user_id = user_id};
+  if(other_user_id !== undefined){json.other_user_id = other_user_id};
+  if(group_id !== undefined){json.group_id = group_id};
 
   options.where = where;
   options.timezone = '+02:00';
