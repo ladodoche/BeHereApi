@@ -39,7 +39,7 @@ function isAuthenticatedBeerAccount(req, res, next) {
   jwt.verify(token, auth.secret, function(err, decoded) {
     if (err)
       return res.status(500).json({ "error": true, "message": "Problème lors de l'authentification"});
-    if ((decoded.id != req.params.beer_id) && decoded.admin != 1)
+    if (decoded.admin != 1)
       return res.status(401).json({ "error": true, "message": "Vous ne disposez pas des droits nécessairent"});
     next();
   });
